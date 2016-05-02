@@ -1,0 +1,22 @@
+{
+  "name": "pckg/auth",
+  "description": "Database, Twitter, Facebook and Google+ authentication",
+  "homepage": "https://github.com/pckg/auth",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Bojan Rajh",
+      "email": "schtr4jh@schtr4jh.net"
+    }
+  ],
+  "require": {
+    "pckg/framework": "dev-master",
+    "facebook/php-sdk-v4": "dev-master"
+  },
+  "autoload": {
+    "psr-0": {
+      "Pckg": "src\\"
+    }
+  },
+  "minimum-stability": "dev"
+}

@@ -1,0 +1,15 @@
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-header">
+                <h1>{% if success %}{{ _lang.get('success_activated') }}{% else %}{{ _lang.get('something_went_wrong') }}{% endif %}</h1>
+            </div>
+            {% if success %}
+                <p>{{ _lang.get('you_can_login') }} <a href="{{ _router.make('login') }}">{{ _lang.get('here') }}</a>.
+                </p>
+            {% else %}
+                <p>{{ _lang.get('user_doesnt_exist_or_activated') }}</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

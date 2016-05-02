@@ -1,0 +1,21 @@
+<div class="row">
+    <div class="col-md-4">
+        <div class="page-header">
+            <h1>{{ __('h1_login_status') }}</h1>
+        </div>
+        {% if auth.isLoggedIn() %}
+            <p>Logged in</p>
+        {% else %}
+            <p>Logged out</p>
+        {% endif %}
+
+        <p>Session auth data</p>
+        <pre>{{ dump(session.Auth) }}</pre>
+
+        <p>Session user data</p>
+        <pre>{{ dump(session.User) }}</pre>
+
+        <p>Cookie data</p>
+        <pre>{{ dump(cookie) }}</pre>
+    </div>
+</div>
