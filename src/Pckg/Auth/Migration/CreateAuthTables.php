@@ -9,6 +9,8 @@ class CreateAuthTables extends Migration
     {
         $this->userGroupsUp();
         $this->usersUp();
+
+        $this->save();
     }
 
     protected function userGroupsUp()
