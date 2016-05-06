@@ -4,12 +4,13 @@ namespace Pckg\Auth\Form;
 
 use Pckg\Htmlbuilder\Element\Form\Bootstrap;
 use Pckg\Auth\Form\Validator\UserEmail;
+use Pckg\Htmlbuilder\Element\Form\ResolvesOnRequest;
 
 /**
  * Class Login
  * @package Pckg\Auth\Form
  */
-class Login extends Bootstrap
+class Login extends Bootstrap implements ResolvesOnRequest
 {
 
     /**

@@ -32,19 +32,18 @@ class LoginUser
     /**
      * @var Users
      */
-    protected $eUsers;
+    protected $users;
 
     /**
      * @param Request $request
-     * @param Auth $authHelper
-     * @param Users $eUsers
+     * @param Auth    $authHelper
+     * @param Users   $eUsers
      */
-    public function __construct(Auth $authHelper, Users $eUsers, Login $loginForm, Dispatcher $dispatcher)
+    public function __construct(Auth $auth, Users $users, Login $loginForm)
     {
-        $this->authHelper = $authHelper;
-        $this->eUsers = $eUsers;
+        $this->auth = $auth;
+        $this->users = $users;
         $this->loginForm = $loginForm;
-        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -52,22 +51,18 @@ class LoginUser
      */
     public function execute()
     {
-        $this->loginForm->initFields();
-
-        //if ($this->loginForm->isValid()) {
         $data = $this->loginForm->getRawData(['email', 'password']);
 
-        $rUser = $this->eUsers
+        $rUser = $this->users
             ->where('email', $data['email'])
-            ->where('password', $this->authHelper->makePassword($data['password']))
+            ->where('password', $this->auth->makePassword($data['password']))
             ->one();
 
-        if ($rUser && $rUser->isActivated() && $this->authHelper->performLogin($rUser)) {
-            $this->dispatcher->trigger('user.loggedIn', [$rUser]);
+        if ($rUser && $this->auth->performLogin($rUser)) {
+            trigger('user.loggedIn', [$rUser]);
 
             return $this->successful();
         }
-        //}
 
         return $this->error();
     }

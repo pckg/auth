@@ -15,7 +15,7 @@ class UserEmail extends AbstractValidator
         //$email = $context->getElement()->getValue();
         //var_dump($email);
 
-        die("validating user email");
+        //die("validating user email");
 
         return $next();
     }

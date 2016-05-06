@@ -4,6 +4,7 @@ namespace Pckg\Auth\Controller;
 
 use Pckg\Concept\Event\Dispatcher;
 
+use Pckg\Framework\Controller;
 use Pckg\Framework\Request\Data\Session;
 use Pckg\Framework\Response;
 use Pckg\Framework\Router;
@@ -12,7 +13,6 @@ use Pckg\Auth\Command\LogoutUser;
 use Pckg\Auth\Command\RegisterUser;
 use Pckg\Auth\Command\SendNewPassword;
 use Pckg\Auth\Entity\Users;
-use Pckg\Auth\Event\UserLoggedIn;
 use Pckg\Auth\Form\ForgotPassword;
 use Pckg\Auth\Form\Login;
 use Pckg\Auth\Form\Register;
@@ -22,47 +22,23 @@ use Pckg\Auth\Service\Auth as AuthService;
  * Class Auth
  * @package Pckg\Auth\Controller
  */
-class Auth
+class Auth extends Controller
 {
-
-    protected $dispatcher;
-
-    public function __construct(Dispatcher $dispatcher)
-    {
-        $this->dispatcher = $dispatcher;
-
-        $dispatcher->registerEvent(new UserLoggedIn());
-    }
-
-    public function events()
-    {
-        return [
-            new UserLoggedIn(),
-        ];
-    }
-
-    public function getLoginStatusAction(AuthService $authService, Session $session)
-    {
-        return view('loginStatus', [
-            'auth'    => $authService,
-            'session' => $session,
-        ]);
-    }
 
     function getLoginAction(Login $loginForm)
     {
         return view('login', [
-            'form' => $loginForm->initFields(),
+            'form' => $loginForm,
         ]);
     }
 
-    function postLoginAction(LoginUser $loginUserCommand, Response $response)
+    function postLoginAction(LoginUser $loginUserCommand)
     {
-        $loginUserCommand->onSuccess(function () use ($response) {
-            $response->redirect('/?success');
+        $loginUserCommand->onSuccess(function () {
+            $this->response()->redirect('/');
 
-        })->onError(function () use ($response) {
-            $response->redirect('/login?error');
+        })->onError(function () {
+            $this->response()->redirect();
 
         })->execute();
     }

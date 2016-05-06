@@ -27,16 +27,6 @@ use Pckg\Auth\Middleware\RestrictAccess;
 class Config extends Provider
 {
 
-    public function commands()
-    {
-        return [
-            'user.loginUser'       => LoginUser::class,
-            'user.logoutUser'      => LogoutUser::class,
-            'user.registerUser'    => RegisterUser::class,
-            'user.sendNewPassword' => SendNewPassword::class,
-        ];
-    }
-
     public function middlewares()
     {
         return [

@@ -122,7 +122,9 @@ class Auth
     {
         return isset($_SESSION['User'])
             ? ($key
-                ? (isset($_SESSION['User'][$key]) ?: null)
+                ? (isset($_SESSION['User'][$key])
+                    ? $_SESSION['User'][$key]
+                    : null)
                 : $_SESSION['User']
             )
             : null;
@@ -208,13 +210,13 @@ class Auth
 
     public function performLogin($rUser)
     {
-        $sessionHash = sha1(microtime() . sha1($rUser->getId()));
+        $sessionHash = sha1(microtime() . sha1($rUser->id));
         $dtIn = date("Y-m-d H:i:s");
 
         $_SESSION['User'] = $rUser->toArray();
 
         $_SESSION['Auth'] = [
-            "user_id" => $rUser->getId(),
+            "user_id" => $rUser->id,
             "dt_in"   => $dtIn,
             "dt_out"  => '0000-00-00 00:00:00',
             "hash"    => $sessionHash,
@@ -263,6 +265,10 @@ class Auth
         }
 
         return false;
+    }
+
+    public function getGroupId() {
+        
     }
 }
 
