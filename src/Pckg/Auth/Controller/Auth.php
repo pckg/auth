@@ -2,12 +2,6 @@
 
 namespace Pckg\Auth\Controller;
 
-use Pckg\Concept\Event\Dispatcher;
-
-use Pckg\Framework\Controller;
-use Pckg\Framework\Request\Data\Session;
-use Pckg\Framework\Response;
-use Pckg\Framework\Router;
 use Pckg\Auth\Command\LoginUser;
 use Pckg\Auth\Command\LogoutUser;
 use Pckg\Auth\Command\RegisterUser;
@@ -17,6 +11,10 @@ use Pckg\Auth\Form\ForgotPassword;
 use Pckg\Auth\Form\Login;
 use Pckg\Auth\Form\Register;
 use Pckg\Auth\Service\Auth as AuthService;
+use Pckg\Concept\Event\Dispatcher;
+use Pckg\Framework\Controller;
+use Pckg\Framework\Response;
+use Pckg\Framework\Router;
 
 /**
  * Class Auth
@@ -78,7 +76,8 @@ class Auth extends Controller
 
     function getActivateAction(ActivateUser $activateUserCommand, Router $router, Users $eUsers, Response $response)
     {
-        $rUser = $eUsers->where('activation', $router->get('activation'))->oneOrFail(new \Exception\NotFound('User not found. Maybe it was already activated?'));
+        $rUser = $eUsers->where('activation',
+            $router->get('activation'))->oneOrFail(new \Exception\NotFound('User not found. Maybe it was already activated?'));
 
         return $activateUserCommand->setUser($rUser)
             ->onSuccess(function () use ($response) {
@@ -118,4 +117,10 @@ class Auth extends Controller
     {
         return view("vendor/lfw/auth/src/Pckg/Auth/View/forgotPasswordError");
     }
+
+    public function getUserHeaderAction()
+    {
+        return view('Pckg\Auth:userHeader');
+    }
+
 }
