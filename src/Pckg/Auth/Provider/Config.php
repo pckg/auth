@@ -6,13 +6,7 @@ namespace Pckg\Auth\Provider;
 Registers commands, and middlewared on initialization
 */
 
-use Pckg\Framework\Provider;
-use Pckg\Framework\Request\Session\SessionUser;
 use Pckg\Auth\Command;
-use Pckg\Auth\Command\LoginUser;
-use Pckg\Auth\Command\LogoutUser;
-use Pckg\Auth\Command\RegisterUser;
-use Pckg\Auth\Command\SendNewPassword;
 use Pckg\Auth\Controller\Auth;
 use Pckg\Auth\Controller\Facebook;
 use Pckg\Auth\Event;
@@ -23,6 +17,9 @@ use Pckg\Auth\Middleware\HandleLoginRequest;
 use Pckg\Auth\Middleware\HandleLogoutRequest;
 use Pckg\Auth\Middleware\LoginWithCookie;
 use Pckg\Auth\Middleware\RestrictAccess;
+use Pckg\Auth\Service\Auth as AuthService;
+use Pckg\Framework\Provider;
+use Pckg\Framework\Request\Session\SessionUser;
 
 class Config extends Provider
 {
@@ -58,6 +55,13 @@ class Config extends Provider
             'object' => [
                 '_user' => SessionUser::class,
             ],
+        ];
+    }
+
+    public function viewObjects()
+    {
+        return [
+            '_auth' => AuthService::class,
         ];
     }
 
