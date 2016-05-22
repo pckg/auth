@@ -268,7 +268,7 @@ class Auth
     }
 
     public function getGroupId() {
-        
+        return 1;
     }
 }
 
