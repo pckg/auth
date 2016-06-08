@@ -19,7 +19,7 @@ class RestrictAccess extends AbstractChainOfReponsibility
 
     public function execute(callable $next)
     {
-        if (!$this->auth->isLoggedIn() && $this->router->get('name') != 'login') {
+        if (!$this->auth->isLoggedIn() && !in_array($this->router->get('name'), ['login', 'impero.git.webhook'])) {
             $this->response->redirect(url('login'));
 
         } else if ($this->auth->isLoggedIn() && $this->router->get('name') == 'login') {
