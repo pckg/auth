@@ -17,32 +17,27 @@ class Auth
 
     protected $provider;
 
-    public function __construct(Config $config)
-    {
+    public function __construct(Config $config) {
         $this->config = $config;
     }
 
-    public function useProvider(ProviderInterface $provider)
-    {
+    public function useProvider(ProviderInterface $provider) {
         $this->provider = $provider;
 
         return $this;
     }
 
-    public function useFacebookProvider($fbApi)
-    {
+    public function useFacebookProvider($fbApi) {
         $this->provider = Reflect::create(Facebook::class, $fbApi);
 
         return $this;
     }
 
-    public function getProvider()
-    {
+    public function getProvider() {
         return $this->provider;
     }
 
-    public function addFlag($flags = [])
-    {
+    public function addFlag($flags = []) {
         if (!is_array($flags)) {
             $flags = (array)$flags;
         }
@@ -54,8 +49,7 @@ class Auth
         }
     }
 
-    public function hasFlag($flags = [])
-    {
+    public function hasFlag($flags = []) {
         if (!isset($_SESSION['Auth']['flags'])) {
             return false;
         }
@@ -73,8 +67,7 @@ class Auth
         return true;
     }
 
-    public function removeFlag($flags = [])
-    {
+    public function removeFlag($flags = []) {
         foreach ($flags AS $flag) {
             if (($key = array_search($flag, $_SESSION['Auth']['flags'])) !== false) {
                 unset($_SESSION['Auth']['flags'][$key]);
@@ -82,16 +75,14 @@ class Auth
         }
     }
 
-    private function setUsersEntity()
-    {
+    private function setUsersEntity() {
         $config = $this->config->get();
         $authConfig = $config["defaults"]["auth"];
 
         return $this->users = new $authConfig["user"]["entity"];
     }
 
-    private function setUserRecord()
-    {
+    private function setUserRecord() {
         $config = $this->config->get();
         $authConfig = $config["defaults"]["auth"];
 
@@ -99,8 +90,7 @@ class Auth
     }
 
     // user object
-    public function getUser()
-    {
+    public function getUser() {
         if ($this->user) {
             return $this->user;
         }
@@ -109,17 +99,17 @@ class Auth
             self::setUsersEntity();
         }
 
-        return $this->user = $this->users->where("id",
-            isset($_SESSION['Auth']['user_id']) ? $_SESSION['Auth']['user_id'] : -1)->findOne() ?: self::setUserRecord();
+        return $this->user = $this->users->where(
+            "id",
+            isset($_SESSION['Auth']['user_id']) ? $_SESSION['Auth']['user_id'] : -1
+        )->findOne() ?: self::setUserRecord();
     }
 
-    public function is()
-    {
+    public function is() {
         return !!$this->getUser();
     }
 
-    public function user($key = null)
-    {
+    public function user($key = null) {
         return isset($_SESSION['User'])
             ? ($key
                 ? (isset($_SESSION['User'][$key])
@@ -130,15 +120,13 @@ class Auth
             : null;
     }
 
-    public function makePassword($password, $hash = null)
-    {
+    public function makePassword($password, $hash = null) {
         $hash = is_null($hash) ? $this->config->get("hash") : $hash;
 
         return sha1($password . $hash);
     }
 
-    public function login($email, $password, $hash = null)
-    {
+    public function login($email, $password, $hash = null) {
         $hash = is_null($hash) ? $this->config->get("hash") : $hash;
 
         $config = $this->config->get();
@@ -149,8 +137,10 @@ class Auth
 
         $this->users = new $config['defaults']['auth']['user']['entity'];
 
-        $rUser = $this->users->where("email", $email)->where("password",
-            self::makePassword($password, $hash))->findOne();
+        $rUser = $this->users->where("email", $email)->where(
+            "password",
+            self::makePassword($password, $hash)
+        )->findOne();
 
         if ($rUser) {
             return self::performLogin($rUser);
@@ -159,8 +149,7 @@ class Auth
         return false;
     }
 
-    public function loginByUserID($id)
-    {
+    public function loginByUserID($id) {
         $sql = "SELECT u.*
 			FROM users u
 			WHERE u.id = '" . $id . "'";
@@ -174,8 +163,7 @@ class Auth
         return false;
     }
 
-    public function loginByAutologin($autologin)
-    {
+    public function loginByAutologin($autologin) {
         $sql = "SELECT u.*
 			FROM users u
 			INNER JOIN lfw_users_autologin ua ON (ua.user_id = u.id AND ua.active = 1)
@@ -190,8 +178,7 @@ class Auth
         return false;
     }
 
-    public function hashLogin($hash)
-    {
+    public function hashLogin($hash) {
         $sql = "SELECT u.*
 			FROM lfw_users u
 			INNER JOIN lfw_logins l ON (l.user_id = u.id)
@@ -208,8 +195,7 @@ class Auth
         return false;
     }
 
-    public function performLogin($rUser)
-    {
+    public function performLogin($rUser) {
         $sessionHash = sha1(microtime() . sha1($rUser->id));
         $dtIn = date("Y-m-d H:i:s");
 
@@ -225,27 +211,29 @@ class Auth
         ];
 
         $config = $this->config->get();
-        setcookie("LFW", serialize(["hash" => $sessionHash]), time() + (24 * 60 * 60 * 365.25),
-            "/"/*, $config['defaults']['domain']*/);
+        setcookie(
+            "LFW",
+            serialize(["hash" => $sessionHash]),
+            time() + (24 * 60 * 60 * 365.25),
+            "/"/*, $config['defaults']['domain']*/
+        );
 
         return true;
     }
 
-    public function logout()
-    {
+    public function logout() {
         unset($_SESSION['User']);
         unset($_SESSION['Auth']);
         unset($_COOKIE['LFW']);
     }
 
-    public function isLoggedIn($try = false)
-    {
+    public function isLoggedIn($try = false) {
         // valid session login
         $sessionLogin = !empty($_SESSION['Auth']['user_id'])
-            && !empty($_SESSION['User']['id'])
-            && !empty($_COOKIE['LFW'])
-            && ($cookie = unserialize($_COOKIE['LFW']))
-            && $cookie['hash'] == $_SESSION['Auth']['hash'];
+                        && !empty($_SESSION['User']['id'])
+                        && !empty($_COOKIE['LFW'])
+                        && ($cookie = unserialize($_COOKIE['LFW']))
+                        && $cookie['hash'] == $_SESSION['Auth']['hash'];
 
         if ($sessionLogin) {
             return true;
