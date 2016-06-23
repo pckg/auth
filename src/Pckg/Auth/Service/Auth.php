@@ -215,7 +215,7 @@ class Auth
             "LFW",
             serialize(["hash" => $sessionHash]),
             time() + (24 * 60 * 60 * 365.25),
-            "/"/*, $config['defaults']['domain']*/
+            "/"
         );
 
         return true;

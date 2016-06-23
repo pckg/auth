@@ -61,6 +61,10 @@ class LoginUser
         if ($rUser && $this->auth->performLogin($rUser)) {
             trigger('user.loggedIn', [$rUser]);
 
+            /**
+             * @T00D00 - autologin implementation
+             */
+
             return $this->successful();
         }
 
