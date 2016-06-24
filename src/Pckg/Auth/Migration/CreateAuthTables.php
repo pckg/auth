@@ -17,6 +17,7 @@ class CreateAuthTables extends Migration
     {
         $userGroups = $this->table('user_groups');
         $userGroups->slug();
+        $userGroups->integer('mode');
 
         $userGroupsI18n = $this->translatable('user_groups');
         $userGroupsI18n->title();
