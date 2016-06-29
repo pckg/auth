@@ -30,7 +30,7 @@ class Config extends Provider
             'auth.loginWithCookie'     => LoginWithCookie::class,
             'auth.restrictAccess'      => RestrictAccess::class,
             'auth.handleLogoutRequest' => HandleLogoutRequest::class,
-            'auth.handleLoginRequest'  => HandleLoginRequest::class,
+            // 'auth.handleLoginRequest'  => HandleLoginRequest::class,
         ];
     }
 

@@ -36,6 +36,10 @@ class Database implements ProviderInterface
         return (new Users())->where('email', $email)->where('password', $password)->one();
     }
 
+    public function getUserByAutologin($autologin) {
+        return (new Users())->where('id', $autologin)->one();
+    }
+
     public function getUser() {
         return (new Users())->where('id', $_SESSION['Auth']['user_id'] ?? null)->one();
     }

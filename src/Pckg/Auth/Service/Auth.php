@@ -128,27 +128,33 @@ class Auth
         $hash = is_null($hash) ? $this->config->get("hash") : $hash;
 
         $rUser = $this->getProvider()
-                      ->getUserByEmailAndPassword($email, self::makePassword($password, $hash));
+                      ->getUserByEmailAndPassword($email, $this->makePassword($password, $hash));
 
         if ($rUser) {
-            return self::performLogin($rUser);
+            return $this->performLogin($rUser);
         }
 
         return false;
     }
 
-    public function loginByUserID($id) {
-        $sql = "SELECT u.*
-			FROM users u
-			WHERE u.id = '" . $id . "'";
-        $q = context()->getDB()->query($sql);
-        $r = context()->getDB()->fetch($q);
+    public function autologin($autologin) {
+        $rUser = $this->getProvider()
+                      ->getUserByAutologin($autologin);
 
-        if ($r) {
-            return self::performLogin($r);
+        if ($rUser) {
+            return $this->performLogin($rUser);
         }
 
         return false;
+    }
+
+    public function setAutologin() {
+        setcookie(
+            "autologin",
+            $_SESSION['Auth']['user_id'],
+            time() + (24 * 60 * 60 * 365.25),
+            "/"
+        );
     }
 
     public function performLogin($rUser) {
@@ -166,7 +172,6 @@ class Auth
             "flags"   => [],
         ];
 
-        $config = $this->config->get();
         setcookie(
             "LFW",
             serialize(["hash" => $sessionHash]),
@@ -180,7 +185,8 @@ class Auth
     public function logout() {
         unset($_SESSION['User']);
         unset($_SESSION['Auth']);
-        unset($_COOKIE['LFW']);
+        setcookie('LFW', null, time() - (24 * 60 * 60 * 365.25), '/');
+        setcookie('autologin', null, time() - (24 * 60 * 60 * 365.25), '/');
     }
 
     public function isLoggedIn($try = false) {
@@ -192,19 +198,6 @@ class Auth
                         && $cookie['hash'] == $_SESSION['Auth']['hash'];
 
         if ($sessionLogin) {
-            return true;
-        }
-
-        if (!$try) {
-            return false;
-        }
-
-        // cookie login
-        $cookieLogin = (isset($_COOKIE['LFW']) && ($cookie = unserialize($_COOKIE['LFW'])) && isset($cookie['hash']))
-            ? self::loginByAutologin($cookie['hash'])
-            : false;
-
-        if ($cookieLogin) {
             return true;
         }
 

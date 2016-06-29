@@ -30,7 +30,7 @@ class Login extends Bootstrap implements ResolvesOnRequest
             ->required();
 
         $fieldset->addCheckbox('autologin')
-            ->setLabel('Auto login?');
+            ->setLabel('Autologin?');
 
         $this->addSubmit();
 

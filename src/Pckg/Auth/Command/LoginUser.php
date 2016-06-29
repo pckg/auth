@@ -2,7 +2,6 @@
 
 namespace Pckg\Auth\Command;
 
-use Pckg\Auth\Entity\Users;
 use Pckg\Auth\Form\Login;
 use Pckg\Auth\Service\Auth;
 use Pckg\Concept\Command\Stated;
@@ -45,6 +44,9 @@ class LoginUser
 
         if ($this->auth->login($data['email'], $data['password'])) {
             trigger('user.loggedIn', [$this->auth->getUser()]);
+            if (isset($data['autologin'])) {
+                $this->auth->setAutologin();
+            }
 
             return $this->successful();
         }
