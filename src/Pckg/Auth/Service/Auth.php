@@ -2,9 +2,10 @@
 
 namespace Pckg\Auth\Service;
 
+use Pckg\Auth\Service\Provider\Database;
+use Pckg\Auth\Service\Provider\Facebook;
 use Pckg\Concept\Reflect;
 use Pckg\Framework\Config;
-use Pckg\Auth\Service\Provider\Facebook;
 
 class Auth
 {
@@ -19,10 +20,18 @@ class Auth
 
     public function __construct(Config $config) {
         $this->config = $config;
+
+        $this->useDatabaseProvider();
     }
 
     public function useProvider(ProviderInterface $provider) {
         $this->provider = $provider;
+
+        return $this;
+    }
+
+    public function useDatabaseProvider() {
+        $this->provider = Reflect::create(Database::class, [$this]);
 
         return $this;
     }
@@ -91,18 +100,7 @@ class Auth
 
     // user object
     public function getUser() {
-        if ($this->user) {
-            return $this->user;
-        }
-
-        if (!$this->users) {
-            self::setUsersEntity();
-        }
-
-        return $this->user = $this->users->where(
-            "id",
-            isset($_SESSION['Auth']['user_id']) ? $_SESSION['Auth']['user_id'] : -1
-        )->findOne() ?: self::setUserRecord();
+        return $this->getProvider()->getUser();
     }
 
     public function is() {
@@ -129,18 +127,8 @@ class Auth
     public function login($email, $password, $hash = null) {
         $hash = is_null($hash) ? $this->config->get("hash") : $hash;
 
-        $config = $this->config->get();
-
-        if (!isset($config['defaults']['auth']['user']['entity'])) {
-            throw new \Exception("Auth user entity not set (config).");
-        }
-
-        $this->users = new $config['defaults']['auth']['user']['entity'];
-
-        $rUser = $this->users->where("email", $email)->where(
-            "password",
-            self::makePassword($password, $hash)
-        )->findOne();
+        $rUser = $this->getProvider()
+                      ->getUserByEmailAndPassword($email, self::makePassword($password, $hash));
 
         if ($rUser) {
             return self::performLogin($rUser);
@@ -153,38 +141,6 @@ class Auth
         $sql = "SELECT u.*
 			FROM users u
 			WHERE u.id = '" . $id . "'";
-        $q = context()->getDB()->query($sql);
-        $r = context()->getDB()->fetch($q);
-
-        if ($r) {
-            return self::performLogin($r);
-        }
-
-        return false;
-    }
-
-    public function loginByAutologin($autologin) {
-        $sql = "SELECT u.*
-			FROM users u
-			INNER JOIN lfw_users_autologin ua ON (ua.user_id = u.id AND ua.active = 1)
-			WHERE ua.autologin = '" . context()->getDB()->escape($autologin) . "'";
-        $q = context()->getDB()->query($sql);
-        $r = context()->getDB()->fetch($q);
-
-        if ($r) {
-            return self::performLogin($r);
-        }
-
-        return false;
-    }
-
-    public function hashLogin($hash) {
-        $sql = "SELECT u.*
-			FROM lfw_users u
-			INNER JOIN lfw_logins l ON (l.user_id = u.id)
-			WHERE l.hash = '" . context()->getDB()->escape($hash) . "' 
-			AND l.dt_out = '0000-00-00 00:00:00'
-			AND l.ip = '" . $_SERVER['REMOTE_ADDR'] . "'";
         $q = context()->getDB()->query($sql);
         $r = context()->getDB()->fetch($q);
 

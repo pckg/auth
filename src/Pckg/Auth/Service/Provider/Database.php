@@ -2,39 +2,50 @@
 
 namespace Pckg\Auth\Service\Provider;
 
-use Pckg\Framework\Response;
-use Pckg\Framework\Router;
 use Pckg\Auth\Entity\Users;
 use Pckg\Auth\Service\Auth;
 use Pckg\Auth\Service\ProviderInterface;
+use Pckg\Framework\Response;
+use Pckg\Framework\Router;
 
 class Database implements ProviderInterface
 {
 
-    protected $users;
+    /**
+     * @var Response
+     */
+    protected $response;
 
-    public function __construct(Users $users, Response $response, Router $router, Auth $auth)
-    {
-        $this->users = $users;
+    /**
+     * @var Router
+     */
+    protected $router;
+
+    /**
+     * @var Auth
+     */
+    protected $auth;
+
+    public function __construct(Response $response, Router $router, Auth $auth) {
         $this->response = $response;
         $this->router = $router;
         $this->auth = $auth;
     }
 
-    public function getUser()
-    {
-
+    public function getUserByEmailAndPassword($email, $password) {
+        return (new Users())->where('email', $email)->where('password', $password)->one();
     }
 
-    public function redirectToLogin()
-    {
+    public function getUser() {
+        return (new Users())->where('id', $_SESSION['Auth']['user_id'] ?? null)->one();
+    }
+
+    public function redirectToLogin() {
         $this->response->redirect($this->router->make('login'));
     }
 
-    public function logout()
-    {
+    public function logout() {
 
     }
-
 
 }

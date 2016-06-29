@@ -2,16 +2,15 @@
 
 namespace Pckg\Auth\Command;
 
-
-use Pckg\Concept\Command\Stated;
-use Pckg\Concept\Event\Dispatcher;
-use Pckg\Framework\Request;
 use Pckg\Auth\Entity\Users;
 use Pckg\Auth\Form\Login;
 use Pckg\Auth\Service\Auth;
+use Pckg\Concept\Command\Stated;
+use Pckg\Framework\Request;
 
 /**
  * Class LoginUser
+ *
  * @package Pckg\Auth\Command
  */
 class LoginUser
@@ -30,40 +29,22 @@ class LoginUser
     protected $authHelper;
 
     /**
-     * @var Users
-     */
-    protected $users;
-
-    /**
      * @param Request $request
-     * @param Auth    $authHelper
-     * @param Users   $eUsers
+     * @param Auth    $auth
      */
-    public function __construct(Auth $auth, Users $users, Login $loginForm)
-    {
+    public function __construct(Auth $auth, Login $loginForm) {
         $this->auth = $auth;
-        $this->users = $users;
         $this->loginForm = $loginForm;
     }
 
     /**
      * @return mixed
      */
-    public function execute()
-    {
+    public function execute() {
         $data = $this->loginForm->getRawData(['email', 'password']);
 
-        $rUser = $this->users
-            ->where('email', $data['email'])
-            ->where('password', $this->auth->makePassword($data['password']))
-            ->one();
-
-        if ($rUser && $this->auth->performLogin($rUser)) {
-            trigger('user.loggedIn', [$rUser]);
-
-            /**
-             * @T00D00 - autologin implementation
-             */
+        if ($this->auth->login($data['email'], $data['password'])) {
+            trigger('user.loggedIn', [$this->auth->getUser()]);
 
             return $this->successful();
         }

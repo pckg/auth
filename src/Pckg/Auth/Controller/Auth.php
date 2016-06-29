@@ -13,6 +13,7 @@ use Pckg\Auth\Form\Register;
 use Pckg\Auth\Service\Auth as AuthService;
 use Pckg\Concept\Event\Dispatcher;
 use Pckg\Framework\Controller;
+use Pckg\Framework\Exception\NotFound;
 use Pckg\Framework\Response;
 use Pckg\Framework\Router;
 
@@ -77,7 +78,7 @@ class Auth extends Controller
     function getActivateAction(ActivateUser $activateUserCommand, Router $router, Users $eUsers, Response $response)
     {
         $rUser = $eUsers->where('activation',
-            $router->get('activation'))->oneOrFail(new \Exception\NotFound('User not found. Maybe it was already activated?'));
+            $router->get('activation'))->oneOrFail(new NotFound('User not found. Maybe it was already activated?'));
 
         return $activateUserCommand->setUser($rUser)
             ->onSuccess(function () use ($response) {
