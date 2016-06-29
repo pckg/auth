@@ -212,7 +212,7 @@ class Auth
     }
 
     public function getGroupId() {
-        return 1;
+        return $_SESSION['Auth']['user_group_id'] ?? null;
     }
 }
 
