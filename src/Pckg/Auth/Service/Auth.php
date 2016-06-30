@@ -201,6 +201,8 @@ class Auth
             return true;
         }
 
+        $this->logout();
+
         return false;
     }
 
