@@ -20,7 +20,7 @@ class Login extends Bootstrap implements ResolvesOnRequest
     {
         $fieldset = $this->addFieldset();
 
-        $fieldset->addEmail('email')
+        $fieldset->addText('email')
             ->setLabel('Email:')
             ->addValidator(new UserEmail())
             ->required();
