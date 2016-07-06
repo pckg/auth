@@ -1,30 +1,51 @@
-<?php
-
-namespace Pckg\Auth\Middleware;
+<?php namespace Pckg\Auth\Middleware;
 
 use Pckg\Concept\AbstractChainOfReponsibility;
-use Pckg\Framework\Response;
-use Pckg\Framework\Router;
-use Pckg\Auth\Service\Auth;
 
 class RestrictAccess extends AbstractChainOfReponsibility
 {
 
-    public function __construct(Auth $auth, Router $router, Response $response)
-    {
-        $this->auth = $auth;
-        $this->router = $router;
-        $this->response = $response;
-    }
+    public function execute(callable $next) {
+        $routeName = router()->get('name');
 
-    public function execute(callable $next)
-    {
-        if (!$this->auth->isLoggedIn() && !in_array($this->router->get('name'), ['login', 'impero.git.webhook', 'derive.orders.voucher.preview'])) {
-            $this->response->redirect(url('login'));
+        foreach (conf('defaults.pckg.auth', []) as $gate) {
+            /**
+             * Check rules for logged-out users.
+             */
+            if ($gate['status'] == 'logged-out' && !auth()->isLoggedIn()) {
+                /**
+                 * Check if route is excluded in rule.
+                 */
+                if (isset($gate['exclude']) && !in_array($routeName, $gate['exclude'])) {
+                    redirect(url($gate['redirect']));
+                }
 
-        } else if ($this->auth->isLoggedIn() && $this->router->get('name') == 'login') {
-            $this->response->redirect('/');
+                /**
+                 * Check if route is included in rule.
+                 */
+                if (isset($gate['include']) && in_array($routeName, $gate['include'])) {
+                    redirect(url($gate['redirect']));
+                }
+            }
 
+            /**
+             * Check rules for logged-in users.
+             */
+            if ($gate['status'] == 'logged-in' && !auth()->isLoggedIn()) {
+                /**
+                 * Check if route is excluded in rule.
+                 */
+                if (isset($gate['exclude']) && !in_array($routeName, $gate['exclude'])) {
+                    redirect(url($gate['redirect']));
+                }
+
+                /**
+                 * Check if route is included in rule.
+                 */
+                if (isset($gate['include']) && in_array($routeName, $gate['include'])) {
+                    redirect(url($gate['redirect']));
+                }
+            }
         }
 
         return $next();
