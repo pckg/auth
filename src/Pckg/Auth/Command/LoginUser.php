@@ -31,7 +31,8 @@ class LoginUser
      * @param Request $request
      * @param Auth    $auth
      */
-    public function __construct(Auth $auth, Login $loginForm) {
+    public function __construct(Auth $auth, Login $loginForm)
+    {
         $this->auth = $auth;
         $this->loginForm = $loginForm;
     }
@@ -39,7 +40,8 @@ class LoginUser
     /**
      * @return mixed
      */
-    public function execute() {
+    public function execute()
+    {
         $data = $this->loginForm->getRawData(['email', 'password']);
 
         if ($this->auth->login($data['email'], $data['password'])) {

@@ -2,12 +2,12 @@
 
 namespace Pckg\Auth\Record;
 
-use Pckg\Database\Record;
 use Pckg\Auth\Entity\Users;
-use Pckg\Auth\Service\Auth;
+use Pckg\Database\Record;
 
 /**
  * Class User
+ *
  * @package Pckg\Auth\Record
  */
 class User extends Record

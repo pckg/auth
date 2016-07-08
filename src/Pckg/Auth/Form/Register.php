@@ -6,6 +6,7 @@ use Pckg\Htmlbuilder\Element\Form\Bootstrap;
 
 /**
  * Class Register
+ *
  * @package Pckg\Auth\Form
  */
 class Register extends Bootstrap
@@ -19,16 +20,16 @@ class Register extends Bootstrap
         $fieldset = $this->addFieldset();
 
         $fieldset->addEmail('email')
-            ->setLabel('Email:')
-            ->required();
+                 ->setLabel('Email:')
+                 ->required();
 
         $fieldset->addPassword('password')
-            ->setLabel('Password:')
-            ->required();
+                 ->setLabel('Password:')
+                 ->required();
 
         $fieldset->addPassword('password2')
-            ->setLabel('Repeat password:')
-            ->required();
+                 ->setLabel('Repeat password:')
+                 ->required();
 
         $this->addSubmit();
 

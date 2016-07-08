@@ -18,35 +18,41 @@ class Auth
 
     protected $provider;
 
-    public function __construct(Config $config) {
+    public function __construct(Config $config)
+    {
         $this->config = $config;
 
         $this->useDatabaseProvider();
     }
 
-    public function useProvider(ProviderInterface $provider) {
+    public function useProvider(ProviderInterface $provider)
+    {
         $this->provider = $provider;
 
         return $this;
     }
 
-    public function useDatabaseProvider() {
+    public function useDatabaseProvider()
+    {
         $this->provider = Reflect::create(Database::class, [$this]);
 
         return $this;
     }
 
-    public function useFacebookProvider($fbApi) {
+    public function useFacebookProvider($fbApi)
+    {
         $this->provider = Reflect::create(Facebook::class, $fbApi);
 
         return $this;
     }
 
-    public function getProvider() {
+    public function getProvider()
+    {
         return $this->provider;
     }
 
-    public function addFlag($flags = []) {
+    public function addFlag($flags = [])
+    {
         if (!is_array($flags)) {
             $flags = (array)$flags;
         }
@@ -58,7 +64,8 @@ class Auth
         }
     }
 
-    public function hasFlag($flags = []) {
+    public function hasFlag($flags = [])
+    {
         if (!isset($_SESSION['Auth']['flags'])) {
             return false;
         }
@@ -76,7 +83,8 @@ class Auth
         return true;
     }
 
-    public function removeFlag($flags = []) {
+    public function removeFlag($flags = [])
+    {
         foreach ($flags AS $flag) {
             if (($key = array_search($flag, $_SESSION['Auth']['flags'])) !== false) {
                 unset($_SESSION['Auth']['flags'][$key]);
@@ -84,14 +92,16 @@ class Auth
         }
     }
 
-    private function setUsersEntity() {
+    private function setUsersEntity()
+    {
         $config = $this->config->get();
         $authConfig = $config["defaults"]["auth"];
 
         return $this->users = new $authConfig["user"]["entity"];
     }
 
-    private function setUserRecord() {
+    private function setUserRecord()
+    {
         $config = $this->config->get();
         $authConfig = $config["defaults"]["auth"];
 
@@ -99,15 +109,18 @@ class Auth
     }
 
     // user object
-    public function getUser() {
+    public function getUser()
+    {
         return $this->getProvider()->getUser();
     }
 
-    public function is() {
+    public function is()
+    {
         return !!$this->getUser();
     }
 
-    public function user($key = null) {
+    public function user($key = null)
+    {
         return isset($_SESSION['User'])
             ? ($key
                 ? (isset($_SESSION['User'][$key])
@@ -118,13 +131,15 @@ class Auth
             : null;
     }
 
-    public function makePassword($password, $hash = null) {
+    public function makePassword($password, $hash = null)
+    {
         $hash = is_null($hash) ? $this->config->get("hash") : $hash;
 
         return sha1($password . $hash);
     }
 
-    public function login($email, $password, $hash = null) {
+    public function login($email, $password, $hash = null)
+    {
         $hash = is_null($hash) ? $this->config->get("hash") : $hash;
 
         $rUser = $this->getProvider()
@@ -137,7 +152,8 @@ class Auth
         return false;
     }
 
-    public function autologin($autologin) {
+    public function autologin($autologin)
+    {
         $rUser = $this->getProvider()
                       ->getUserByAutologin($autologin);
 
@@ -148,7 +164,8 @@ class Auth
         return false;
     }
 
-    public function setAutologin() {
+    public function setAutologin()
+    {
         setcookie(
             "autologin",
             $_SESSION['Auth']['user_id'],
@@ -157,7 +174,8 @@ class Auth
         );
     }
 
-    public function performLogin($rUser) {
+    public function performLogin($rUser)
+    {
         $sessionHash = sha1(microtime() . sha1($rUser->id));
         $dtIn = date("Y-m-d H:i:s");
 
@@ -182,14 +200,16 @@ class Auth
         return true;
     }
 
-    public function logout() {
+    public function logout()
+    {
         unset($_SESSION['User']);
         unset($_SESSION['Auth']);
         setcookie('LFW', null, time() - (24 * 60 * 60 * 365.25), '/');
         setcookie('autologin', null, time() - (24 * 60 * 60 * 365.25), '/');
     }
 
-    public function isLoggedIn($try = false) {
+    public function isLoggedIn($try = false)
+    {
         // valid session login
         $sessionLogin = !empty($_SESSION['Auth']['user_id'])
                         && !empty($_SESSION['User']['id'])
@@ -206,7 +226,8 @@ class Auth
         return false;
     }
 
-    public function getGroupId() {
+    public function getGroupId()
+    {
         return $_SESSION['User']['user_group_id'] ?? null;
     }
 }

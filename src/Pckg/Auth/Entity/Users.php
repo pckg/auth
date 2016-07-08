@@ -2,11 +2,12 @@
 
 namespace Pckg\Auth\Entity;
 
-use Pckg\Database\Entity;
 use Pckg\Auth\Record\User;
+use Pckg\Database\Entity;
 
 /**
  * Class Users
+ *
  * @package Pckg\Auth\Entity
  * @method $this withStaticGroup()
  * @method $this joinStaticGroup()
@@ -23,7 +24,7 @@ class Users extends Entity
     public function getUserByEmailAndPassword($email, $password)
     {
         return $this->where('email', $email)
-            ->where('password', $password)
-            ->one();
+                    ->where('password', $password)
+                    ->one();
     }
 }

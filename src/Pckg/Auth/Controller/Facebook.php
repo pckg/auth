@@ -2,11 +2,11 @@
 
 namespace Pckg\Auth\Controller;
 
+use Pckg\Auth\Service\Auth;
 use Pckg\Concept\Event\Dispatcher;
 use Pckg\Framework\Config;
 use Pckg\Framework\Response;
 use Pckg\Framework\Router;
-use Pckg\Auth\Service\Auth;
 
 class Facebook extends Auth
 {
@@ -32,9 +32,11 @@ class Facebook extends Auth
             ->getProvider()
             ->handleTakelogin();
 
-        $response->redirect($success
-            ? '/?success'
-            : ($router->make('login') . '?error=fb'));
+        $response->redirect(
+            $success
+                ? '/?success'
+                : ($router->make('login') . '?error=fb')
+        );
     }
 }
 

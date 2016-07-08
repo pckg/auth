@@ -25,14 +25,18 @@ class LoginWithCookie extends AbstractChainOfReponsibility
      */
     protected $response;
 
-    public function __construct(Request $request, Auth $auth, Response $response) {
+    public function __construct(Request $request, Auth $auth, Response $response)
+    {
         $this->request = $request;
         $this->auth = $auth;
         $this->response = $response;
     }
 
-    public function execute(callable $next) {
-        if (!$this->auth->isLoggedIn() && $this->request->isGet() && isset($_COOKIE['autologin']) && $this->auth->autologin($_COOKIE['autologin'])) {
+    public function execute(callable $next)
+    {
+        if (!$this->auth->isLoggedIn() && $this->request->isGet(
+            ) && isset($_COOKIE['autologin']) && $this->auth->autologin($_COOKIE['autologin'])
+        ) {
             $this->response->redirect();
         }
 

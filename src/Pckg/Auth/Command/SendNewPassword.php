@@ -2,13 +2,14 @@
 
 namespace Pckg\Auth\Command;
 
+use Pckg\Auth\Record\User;
 use Pckg\Concept\Command\Stated;
 use Pckg\Concept\CommandInterface;
 use Pckg\Framework\Request;
-use Pckg\Auth\Record\User;
 
 /**
  * Class SendNewPassword
+ *
  * @package Pckg\Auth\Command
  */
 class SendNewPassword
@@ -28,7 +29,7 @@ class SendNewPassword
 
     /**
      * @param Request $request
-     * @param User $rUser
+     * @param User    $rUser
      */
     public function __construct(Request $request, User $rUser)
     {

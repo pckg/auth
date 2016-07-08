@@ -19,6 +19,7 @@ use Pckg\Framework\Router;
 
 /**
  * Class Auth
+ *
  * @package Pckg\Auth\Controller
  */
 class Auth extends Controller
@@ -26,31 +27,42 @@ class Auth extends Controller
 
     function getLoginAction(Login $loginForm)
     {
-        return view('login', [
-            'form' => $loginForm,
-        ]);
+        return view(
+            'login',
+            [
+                'form' => $loginForm,
+            ]
+        );
     }
 
     function postLoginAction(LoginUser $loginUserCommand)
     {
-        $loginUserCommand->onSuccess(function () {
-            $this->response()->redirect('/');
+        $loginUserCommand->onSuccess(
+            function() {
+                $this->response()->redirect('/');
 
-        })->onError(function () {
-            $this->response()->redirect();
+            }
+        )->onError(
+            function() {
+                $this->response()->redirect();
 
-        })->execute();
+            }
+        )->execute();
     }
 
     function getLogoutAction(LogoutUser $logoutUserCommand, Response $response)
     {
-        $logoutUserCommand->onSuccess(function () use ($response) {
-            $response->redirect('/');
+        $logoutUserCommand->onSuccess(
+            function() use ($response) {
+                $response->redirect('/');
 
-        })->onError(function () use ($response) {
-            $response->redirect('/');
+            }
+        )->onError(
+            function() use ($response) {
+                $response->redirect('/');
 
-        })->execute();
+            }
+        )->execute();
     }
 
     function getRegisterAction(Register $registerForm, AuthService $authHelper, Response $response)
@@ -59,54 +71,74 @@ class Auth extends Controller
             $response->redirect('/');
         }
 
-        return view("vendor/lfw/auth/src/Pckg/Auth/View/register", [
-            'form' => $registerForm->initFields(),
-        ]);
+        return view(
+            "vendor/lfw/auth/src/Pckg/Auth/View/register",
+            [
+                'form' => $registerForm->initFields(),
+            ]
+        );
     }
 
     function postRegisterAction(RegisterUser $registerUserCommand, Dispatcher $dispatcher, Response $response)
     {
-        $registerUserCommand->onSuccess(function () use ($response) {
-            $response->redirect('/auth/registered?successful');
+        $registerUserCommand->onSuccess(
+            function() use ($response) {
+                $response->redirect('/auth/registered?successful');
 
-        })->onError(function () use ($response) {
-            $response->redirect('/auth/register?error');
+            }
+        )->onError(
+            function() use ($response) {
+                $response->redirect('/auth/register?error');
 
-        })->execute();
+            }
+        )->execute();
     }
 
     function getActivateAction(ActivateUser $activateUserCommand, Router $router, Users $eUsers, Response $response)
     {
-        $rUser = $eUsers->where('activation',
-            $router->get('activation'))->oneOrFail(new NotFound('User not found. Maybe it was already activated?'));
+        $rUser = $eUsers->where(
+            'activation',
+            $router->get('activation')
+        )->oneOrFail(new NotFound('User not found. Maybe it was already activated?'));
 
         return $activateUserCommand->setUser($rUser)
-            ->onSuccess(function () use ($response) {
-                $response->redirect('/auth/activated?succesful');
+                                   ->onSuccess(
+                                       function() use ($response) {
+                                           $response->redirect('/auth/activated?succesful');
 
-            })
-            ->onError(function () {
-                return view('vendor/lfw/auth/src/Pckg/Auth/View/activationFailed');
+                                       }
+                                   )
+                                   ->onError(
+                                       function() {
+                                           return view('vendor/lfw/auth/src/Pckg/Auth/View/activationFailed');
 
-            })->execute();
+                                       }
+                                   )->execute();
     }
 
     function getForgotPasswordAction(ForgotPassword $forgotPasswordForm)
     {
-        return view("vendor/lfw/auth/src/Pckg/Auth/View/forgotPassword", [
-            'form' => $forgotPasswordForm->initFields(),
-        ]);
+        return view(
+            "vendor/lfw/auth/src/Pckg/Auth/View/forgotPassword",
+            [
+                'form' => $forgotPasswordForm->initFields(),
+            ]
+        );
     }
 
     function postForgotPasswordAction(SendNewPassword $sendNewPasswordCommand, Response $response)
     {
-        $sendNewPasswordCommand->onSuccess(function () use ($response) {
-            $response->redirect('/auth/forgot-password/success');
+        $sendNewPasswordCommand->onSuccess(
+            function() use ($response) {
+                $response->redirect('/auth/forgot-password/success');
 
-        })->onError(function () use ($response) {
-            $response->redirect('/auth/forgot-password/error');
+            }
+        )->onError(
+            function() use ($response) {
+                $response->redirect('/auth/forgot-password/error');
 
-        })->execute();
+            }
+        )->execute();
     }
 
     function getForgotPasswordSuccessAction()

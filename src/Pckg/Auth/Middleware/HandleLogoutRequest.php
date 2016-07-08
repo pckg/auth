@@ -2,10 +2,10 @@
 
 namespace Pckg\Auth\Middleware;
 
+use Pckg\Auth\Service\Auth;
 use Pckg\Concept\AbstractChainOfReponsibility;
 use Pckg\Framework\Request;
 use Pckg\Framework\Response;
-use Pckg\Auth\Service\Auth;
 
 class HandleLogoutRequest extends AbstractChainOfReponsibility
 {

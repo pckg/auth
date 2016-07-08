@@ -2,8 +2,8 @@
 
 namespace Pckg\Auth\Form\Validator;
 
-use Pckg\Htmlbuilder\Validator\AbstractValidator;
 use Pckg\Concept\AbstractObject;
+use Pckg\Htmlbuilder\Validator\AbstractValidator;
 
 class UserEmail extends AbstractValidator
 {

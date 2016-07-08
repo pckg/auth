@@ -13,7 +13,6 @@ use Pckg\Auth\Event;
 use Pckg\Auth\Event\UserLoggedIn;
 use Pckg\Auth\Event\UserRegistered;
 use Pckg\Auth\Middleware;
-use Pckg\Auth\Middleware\HandleLoginRequest;
 use Pckg\Auth\Middleware\HandleLogoutRequest;
 use Pckg\Auth\Middleware\LoginWithCookie;
 use Pckg\Auth\Middleware\RestrictAccess;
@@ -74,52 +73,58 @@ class Auth extends Provider
 
     protected function baseRoutes()
     {
-        return array_merge_array([
-            'controller' => AuthController::class,
-        ], [
-            '/login-status'               => [
-                'view' => 'loginStatus',
-                'name' => 'loginStatus',
+        return array_merge_array(
+            [
+                'controller' => AuthController::class,
             ],
-            '/login'                      => [
-                'view' => 'login',
-                'name' => 'login',
-            ],
-            '/logout'                     => [
-                'view' => 'logout',
-            ],
-            '/register'                   => [
-                'view' => 'register',
-            ],
-            '/activate-user/[activation]' => [
-                'view' => 'activate',
-            ],
-            '/forgot-password'            => [
-                'view' => 'forgotPassword',
-            ],
-            '/forgot-password/success'    => [
-                'view' => 'forgotPasswordSuccessful',
-            ],
-            '/forgot-password/error'      => [
-                'view' => 'forgotPasswordError',
-            ],
-        ]);
+            [
+                '/login-status'               => [
+                    'view' => 'loginStatus',
+                    'name' => 'loginStatus',
+                ],
+                '/login'                      => [
+                    'view' => 'login',
+                    'name' => 'login',
+                ],
+                '/logout'                     => [
+                    'view' => 'logout',
+                ],
+                '/register'                   => [
+                    'view' => 'register',
+                ],
+                '/activate-user/[activation]' => [
+                    'view' => 'activate',
+                ],
+                '/forgot-password'            => [
+                    'view' => 'forgotPassword',
+                ],
+                '/forgot-password/success'    => [
+                    'view' => 'forgotPasswordSuccessful',
+                ],
+                '/forgot-password/error'      => [
+                    'view' => 'forgotPasswordError',
+                ],
+            ]
+        );
     }
 
     protected function facebookRoutes()
     {
-        return array_merge_array([
-            'controller' => Facebook::class,
-        ], [
-            '/login/facebook'     => [
-                'view' => 'login',
-                'name' => 'login_facebook',
+        return array_merge_array(
+            [
+                'controller' => Facebook::class,
             ],
-            '/takelogin/facebook' => [
-                'view' => 'takelogin',
-                'name' => 'takelogin_facebook',
-            ],
-        ]);
+            [
+                '/login/facebook'     => [
+                    'view' => 'login',
+                    'name' => 'login_facebook',
+                ],
+                '/takelogin/facebook' => [
+                    'view' => 'takelogin',
+                    'name' => 'takelogin_facebook',
+                ],
+            ]
+        );
     }
 
 }

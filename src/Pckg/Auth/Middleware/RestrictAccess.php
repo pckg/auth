@@ -5,7 +5,8 @@ use Pckg\Concept\AbstractChainOfReponsibility;
 class RestrictAccess extends AbstractChainOfReponsibility
 {
 
-    public function execute(callable $next) {
+    public function execute(callable $next)
+    {
         $routeName = router()->get('name');
 
         foreach (conf('defaults.pckg.auth', []) as $gate) {

@@ -2,10 +2,10 @@
 
 namespace Pckg\Auth\Service\Provider;
 
+use Pckg\Auth\Service\ProviderInterface;
 use Pckg\Framework\Request\Data\Session;
 use Pckg\Framework\Response;
 use Pckg\Framework\Router;
-use Pckg\Auth\Service\ProviderInterface;
 
 class Facebook implements ProviderInterface
 {
@@ -31,7 +31,10 @@ class Facebook implements ProviderInterface
 
     public function redirectToLogin()
     {
-        $loginUrl = $this->redirectLoginHelper->getLoginUrl($this->router->make('takelogin_facebook', [], true), $this->permissions);
+        $loginUrl = $this->redirectLoginHelper->getLoginUrl(
+            $this->router->make('takelogin_facebook', [], true),
+            $this->permissions
+        );
 
         $this->response->redirect($loginUrl);
     }
@@ -57,7 +60,11 @@ class Facebook implements ProviderInterface
     {
         if (!$accessToken) {
             if ($this->redirectLoginHelper->getError()) {
-                throw new \Exception($this->redirectLoginHelper->getError() . ' ' . $this->redirectLoginHelper->getErrorCode() . ' ' . $this->redirectLoginHelper->getErrorReason() . ' ' . $this->redirectLoginHelper->getErrorDescription());
+                throw new \Exception(
+                    $this->redirectLoginHelper->getError() . ' ' . $this->redirectLoginHelper->getErrorCode(
+                    ) . ' ' . $this->redirectLoginHelper->getErrorReason(
+                    ) . ' ' . $this->redirectLoginHelper->getErrorDescription()
+                );
 
             } else {
                 throw new \Exception('No access token');
@@ -106,6 +113,5 @@ class Facebook implements ProviderInterface
     public function logout()
     {
     }
-
 
 }

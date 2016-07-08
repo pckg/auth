@@ -2,8 +2,8 @@
 
 namespace Pckg\Auth\Record;
 
-use Pckg\Database\Record;
 use Pckg\Auth\Entity\UserGroups;
+use Pckg\Database\Record;
 
 class UserGroup extends Record
 {
@@ -14,11 +14,13 @@ class UserGroup extends Record
 
     const MODE_GUEST = 'GUEST';
 
-    public function isSuper() {
+    public function isSuper()
+    {
         return $this->mode == static::MODE_SUPER;
     }
 
-    public function isGuest() {
+    public function isGuest()
+    {
         return $this->mode == static::MODE_GUEST;
     }
 

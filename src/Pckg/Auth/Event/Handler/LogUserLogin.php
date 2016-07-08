@@ -2,9 +2,9 @@
 
 namespace Pckg\Auth\Event\Handler;
 
+use Pckg\Auth\Record\User;
 use Pckg\Concept\AbstractChainOfReponsibility;
 use Pckg\Framework\Request\Data\Session;
-use Pckg\Auth\Record\User;
 
 class LogUserLogin extends AbstractChainOfReponsibility
 {

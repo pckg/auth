@@ -7,6 +7,7 @@ use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Class SendUserRegistrationEmail
+ *
  * @package Pckg\User\Event
  */
 class UserRegistered implements EventHandler

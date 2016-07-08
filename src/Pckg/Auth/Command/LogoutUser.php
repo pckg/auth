@@ -2,12 +2,13 @@
 
 namespace Pckg\Auth\Command;
 
+use Pckg\Auth\Service\Auth;
 use Pckg\Concept\Command\Stated;
 use Pckg\Concept\CommandInterface;
-use Pckg\Auth\Service\Auth;
 
 /**
  * Class LogoutUser
+ *
  * @package Pckg\Auth\Command
  */
 class LogoutUser

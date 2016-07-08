@@ -6,6 +6,7 @@ use Pckg\Htmlbuilder\Element\Form\Bootstrap;
 
 /**
  * Class ForgotPassword
+ *
  * @package Pckg\Auth\Form
  */
 class ForgotPassword extends Bootstrap
@@ -19,8 +20,8 @@ class ForgotPassword extends Bootstrap
         $fieldset = $this->addFieldset();
 
         $fieldset->addEmail('email')
-            ->setLabel('Email:')
-            ->required();
+                 ->setLabel('Email:')
+                 ->required();
 
         $this->addSubmit();
 

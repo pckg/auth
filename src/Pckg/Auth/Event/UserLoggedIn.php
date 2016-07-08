@@ -2,8 +2,8 @@
 
 namespace Pckg\Auth\Event;
 
-use Pckg\Concept\Event\AbstractEvent;
 use Pckg\Auth\Event\Handler\LogUserLogin;
+use Pckg\Concept\Event\AbstractEvent;
 
 class UserLoggedIn extends AbstractEvent
 {
