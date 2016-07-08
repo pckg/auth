@@ -31,7 +31,7 @@ class RestrictAccess extends AbstractChainOfReponsibility
             /**
              * Check rules for logged-in users.
              */
-            if ($gate['status'] == 'logged-in' && !auth()->isLoggedIn()) {
+            if ($gate['status'] == 'logged-in' && auth()->isLoggedIn()) {
                 /**
                  * Check if route is excluded in rule.
                  */
