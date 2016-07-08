@@ -7,7 +7,7 @@ Registers commands, and middlewared on initialization
 */
 
 use Pckg\Auth\Command;
-use Pckg\Auth\Controller\Auth;
+use Pckg\Auth\Controller\Auth as AuthController;
 use Pckg\Auth\Controller\Facebook;
 use Pckg\Auth\Event;
 use Pckg\Auth\Event\UserLoggedIn;
@@ -21,7 +21,7 @@ use Pckg\Auth\Service\Auth as AuthService;
 use Pckg\Framework\Provider;
 use Pckg\Framework\Request\Session\SessionUser;
 
-class Config extends Provider
+class Auth extends Provider
 {
 
     public function middlewares()
@@ -75,7 +75,7 @@ class Config extends Provider
     protected function baseRoutes()
     {
         return array_merge_array([
-            'controller' => Auth::class,
+            'controller' => AuthController::class,
         ], [
             '/login-status'               => [
                 'view' => 'loginStatus',
