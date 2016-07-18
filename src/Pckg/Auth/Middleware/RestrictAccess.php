@@ -18,6 +18,12 @@ class RestrictAccess extends AbstractChainOfReponsibility
                  * Check if route is excluded in rule.
                  */
                 if (isset($gate['exclude']) && !in_array($routeName, $gate['exclude'])) {
+                    foreach ($gate['exclude'] as $route) {
+                        if (preg_match('#' . $route . '#', $routeName)) {
+                            break 2;
+                        }
+                    }
+                    
                     redirect(url($gate['redirect']));
                 }
 
