@@ -226,10 +226,13 @@ class Auth
         return false;
     }
 
+    public function isGuest()
+    {
+        return !$this->isLoggedIn();
+    }
+
     public function getGroupId()
     {
         return $_SESSION['User']['user_group_id'] ?? null;
     }
 }
-
-?>
