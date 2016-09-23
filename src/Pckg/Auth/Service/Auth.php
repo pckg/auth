@@ -221,7 +221,9 @@ class Auth
             return true;
         }
 
-        $this->logout();
+        if (config('pckg.auth.logoutOnInvalid')) {
+            $this->logout();
+        }
 
         return false;
     }
