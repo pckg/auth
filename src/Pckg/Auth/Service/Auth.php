@@ -92,22 +92,6 @@ class Auth
         }
     }
 
-    private function setUsersEntity()
-    {
-        $config = $this->config->get();
-        $authConfig = $config["defaults"]["auth"];
-
-        return $this->users = new $authConfig["user"]["entity"];
-    }
-
-    private function setUserRecord()
-    {
-        $config = $this->config->get();
-        $authConfig = $config["defaults"]["auth"];
-
-        return $this->user = new $authConfig["user"]["record"];
-    }
-
     // user object
     public function getUser()
     {
@@ -140,7 +124,9 @@ class Auth
 
     public function login($email, $password, $hash = null)
     {
-        $hash = is_null($hash) ? $this->config->get("hash") : $hash;
+        $hash = is_null($hash)
+            ? config('hash')
+            : $hash;
 
         $rUser = $this->getProvider()
                       ->getUserByEmailAndPassword($email, $this->makePassword($password, $hash));
@@ -174,7 +160,7 @@ class Auth
         );
     }
 
-    public function performLogin($rUser)
+    public function performLogin($rUser, $provider = 'default')
     {
         $sessionHash = sha1(microtime() . sha1($rUser->id));
         $dtIn = date("Y-m-d H:i:s");
@@ -182,12 +168,13 @@ class Auth
         $_SESSION['User'] = $rUser->toArray();
 
         $_SESSION['Auth'] = [
-            "user_id" => $rUser->id,
-            "dt_in"   => $dtIn,
-            "dt_out"  => '0000-00-00 00:00:00',
-            "hash"    => $sessionHash,
-            "ip"      => $_SERVER['REMOTE_ADDR'],
-            "flags"   => [],
+            'provider' => $provider,
+            "user_id"  => $rUser->id,
+            "dt_in"    => $dtIn,
+            "dt_out"   => null,
+            "hash"     => $sessionHash,
+            "ip"       => $_SERVER['REMOTE_ADDR'],
+            "flags"    => [],
         ];
 
         setcookie(

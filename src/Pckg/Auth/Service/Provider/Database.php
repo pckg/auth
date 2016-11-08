@@ -12,45 +12,47 @@ class Database implements ProviderInterface
 {
 
     /**
-     * @var Response
-     */
-    protected $response;
-
-    /**
-     * @var Router
-     */
-    protected $router;
-
-    /**
      * @var Auth
      */
     protected $auth;
 
-    public function __construct(Response $response, Router $router, Auth $auth)
+    protected $entity = Users::class;
+
+    public function __construct(Auth $auth)
     {
-        $this->response = $response;
-        $this->router = $router;
         $this->auth = $auth;
+    }
+
+    public function setEntity($entity)
+    {
+        $this->entity = $entity;
+    }
+
+    public function getEntity()
+    {
+        $class = $this->entity;
+
+        return new $class;
     }
 
     public function getUserByEmailAndPassword($email, $password)
     {
-        return (new Users())->where('email', $email)->where('password', $password)->one();
+        return $this->getEntity()->where('email', $email)->where('password', $password)->one();
     }
 
     public function getUserByAutologin($autologin)
     {
-        return (new Users())->where('id', $autologin)->one();
+        return $this->getEntity()->where('id', $autologin)->one();
     }
 
     public function getUser()
     {
-        return (new Users())->where('id', $_SESSION['Auth']['user_id'] ?? null)->one();
+        return $this->getEntity()->where('id', $_SESSION['Auth']['user_id'] ?? null)->one();
     }
 
     public function redirectToLogin()
     {
-        $this->response->redirect($this->router->make('login'));
+        redirect(url('login'));
     }
 
     public function logout()

@@ -39,7 +39,12 @@ class Auth extends Controller
     {
         $loginUserCommand->onSuccess(
             function() {
-                $this->response()->redirect('/');
+                $user = $this->auth()->getUser();
+                $this->response()->redirect(
+                    method_exists($user, 'hasMaestro') && $user->hasMaestro()
+                        ? '/maestro'
+                        : '/'
+                );
 
             }
         )->onError(

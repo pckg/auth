@@ -5,6 +5,7 @@ namespace Pckg\Auth\Command;
 use Pckg\Auth\Form\Login;
 use Pckg\Auth\Service\Auth;
 use Pckg\Concept\Command\Stated;
+use Pckg\Concept\Reflect;
 use Pckg\Framework\Request;
 
 /**
@@ -44,13 +45,36 @@ class LoginUser
     {
         $data = $this->loginForm->getRawData(['email', 'password']);
 
-        if ($this->auth->login($data['email'], $data['password'])) {
-            trigger('user.loggedIn', [$this->auth->getUser()]);
-            if (isset($data['autologin'])) {
-                $this->auth->setAutologin();
+        foreach (config('pckg.auth.providers') as $providerKey => $providerConfig) {
+            /**
+             * Create and set new provider.
+             */
+            $provider = Reflect::create($providerConfig['type'], [$this->auth]);
+            $provider->setEntity($providerConfig['entity']);
+
+            /**
+             * If user doesnt exists, don't proceed with execution.
+             */
+            if (!($user = $provider->getUserByEmailAndPassword(
+                $data['email'],
+                sha1($data['password'] . $providerConfig['hash'])
+            ))
+            ) {
+                continue;
             }
 
-            return $this->successful();
+            /**
+             * Try to login.
+             */
+            if ($this->auth->performLogin($user, $providerKey)) {
+                $this->auth->useProvider($provider);
+                trigger('user.loggedIn', [$this->auth->getUser()]);
+                if (isset($data['autologin'])) {
+                    $this->auth->setAutologin();
+                }
+
+                return $this->successful();
+            }
         }
 
         return $this->error();
