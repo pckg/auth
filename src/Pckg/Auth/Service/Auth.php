@@ -18,6 +18,8 @@ class Auth
 
     protected $provider;
 
+    protected $providers = [];
+
     public function __construct(Config $config)
     {
         $this->config = $config;
@@ -25,8 +27,22 @@ class Auth
         $this->useDatabaseProvider();
     }
 
-    public function useProvider(ProviderInterface $provider)
+    /**
+     * @param ProviderInterface|mixed $provider
+     *
+     * @return $this
+     */
+    public function useProvider($provider)
     {
+        if (is_string($provider)) {
+            if (!array_key_exists($provider, $this->providers)) {
+                $config = config('pckg.auth.providers.' . $provider);
+                $this->providers[$provider] = Reflect::create($config['type'], [$this]);
+            }
+
+            $provider = $this->providers[$provider];
+        }
+
         $this->provider = $provider;
 
         return $this;

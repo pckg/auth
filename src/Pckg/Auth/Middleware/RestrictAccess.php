@@ -12,13 +12,15 @@ class RestrictAccess extends AbstractChainOfReponsibility
         $routeName = $router['name'];
 
         foreach (config('pckg.auth.gates', []) as $gate) {
+            $auth = auth()->useProvider($gate['provider']);
+
             /**
              * Check rules for logged-out users.
              */
-            if ($gate['status'] == 'logged-out' && auth()->isLoggedIn()) {
+            if ($gate['status'] == 'logged-out' && $auth->isLoggedIn()) {
                 continue;
 
-            } elseif ($gate['status'] == 'logged-in' && !auth()->isLoggedIn()) {
+            } elseif ($gate['status'] == 'logged-in' && !$auth->isLoggedIn()) {
                 continue;
 
             }
