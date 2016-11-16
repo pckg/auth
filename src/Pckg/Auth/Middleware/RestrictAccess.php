@@ -12,7 +12,7 @@ class RestrictAccess extends AbstractChainOfReponsibility
         $routeName = $router['name'];
 
         foreach (config('pckg.auth.gates', []) as $gate) {
-            $auth = auth()->useProvider($gate['provider']);
+            $auth = auth($gate['provider']);
 
             /**
              * Check rules for logged-out users.
