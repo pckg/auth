@@ -40,16 +40,15 @@ class Auth extends Controller
         $loginUserCommand->onSuccess(
             function() {
                 $user = $this->auth()->getUser();
-                $this->response()->redirect(
+                $this->response()->respondWithSuccessRedirect(
                     method_exists($user, 'hasMaestro') && $user->hasMaestro()
                         ? '/maestro'
                         : '/'
                 );
-
             }
         )->onError(
             function() {
-                $this->response()->redirect();
+                $this->response()->respondWithError();;
 
             }
         )->execute();
@@ -131,16 +130,15 @@ class Auth extends Controller
         );
     }
 
-    function postForgotPasswordAction(SendNewPassword $sendNewPasswordCommand, Response $response)
+    function postForgotPasswordAction(SendNewPassword $sendNewPasswordCommand)
     {
         $sendNewPasswordCommand->onSuccess(
-            function() use ($response) {
-                $response->redirect('/auth/forgot-password/success');
-
+            function() {
+                $this->response()->respondWithSuccess();
             }
         )->onError(
-            function() use ($response) {
-                $response->redirect('/auth/forgot-password/error');
+            function() {
+                $this->response()->respondWithError(['text' => 'Email not found ...']);
 
             }
         )->execute();

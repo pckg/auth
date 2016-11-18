@@ -138,6 +138,17 @@ class Auth
         return sha1($password . $hash);
     }
 
+    public function createPassword($length = 10)
+    {
+        $characters = str_split('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 1);
+        $password = '';
+        for ($i = 0; $i < $length; $i++) {
+            $password .= $characters[array_rand($characters)];
+        }
+
+        return $password;
+    }
+
     public function login($email, $password, $hash = null)
     {
         $hash = is_null($hash)

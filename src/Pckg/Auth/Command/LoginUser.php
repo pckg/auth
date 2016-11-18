@@ -51,7 +51,6 @@ class LoginUser
              */
             $provider = Reflect::create($providerConfig['type'], [$this->auth]);
             $provider->setEntity($providerConfig['entity']);
-
             /**
              * If user doesnt exists, don't proceed with execution.
              */
@@ -67,6 +66,9 @@ class LoginUser
              * Try to login.
              */
             if ($this->auth->performLogin($user, $providerKey)) {
+                /**
+                 * @T00D00 - login user on all providers!
+                 */
                 $this->auth->useProvider($provider);
                 trigger('user.loggedIn', [$this->auth->getUser()]);
                 if (isset($data['autologin'])) {

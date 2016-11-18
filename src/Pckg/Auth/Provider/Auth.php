@@ -88,6 +88,7 @@ class Auth extends Provider
                 ],
                 '/logout'                     => [
                     'view' => 'logout',
+                    'name' => 'pckg.auth.logout',
                 ],
                 '/register'                   => [
                     'view' => 'register',
@@ -97,6 +98,7 @@ class Auth extends Provider
                 ],
                 '/forgot-password'            => [
                     'view' => 'forgotPassword',
+                    'name' => 'pckg.auth.forgotPassword',
                 ],
                 '/forgot-password/success'    => [
                     'view' => 'forgotPasswordSuccessful',

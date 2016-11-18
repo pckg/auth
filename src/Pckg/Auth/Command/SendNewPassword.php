@@ -2,10 +2,10 @@
 
 namespace Pckg\Auth\Command;
 
-use Pckg\Auth\Record\User;
+use Derive\User\Service\Mail\User;
 use Pckg\Concept\Command\Stated;
 use Pckg\Concept\CommandInterface;
-use Pckg\Framework\Request;
+use Pckg\Concept\Reflect;
 
 /**
  * Class SendNewPassword
@@ -18,30 +18,51 @@ class SendNewPassword
     use Stated;
 
     /**
-     * @var Request
-     */
-    protected $request;
-
-    /**
-     * @var User
-     */
-    protected $rUser;
-
-    /**
-     * @param Request $request
-     * @param User    $rUser
-     */
-    public function __construct(Request $request, User $rUser)
-    {
-        $this->request = $request;
-        $this->rUser = $rUser;
-    }
-
-    /**
      * @return mixed
      */
     public function execute()
     {
+        $password = auth()->createPassword();
+
+        foreach (config('pckg.auth.providers') as $providerKey => $providerConfig) {
+            if (!$providerConfig['forgotPassword']) {
+                continue;
+            }
+
+            /**
+             * Create and set new provider.
+             */
+            $provider = Reflect::create($providerConfig['type'], [auth()]);
+            $provider->setEntity($providerConfig['entity']);
+
+            /**
+             * If user doesnt exists, don't proceed with execution.
+             */
+            if (!($user = $provider->getUserByEmail(post('email')))) {
+                continue;
+            }
+
+            $user->password = sha1($password . $providerConfig['hash']);
+            $user->save();
+
+            /**
+             * Send email via queue.
+             */
+            email(
+                'password-update',
+                new User($user),
+                [
+                    'password' => $password,
+                ],
+                [
+                    'user' => [
+                        get_class($user->getEntity()) => $user->id,
+                    ],
+                ]
+            );
+
+            return $this->successful();
+        }
 
         return $this->error();
     }
