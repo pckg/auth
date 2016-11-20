@@ -52,11 +52,13 @@ class SendNewPassword
                 'password-update',
                 new User($user),
                 [
-                    'password' => $password,
-                ],
-                [
-                    'user' => [
-                        $user->getEntityClass() => $user->id,
+                    'data'  => [
+                        'password' => $password,
+                    ],
+                    'fetch' => [
+                        'user' => [
+                            $user->getEntityClass() => $user->id,
+                        ],
                     ],
                 ]
             );
