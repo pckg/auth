@@ -134,7 +134,7 @@ class Auth extends Controller
     {
         $sendNewPasswordCommand->onSuccess(
             function() {
-                $this->response()->respondWithSuccess();
+                $this->response()->respondWithSuccess(['text' => 'Password was sent']);
             }
         )->onError(
             function() {
