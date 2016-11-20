@@ -56,7 +56,7 @@ class SendNewPassword
                 ],
                 [
                     'user' => [
-                        get_class($user->getEntity()) => $user->id,
+                        $user->getEntityClass() => $user->id,
                     ],
                 ]
             );
