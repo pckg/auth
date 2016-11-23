@@ -2,10 +2,7 @@
 
 namespace Pckg\Auth\Service;
 
-use Pckg\Auth\Service\Provider\Database;
-use Pckg\Auth\Service\Provider\Facebook;
 use Pckg\Concept\Reflect;
-use Pckg\Framework\Config;
 
 class Auth
 {
@@ -14,25 +11,16 @@ class Auth
 
     public $statuses;
 
-    private $user;
-
     protected $provider;
 
     protected $providers = [];
-
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
-
-        $this->useDatabaseProvider();
-    }
 
     /**
      * @param ProviderInterface|mixed $provider
      *
      * @return $this
      */
-    public function useProvider($provider)
+    public function useProvider($provider, $providerKey = 'default')
     {
         if (is_string($provider)) {
             if (!array_key_exists($provider, $this->providers)) {
@@ -41,23 +29,11 @@ class Auth
             }
 
             $provider = $this->providers[$provider];
+        } else {
+            $this->providers[$providerKey] = $provider;
         }
 
         $this->provider = $provider;
-
-        return $this;
-    }
-
-    public function useDatabaseProvider()
-    {
-        $this->provider = Reflect::create(Database::class, [$this]);
-
-        return $this;
-    }
-
-    public function useFacebookProvider($fbApi)
-    {
-        $this->provider = Reflect::create(Facebook::class, $fbApi);
 
         return $this;
     }
@@ -67,51 +43,21 @@ class Auth
         return $this->provider;
     }
 
-    public function addFlag($flags = [])
+    public function getProviderKey()
     {
-        if (!is_array($flags)) {
-            $flags = (array)$flags;
-        }
-
-        foreach ($flags AS $flag) {
-            if (!in_array($flag, $_SESSION['Auth']['flags'])) {
-                $_SESSION['Auth']['flags'][] = $flag;
-            }
-        }
-    }
-
-    public function hasFlag($flags = [])
-    {
-        if (!isset($_SESSION['Auth']['flags'])) {
-            return false;
-        }
-
-        if (!is_array($flags)) {
-            $flags = (array)$flags;
-        }
-
-        foreach ($flags AS $flag) {
-            if (!in_array($flag, $_SESSION['Auth']['flags'])) {
-                return false;
+        foreach ($this->providers as $key => $provider) {
+            if ($provider == $this->provider) {
+                return $key;
             }
         }
 
-        return true;
-    }
-
-    public function removeFlag($flags = [])
-    {
-        foreach ($flags AS $flag) {
-            if (($key = array_search($flag, $_SESSION['Auth']['flags'])) !== false) {
-                unset($_SESSION['Auth']['flags'][$key]);
-            }
-        }
+        return null;
     }
 
     // user object
     public function getUser()
     {
-        return $this->getProvider()->getUser();
+        return $this->getProvider()->getUserById($this->user('id'));
     }
 
     public function is()
@@ -121,13 +67,14 @@ class Auth
 
     public function user($key = null)
     {
-        return isset($_SESSION['User'])
-            ? ($key
-                ? (isset($_SESSION['User'][$key])
-                    ? $_SESSION['User'][$key]
-                    : null)
-                : $_SESSION['User']
-            )
+        $sessionUser = $this->getSessionProvider()['user'] ?? [];
+
+        if (!$sessionUser || !$key) {
+            return $sessionUser;
+        }
+
+        return array_key_exists($key, $sessionUser)
+            ? $sessionUser[$key]
             : null;
     }
 
@@ -179,34 +126,44 @@ class Auth
 
     public function setAutologin()
     {
+        if (!$this->isLoggedIn()) {
+            return;
+        }
+
         setcookie(
-            "autologin",
-            $_SESSION['Auth']['user_id'],
+            "pckg.auth.autologin",
+            serialize(
+                [
+                    $this->getProviderKey() => [
+                        'user_id' => sha1($this->user('id')),
+                    ],
+                ]
+            ),
             time() + (24 * 60 * 60 * 365.25),
             "/"
         );
     }
 
-    public function performLogin($rUser, $provider = 'default')
+    public function performLogin($user)
     {
-        $sessionHash = sha1(microtime() . sha1($rUser->id));
-        $dtIn = date("Y-m-d H:i:s");
+        $providerKey = $this->getProviderKey();
 
-        $_SESSION['User'] = $rUser->toArray();
+        $sessionHash = sha1(microtime() . sha1($user->id));
 
-        $_SESSION['Auth'] = [
-            'provider' => $provider,
-            "user_id"  => $rUser->id,
-            "dt_in"    => $dtIn,
-            "dt_out"   => null,
-            "hash"     => $sessionHash,
-            "ip"       => $_SERVER['REMOTE_ADDR'],
-            "flags"    => [],
+        $_SESSION['Pckg']['Auth']['Provider'][$providerKey] = [
+            "user"  => $user->toArray(),
+            "hash"  => $sessionHash,
+            "flags" => [],
         ];
 
         setcookie(
-            "LFW",
-            serialize(["hash" => $sessionHash]),
+            "pckg_auth_provider_" . $providerKey,
+            serialize(
+                [
+                    "user" => $user->id,
+                    "hash" => $sessionHash,
+                ]
+            ),
             time() + (24 * 60 * 60 * 365.25),
             "/"
         );
@@ -216,27 +173,61 @@ class Auth
 
     public function logout()
     {
-        unset($_SESSION['User']);
-        unset($_SESSION['Auth']);
-        setcookie('LFW', null, time() - (24 * 60 * 60 * 365.25), '/');
-        setcookie('autologin', null, time() - (24 * 60 * 60 * 365.25), '/');
-    }
+        $providerKeys = array_keys($_SESSION['Pckg']['Auth']['Provider'] ?? []);
+        unset($_SESSION['Pckg']['Auth']['Provider']);
 
-    public function isLoggedIn($try = false)
-    {
-        // valid session login
-        $sessionLogin = !empty($_SESSION['Auth']['user_id'])
-                        && !empty($_SESSION['User']['id'])
-                        && !empty($_COOKIE['LFW'])
-                        && ($cookie = unserialize($_COOKIE['LFW']))
-                        && $cookie['hash'] == $_SESSION['Auth']['hash'];
-
-        if ($sessionLogin) {
-            return true;
+        foreach ($providerKeys as $providerKey) {
+            setcookie('pckg_auth_provider_' . $providerKey, null, time() - (24 * 60 * 60 * 365.25), '/');
         }
 
-        if (config('pckg.auth.logoutOnInvalid')) {
-            $this->logout();
+        setcookie('pckg_auth_autologin', null, time() - (24 * 60 * 60 * 365.25), '/');
+    }
+
+    public function getSessionProvider()
+    {
+        return $_SESSION['Pckg']['Auth']['Provider'][$this->getProviderKey()] ?? [];
+    }
+
+    public function isLoggedIn()
+    {
+        $providerKey = $this->getProviderKey();
+        $sessionProvider = $this->getSessionProvider();
+
+        /**
+         * Session for provider does not exist.
+         */
+        if (!$sessionProvider) {
+            return false;
+        }
+
+        /**
+         * Session exists, but user doesn't.
+         */
+        if (!isset($sessionProvider['user']['id'])) {
+            return false;
+        }
+
+        /**
+         * Cookie for provider does not exist.
+         */
+        if (!isset($_COOKIE['pckg_auth_provider_' . $providerKey])) {
+            return false;
+        }
+
+        $cookie = unserialize($_COOKIE['pckg_auth_provider_' . $providerKey]);
+
+        /**
+         * Cookie exists, but hash isn't set.
+         */
+        if (!isset($cookie['hash'])) {
+            return false;
+        }
+
+        /**
+         * Hash and user matches.
+         */
+        if ($cookie['hash'] === $sessionProvider['hash'] && $cookie['user'] === $sessionProvider['user']['id']) {
+            return true;
         }
 
         return false;
@@ -249,6 +240,6 @@ class Auth
 
     public function getGroupId()
     {
-        return $_SESSION['User']['user_group_id'] ?? null;
+        return $this->getSessionProvider()['user']['user_group_id'] ?? null;
     }
 }

@@ -47,12 +47,12 @@ class Database implements ProviderInterface
 
     public function getUserByAutologin($autologin)
     {
-        return $this->getEntity()->where('id', $autologin)->one();
+        return $this->getEntity()->where('SHA1(id)', $autologin)->one();
     }
 
-    public function getUser()
+    public function getUserById($id)
     {
-        return $this->getEntity()->where('id', $_SESSION['Auth']['user_id'] ?? null)->one();
+        return $this->getEntity()->where('id', $id)->one();
     }
 
     public function redirectToLogin()

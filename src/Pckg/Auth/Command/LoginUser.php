@@ -65,7 +65,8 @@ class LoginUser
             /**
              * Try to login.
              */
-            if ($this->auth->performLogin($user, $providerKey)) {
+            $this->auth->useProvider($provider, $providerKey);
+            if ($this->auth->performLogin($user)) {
                 /**
                  * @T00D00 - login user on all providers!
                  */
@@ -78,7 +79,7 @@ class LoginUser
                 return $this->successful();
             }
         }
-
+dd("error");
         return $this->error();
     }
 

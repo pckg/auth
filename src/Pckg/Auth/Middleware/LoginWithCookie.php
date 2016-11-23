@@ -34,10 +34,14 @@ class LoginWithCookie extends AbstractChainOfReponsibility
 
     public function execute(callable $next)
     {
-        if (!$this->auth->isLoggedIn() && $this->request->isGet(
-            ) && isset($_COOKIE['autologin']) && $this->auth->autologin($_COOKIE['autologin'])
-        ) {
-            $this->response->redirect();
+        if ($this->auth->isLoggedIn() || !$this->request->isGet() || !isset($_COOKIE['pckg.auth.autologin'])) {
+            return $next();
+        }
+
+        $cookie = unserialize($_COOKIE['pckg.auth.autologin']);
+        foreach ($cookie as $provider => $data) {
+            $this->auth->useProvider($provider);
+            $this->auth->autologin($data['user_id']);
         }
 
         return $next();
