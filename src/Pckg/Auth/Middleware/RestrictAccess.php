@@ -28,27 +28,32 @@ class RestrictAccess extends AbstractChainOfReponsibility
             /**
              * Check if route is excluded in rule.
              */
-            if (isset($gate['exclude']) && !in_array($routeName, $gate['exclude'])) {
-                foreach ($gate['exclude'] as $route) {
-                    if (preg_match('#' . $route . '#', $routeName)) {
-                        break 2;
-                    }
+            if (isset($gate['exclude'])) {
+                if (in_array($routeName, $gate['exclude'])) {
+                    continue;
                 }
 
-                redirect(url($gate['redirect']));
+                foreach ($gate['exclude'] as $route) {
+                    if (preg_match('#' . $route . '#', $routeName)) {
+                        continue;
+                    }
+                }
             }
 
             /**
              * Check if route is included in rule.
              */
-            if (isset($gate['include']) && in_array($routeName, $gate['include'])) {
+            if (isset($gate['include']) && !in_array($routeName, $gate['include'])) {
+                $found = false;
                 foreach ($gate['include'] as $route) {
                     if (preg_match('#' . $route . '#', $routeName)) {
-                        break 2;
+                        $found = true;
+                        break;
                     }
                 }
-
-                redirect(url($gate['redirect']));
+                if (!$found) {
+                    continue;
+                }
             }
 
             /**
@@ -56,11 +61,11 @@ class RestrictAccess extends AbstractChainOfReponsibility
              */
             if (isset($gate['callback'])) {
                 if (Reflect::method($gate['callback']['class'], $gate['callback']['method'])) {
-                    break;
+                    continue;
                 }
-
-                redirect(url($gate['redirect']));
             }
+
+            redirect(url($gate['redirect']));
         }
 
         return $next();
