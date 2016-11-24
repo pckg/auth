@@ -80,7 +80,7 @@ class Auth
 
     public function makePassword($password, $hash = null)
     {
-        $hash = is_null($hash) ? $this->config->get("hash") : $hash;
+        $hash = is_null($hash) ? config("hash") : $hash;
 
         return sha1($password . $hash);
     }
