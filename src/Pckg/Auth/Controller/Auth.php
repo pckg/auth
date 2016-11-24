@@ -43,7 +43,7 @@ class Auth extends Controller
                 $this->response()->respondWithSuccessRedirect(
                     method_exists($user, 'hasMaestro') && $user->hasMaestro()
                         ? '/maestro'
-                        : '/'
+                        : '/profile'
                 );
             }
         )->onError(
