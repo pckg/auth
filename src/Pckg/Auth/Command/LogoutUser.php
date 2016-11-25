@@ -17,24 +17,11 @@ class LogoutUser
     use Stated;
 
     /**
-     * @var Auth
-     */
-    protected $authHelper;
-
-    /**
-     * @param Auth $authHelper
-     */
-    public function __construct(Auth $authHelper)
-    {
-        $this->authHelper = $authHelper;
-    }
-
-    /**
      * @return mixed
      */
     public function execute()
     {
-        $this->authHelper->logout();
+        auth()->logout();
 
         return $this->successful();
     }
