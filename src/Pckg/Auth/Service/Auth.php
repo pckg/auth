@@ -69,8 +69,12 @@ class Auth
     {
         $sessionUser = $this->getSessionProvider()['user'] ?? [];
 
-        if (!$sessionUser || !$key) {
+        if (!$sessionUser) {
+            return null;
+
+        } else if (!$key) {
             return $sessionUser;
+            
         }
 
         return array_key_exists($key, $sessionUser)
