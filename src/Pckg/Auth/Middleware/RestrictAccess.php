@@ -8,6 +8,10 @@ class RestrictAccess extends AbstractChainOfReponsibility
 
     public function execute(callable $next)
     {
+        if (isConsole()) {
+            return $next();
+        }
+        
         $router = router()->get();
         $routeName = $router['name'];
 
