@@ -48,7 +48,11 @@ class Auth extends Controller
             }
         )->onError(
             function() {
-                $this->response()->respondWithError();;
+                $this->response()->respondWithError(
+                    [
+                        'text' => __('pckg.auth.error'),
+                    ]
+                );
 
             }
         )->execute();
