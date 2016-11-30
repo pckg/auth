@@ -155,8 +155,8 @@ class Auth
         $sessionHash = sha1(microtime() . sha1($user->id));
 
         $_SESSION['Pckg']['Auth']['Provider'][$providerKey] = [
-            "user"  => $user->toArray(),
-            "hash"  => $sessionHash,
+            "user" => $user->toArray(),
+            "hash" => $sessionHash,
             "flags" => [],
         ];
 
@@ -249,6 +249,8 @@ class Auth
 
     public function getGroupId()
     {
-        return $this->getSessionProvider()['user']['user_group_id'] ?? null;
+        return $this->getSessionProvider()['user'][config(
+            'pckg.auth.providers.' . $this->getProviderKey() . '.userGroup'
+        )] ?? null;
     }
 }

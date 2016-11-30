@@ -41,7 +41,7 @@ class Auth extends Controller
             function() {
                 $user = $this->auth()->getUser();
                 $this->response()->respondWithSuccessRedirect(
-                    method_exists($user, 'hasMaestro') && $user->hasMaestro()
+                    method_exists($user, 'isAdmin') && $user->isAdmin()
                         ? '/maestro'
                         : '/profile'
                 );
