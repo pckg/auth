@@ -15,7 +15,7 @@ class User extends Record
 
     protected $entity = Users::class;
 
-    public function hasMaestro()
+    public function isAdmin()
     {
         return in_array($this->user_group_id, [1, 2, 3]);
     }

@@ -242,6 +242,11 @@ class Auth
         return !$this->isLoggedIn();
     }
 
+    public function isAdmin()
+    {
+        return $this->isLoggedIn() && method_exists($this->getUser(), 'isAdmin') && $this->getUser()->isAdmin();
+    }
+
     public function getGroupId()
     {
         return $this->getSessionProvider()['user']['user_group_id'] ?? null;
