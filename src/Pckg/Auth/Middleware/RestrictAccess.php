@@ -11,7 +11,7 @@ class RestrictAccess extends AbstractChainOfReponsibility
         if (isConsole()) {
             return $next();
         }
-        
+
         $router = router()->get();
         $routeName = $router['name'];
 
@@ -19,14 +19,26 @@ class RestrictAccess extends AbstractChainOfReponsibility
             $auth = auth($gate['provider']);
 
             /**
-             * Check rules for logged-out users.
+             * Check status rules.
              */
-            if ($gate['status'] == 'logged-out' && $auth->isLoggedIn()) {
-                continue;
+            if ($gate['status']) {
+                if ($gate['status'] == 'logged-out' && $auth->isLoggedIn()) {
+                    continue;
 
-            } elseif ($gate['status'] == 'logged-in' && !$auth->isLoggedIn()) {
-                continue;
+                } elseif ($gate['status'] == 'logged-in' && !$auth->isLoggedIn()) {
+                    continue;
 
+                }
+            }
+
+            /**
+             * Check user group rules.
+             */
+            if ($gate['userGroup']) {
+                if (!in_array($auth->getGroupId(), $gate['userGroup'])) {
+                    continue;
+
+                }
             }
 
             /**
