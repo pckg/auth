@@ -74,7 +74,7 @@ class Auth
 
         } else if (!$key) {
             return $sessionUser;
-            
+
         }
 
         return array_key_exists($key, $sessionUser)
