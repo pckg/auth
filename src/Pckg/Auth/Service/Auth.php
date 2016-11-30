@@ -82,9 +82,9 @@ class Auth
             : null;
     }
 
-    public function makePassword($password, $hash = null)
+    public function makePassword($password)
     {
-        $hash = is_null($hash) ? config("hash") : $hash;
+        $hash = config('pckg.auth.providers.' . $this->getProviderKey() . '.hash');
 
         return sha1($password . $hash);
     }
@@ -155,8 +155,8 @@ class Auth
         $sessionHash = sha1(microtime() . sha1($user->id));
 
         $_SESSION['Pckg']['Auth']['Provider'][$providerKey] = [
-            "user" => $user->toArray(),
-            "hash" => $sessionHash,
+            "user"  => $user->toArray(),
+            "hash"  => $sessionHash,
             "flags" => [],
         ];
 
