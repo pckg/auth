@@ -39,7 +39,6 @@ class LoginUser
      */
     public function execute()
     {
-        dd(db());
         $data = $this->loginForm->getRawData(['email', 'password']);
 
         $this->executeManual($data['email'], $data['password'], isset($data['autologin']));
