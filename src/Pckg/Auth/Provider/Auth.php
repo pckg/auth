@@ -28,9 +28,9 @@ class Auth extends Provider
     {
         return [
             'auth.loginWithCookie'     => LoginWithCookie::class,
-            'auth.restrictAccess'      => RestrictAccess::class,
             'auth.handleLogoutRequest' => HandleLogoutRequest::class,
             'auth.handleLoginRequest'  => HandleLoginRequest::class,
+            'auth.restrictAccess'      => RestrictAccess::class,
         ];
     }
 
