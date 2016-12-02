@@ -45,11 +45,6 @@ class Database implements ProviderInterface
         return $this->getEntity()->where('email', $email)->one();
     }
 
-    public function getUserByAutologin($autologin)
-    {
-        return $this->getEntity()->where('SHA1(id)', $autologin)->one();
-    }
-
     public function getUserById($id)
     {
         return $this->getEntity()->where('id', $id)->one();

@@ -2,7 +2,7 @@
 
 namespace Pckg\Auth\Controller;
 
-use Pckg\Auth\Command\LoginUser;
+use Pckg\Auth\Command\LoginUserViaForm;
 use Pckg\Auth\Command\LogoutUser;
 use Pckg\Auth\Command\RegisterUser;
 use Pckg\Auth\Command\SendNewPassword;
@@ -35,7 +35,7 @@ class Auth extends Controller
         );
     }
 
-    function postLoginAction(LoginUser $loginUserCommand)
+    function postLoginAction(LoginUserViaForm $loginUserCommand)
     {
         $loginUserCommand->onSuccess(
             function() {

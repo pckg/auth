@@ -117,10 +117,10 @@ class Auth
         return false;
     }
 
-    public function autologin($autologin)
+    public function autologin($id)
     {
         $rUser = $this->getProvider()
-                      ->getUserByAutologin($autologin);
+                      ->getUserById($id);
 
         if ($rUser) {
             return $this->performLogin($rUser);
@@ -129,18 +129,18 @@ class Auth
         return false;
     }
 
+    /**
+     * @T00D00
+     */
     public function setAutologin()
     {
-        if (!$this->isLoggedIn()) {
-            return;
-        }
-
         setcookie(
-            "pckg.auth.autologin",
+            "pckg_auth_autologin",
             serialize(
                 [
                     $this->getProviderKey() => [
-                        'user_id' => sha1($this->user('id')),
+                        'hash'    => sha1(config('security.hash') . $this->user('id')),
+                        'user_id' => $this->user('id'),
                     ],
                 ]
             ),
@@ -193,8 +193,16 @@ class Auth
         return $_SESSION['Pckg']['Auth']['Provider'][$this->getProviderKey()] ?? [];
     }
 
+    public function requestProvider()
+    {
+        if (!$this->provider) {
+            $this->useProvider('frontend');
+        }
+    }
+
     public function isLoggedIn()
     {
+        $this->requestProvider();
         $providerKey = $this->getProviderKey();
         $sessionProvider = $this->getSessionProvider();
 
@@ -250,8 +258,10 @@ class Auth
 
     public function getGroupId()
     {
-        return $this->getSessionProvider()['user'][config(
-            'pckg.auth.providers.' . $this->getProviderKey() . '.userGroup'
-        )] ?? null;
+        $group = $this->getSessionProvider()['user'][config(
+                'pckg.auth.providers.' . $this->getProviderKey() . '.userGroup'
+            )] ?? null;
+
+        return $group;
     }
 }

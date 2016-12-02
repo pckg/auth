@@ -2,11 +2,8 @@
 
 namespace Pckg\Auth\Command;
 
-use Pckg\Auth\Form\Login;
-use Pckg\Auth\Service\Auth;
 use Pckg\Concept\Command\Stated;
 use Pckg\Concept\Reflect;
-use Pckg\Framework\Request;
 
 /**
  * Class LoginUser
@@ -19,29 +16,10 @@ class LoginUser
     use Stated;
 
     /**
-     * @var Request
-     */
-    protected $request;
-
-    protected $loginForm;
-
-    /**
-     * @param Request $request
-     * @param Auth    $auth
-     */
-    public function __construct(Login $loginForm = null)
-    {
-        $this->loginForm = $loginForm;
-    }
-
-    /**
      * @return mixed
      */
     public function execute()
     {
-        $data = $this->loginForm->getRawData(['email', 'password']);
-
-        $this->executeManual($data['email'], $data['password'], isset($data['autologin']));
     }
 
     public function executeManual($email, $password, $autologin = false)
