@@ -23,18 +23,14 @@ class LoginUser
      */
     protected $request;
 
-    /**
-     * @var Auth
-     */
-    protected $authHelper;
+    protected $loginForm;
 
     /**
      * @param Request $request
      * @param Auth    $auth
      */
-    public function __construct(Auth $auth, Login $loginForm)
+    public function __construct(Login $loginForm = null)
     {
-        $this->auth = $auth;
         $this->loginForm = $loginForm;
     }
 
@@ -43,43 +39,43 @@ class LoginUser
      */
     public function execute()
     {
+        dd(db());
         $data = $this->loginForm->getRawData(['email', 'password']);
 
+        $this->executeManual($data['email'], $data['password'], isset($data['autologin']));
+    }
+
+    public function executeManual($email, $password, $autologin = false)
+    {
         foreach (config('pckg.auth.providers') as $providerKey => $providerConfig) {
-            /**
-             * Create and set new provider.
-             */
-            $provider = Reflect::create($providerConfig['type'], [$this->auth]);
-            $provider->setEntity($providerConfig['entity']);
+            $auth = auth($providerKey);
+            $provider = $auth->getProvider();
+
             /**
              * If user doesnt exists, don't proceed with execution.
              */
             if (!($user = $provider->getUserByEmailAndPassword(
-                $data['email'],
-                sha1($data['password'] . $providerConfig['hash'])
+                $email,
+                sha1($password . $providerConfig['hash'])
             ))
             ) {
                 continue;
             }
 
-            /**
-             * Try to login.
-             */
-            $this->auth->useProvider($provider, $providerKey);
-            if ($this->auth->performLogin($user)) {
+            if ($auth->performLogin($user)) {
                 /**
                  * @T00D00 - login user on all providers!
                  */
-                $this->auth->useProvider($provider);
-                trigger('user.loggedIn', [$this->auth->getUser()]);
-                if (isset($data['autologin'])) {
-                    $this->auth->setAutologin();
+                $auth->useProvider($provider);
+                trigger('user.loggedIn', [$auth->getUser()]);
+                if ($autologin) {
+                    $auth->setAutologin();
                 }
 
                 return $this->successful();
             }
         }
-        
+
         return $this->error();
     }
 

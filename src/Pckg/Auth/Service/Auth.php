@@ -20,12 +20,13 @@ class Auth
      *
      * @return $this
      */
-    public function useProvider($provider, $providerKey = 'default')
+    public function useProvider($provider, $providerKey = 'frontend')
     {
         if (is_string($provider)) {
             if (!array_key_exists($provider, $this->providers)) {
                 $config = config('pckg.auth.providers.' . $provider);
                 $this->providers[$provider] = Reflect::create($config['type'], [$this]);
+                $this->providers[$provider]->setEntity($config['entity']);
             }
 
             $provider = $this->providers[$provider];

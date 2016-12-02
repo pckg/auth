@@ -39,12 +39,7 @@ class Auth extends Controller
     {
         $loginUserCommand->onSuccess(
             function() {
-                $user = $this->auth()->getUser();
-                $this->response()->respondWithSuccessRedirect(
-                    method_exists($user, 'isAdmin') && $user->isAdmin()
-                        ? '/maestro'
-                        : '/profile'
-                );
+                $this->response()->respondWithSuccessRedirect($this->auth()->getUser()->getDashboardUrl());
             }
         )->onError(
             function() {

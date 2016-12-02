@@ -21,7 +21,7 @@ class RestrictAccess extends AbstractChainOfReponsibility
             /**
              * Check status rules.
              */
-            if ($gate['status']) {
+            if (isset($gate['status'])) {
                 if ($gate['status'] == 'logged-out' && $auth->isLoggedIn()) {
                     continue;
 
@@ -34,7 +34,7 @@ class RestrictAccess extends AbstractChainOfReponsibility
             /**
              * Check user group rules.
              */
-            if ($gate['userGroup']) {
+            if (isset($gate['userGroup'])) {
                 if (!in_array($auth->getGroupId(), $gate['userGroup'])) {
                     continue;
 
@@ -81,7 +81,7 @@ class RestrictAccess extends AbstractChainOfReponsibility
                 }
             }
 
-            redirect(url($gate['redirect']));
+            internal(url($gate['redirect']));
         }
 
         return $next();

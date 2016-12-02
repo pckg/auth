@@ -13,6 +13,7 @@ use Pckg\Auth\Event;
 use Pckg\Auth\Event\UserLoggedIn;
 use Pckg\Auth\Event\UserRegistered;
 use Pckg\Auth\Middleware;
+use Pckg\Auth\Middleware\HandleLoginRequest;
 use Pckg\Auth\Middleware\HandleLogoutRequest;
 use Pckg\Auth\Middleware\LoginWithCookie;
 use Pckg\Auth\Middleware\RestrictAccess;
@@ -29,7 +30,7 @@ class Auth extends Provider
             'auth.loginWithCookie'     => LoginWithCookie::class,
             'auth.restrictAccess'      => RestrictAccess::class,
             'auth.handleLogoutRequest' => HandleLogoutRequest::class,
-            // 'auth.handleLoginRequest'  => HandleLoginRequest::class,
+            'auth.handleLoginRequest'  => HandleLoginRequest::class,
         ];
     }
 
