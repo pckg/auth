@@ -11,7 +11,7 @@
   ],
   "require": {
     "pckg/framework": "dev-master",
-    "facebook/php-sdk-v4": "dev-master"
+    "facebook/graph-sdk": "5.*"
   },
   "autoload": {
     "psr-0": {
