@@ -31,11 +31,14 @@ class LoginUser
             /**
              * If user doesnt exists, don't proceed with execution.
              */
-            if (!($user = $provider->getUserByEmailAndPassword(
-                $email,
-                sha1($password . $providerConfig['hash'])
-            ))
+
+            if (!($user = $provider->getUserByEmail($email))
             ) {
+                continue;
+            }
+
+            $hashedPassword = $user->password;
+            if (!$auth->hashedPasswordMatches($hashedPassword, $password)) {
                 continue;
             }
 

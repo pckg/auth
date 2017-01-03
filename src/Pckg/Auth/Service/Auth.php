@@ -90,6 +90,18 @@ class Auth
         return sha1($password . $hash);
     }
 
+    public function hashedPasswordMatches($hashedPassword, $password)
+    {
+        $version = config('pckg.auth.providers.' . $this->getProviderKey() . '.version');
+        $hash = config('pckg.auth.providers.' . $this->getProviderKey() . '.hash');
+
+        if ($version == 'secure') {
+            return password_verify($password, $hashedPassword);
+        }
+
+        return sha1($password . $hash);
+    }
+
     public function createPassword($length = 10)
     {
         $characters = str_split('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 1);
@@ -101,14 +113,14 @@ class Auth
         return $password;
     }
 
-    public function login($email, $password, $hash = null)
+    public function login($email, $password)
     {
-        $hash = is_null($hash)
-            ? config('hash')
-            : $hash;
-
         $rUser = $this->getProvider()
-                      ->getUserByEmailAndPassword($email, $this->makePassword($password, $hash));
+                      ->getUserByEmail($email);
+
+        if (!$rUser || !$this->hashedPasswordMatches($rUser->password, $password)) {
+            return false;
+        }
 
         if ($rUser) {
             return $this->performLogin($rUser);
