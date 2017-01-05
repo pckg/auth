@@ -102,6 +102,18 @@ class Auth
         return sha1($password . $hash);
     }
 
+    public function hashPassword($password)
+    {
+        $version = config('pckg.auth.providers.' . $this->getProviderKey() . '.version');
+        $hash = config('pckg.auth.providers.' . $this->getProviderKey() . '.hash');
+
+        if ($version == 'secure') {
+            return password_hash($password, PASSWORD_DEFAULT);
+        }
+
+        return sha1($password . $hash);
+    }
+
     public function createPassword($length = 10)
     {
         $characters = str_split('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 1);

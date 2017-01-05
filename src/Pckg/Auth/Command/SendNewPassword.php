@@ -42,7 +42,7 @@ class SendNewPassword
                 continue;
             }
 
-            $user->password = sha1($password . $providerConfig['hash']);
+            $user->password = auth()->hashPassword($password);
             $user->save();
 
             /**
