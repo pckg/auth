@@ -83,13 +83,6 @@ class Auth
             : null;
     }
 
-    public function makePassword($password)
-    {
-        $hash = config('pckg.auth.providers.' . $this->getProviderKey() . '.hash');
-
-        return sha1($password . $hash);
-    }
-
     public function hashedPasswordMatches($hashedPassword, $password)
     {
         $version = config('pckg.auth.providers.' . $this->getProviderKey() . '.version');
