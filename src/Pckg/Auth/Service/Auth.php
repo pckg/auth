@@ -92,7 +92,7 @@ class Auth
             return password_verify($password, $hashedPassword);
         }
 
-        return sha1($password . $hash);
+        return sha1($password . $hash) === $hashedPassword;
     }
 
     public function hashPassword($password)
