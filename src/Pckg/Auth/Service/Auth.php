@@ -91,7 +91,7 @@ class Auth
         if ($version == 'secure') {
             return password_verify($password, $hashedPassword);
         }
-
+        
         return sha1($password . $hash) === $hashedPassword;
     }
 
