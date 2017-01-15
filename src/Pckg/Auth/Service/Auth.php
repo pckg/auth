@@ -255,6 +255,7 @@ class Auth
 
         if (isset($_COOKIE['pckg_auth_parentlogin'])) {
             $this->performParentLogin();
+            setcookie('pckg_auth_parentlogin', null, time() - (24 * 60 * 60 * 365.25), '/');
         } else {
             setcookie('pckg_auth_autologin', null, time() - (24 * 60 * 60 * 365.25), '/');
         }
