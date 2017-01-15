@@ -91,7 +91,7 @@ class Auth
         if ($version == 'secure') {
             return password_verify($password, $hashedPassword);
         }
-        
+
         return sha1($password . $hash) === $hashedPassword;
     }
 
@@ -144,6 +144,57 @@ class Auth
         }
 
         return false;
+    }
+
+    public function setParentLogin()
+    {
+        setcookie(
+            "pckg_auth_parentlogin",
+            serialize(
+                [
+                    $this->getProviderKey() => [
+                        'hash'    => sha1(config('security.hash') . $this->user('id')),
+                        'user_id' => $this->user('id'),
+                    ],
+                ]
+            ),
+            time() + (24 * 60 * 60 * 365.25),
+            "/"
+        );
+    }
+
+    public function performAutologin()
+    {
+        if (!isset($_COOKIE['pckg_auth_autologin'])) {
+            return;
+        }
+
+        $cookie = unserialize($_COOKIE['pckg_auth_autologin']);
+        foreach ($cookie as $provider => $data) {
+            if (isset($data['user_id']) && isset($data['hash'])
+                && sha1(config('security.hash') . $data['user_id']) == $data['hash']
+            ) {
+                auth()->useProvider($provider);
+                auth()->autologin($data['user_id']);
+            }
+        }
+    }
+
+    public function performParentLogin()
+    {
+        if (!isset($_COOKIE['pckg_auth_autologin'])) {
+            return;
+        }
+
+        $cookie = unserialize($_COOKIE['pckg_auth_autologin']);
+        foreach ($cookie as $provider => $data) {
+            if (isset($data['user_id']) && isset($data['hash'])
+                && sha1(config('security.hash') . $data['user_id']) == $data['hash']
+            ) {
+                auth()->useProvider($provider);
+                auth()->autologin($data['user_id']);
+            }
+        }
     }
 
     /**
@@ -202,7 +253,12 @@ class Auth
             setcookie('pckg_auth_provider_' . $providerKey, null, time() - (24 * 60 * 60 * 365.25), '/');
         }
 
-        setcookie('pckg_auth_autologin', null, time() - (24 * 60 * 60 * 365.25), '/');
+        if (isset($_COOKIE['pckg_auth_parentlogin'])) {
+            $this->performParentLogin();
+        } else {
+            setcookie('pckg_auth_autologin', null, time() - (24 * 60 * 60 * 365.25), '/');
+        }
+
     }
 
     public function getSessionProvider()

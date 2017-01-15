@@ -15,15 +15,7 @@ class LoginWithCookie extends AbstractChainOfReponsibility
             return $next();
         }
 
-        $cookie = unserialize($_COOKIE['pckg_auth_autologin']);
-        foreach ($cookie as $provider => $data) {
-            if (isset($data['user_id']) && isset($data['hash'])
-                && sha1(config('security.hash') . $data['user_id']) == $data['hash']
-            ) {
-                auth()->useProvider($provider);
-                auth()->autologin($data['user_id']);
-            }
-        }
+        auth()->performAutologin();
 
         return $next();
     }
