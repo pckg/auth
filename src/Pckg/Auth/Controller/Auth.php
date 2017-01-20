@@ -43,11 +43,12 @@ class Auth extends Controller
             }
         )->onError(
             function() {
-                $this->response()->respondWithError(
-                    [
-                        'text' => __('pckg.auth.error'),
-                    ]
-                );
+                if ($this->request()->isAjax()) {
+                    $this->response()->respondWithError(['text' => __('pckg.auth.error')]);
+                } else {
+                    flash('pckg.auth.error', __('pckg.auth.error'));
+                    $this->response()->respondWithErrorRedirect();
+                }
 
             }
         )->execute();

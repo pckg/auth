@@ -4,20 +4,11 @@
             <h1>{{ __('h1_login') }}</h1>
         </div>
         <div>
-            {{ form | raw }}
+            {% if flash('pckg.auth.error', false) %}
+                <pckg-bootstrap-alert style="danger" text="{{ flash('pckg.auth.error') }}"></pckg-bootstrap-alert>
+            {% endif %}
 
-            <!-- <div class="row">
-                <div class="col-md-12">Coming soon:</div>
-                <div class="col-md-4">
-                    <a href="{{ url('login_facebook') }}">Facebook</a>
-                </div>
-                <div class="col-md-4">
-                    <a href="{{ url('login_twitter') }}">Twitter</a>
-                </div>
-                <div class="col-md-4">
-                    <a href="{{ url('login_facebook') }}">Google+</a>
-                </div>
-            </div> -->
+            {{ form | raw }}
         </div>
     </div>
 </div>
