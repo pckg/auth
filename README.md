@@ -1,0 +1,2 @@
+# auth
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8c8b27d58aaa405e9f15ee93f2712d54)](https://www.codacy.com/app/schtr4jh/auth?utm_source=github.com&utm_medium=referral&utm_content=pckg/auth&utm_campaign=badger)
