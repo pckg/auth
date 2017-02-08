@@ -27,6 +27,10 @@ class Auth extends Controller
 
     function getLoginAction(Login $loginForm)
     {
+        if (auth()->isLoggedIn()) {
+            return $this->response()->redirect($this->auth()->getUser()->getDashboardUrl());
+        }
+
         return view(
             'login',
             [
