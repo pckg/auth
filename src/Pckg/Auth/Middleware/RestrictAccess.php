@@ -1,5 +1,6 @@
 <?php namespace Pckg\Auth\Middleware;
 
+use Exception;
 use Pckg\Concept\AbstractChainOfReponsibility;
 use Pckg\Concept\Reflect;
 
@@ -12,76 +13,31 @@ class RestrictAccess extends AbstractChainOfReponsibility
             return $next();
         }
 
-        $router = router()->get();
-        $routeName = $router['name'];
+        $route = router()->get();
+        $tags = config('pckg.auth.tags', []);
 
-        foreach (config('pckg.auth.gates', []) as $gate) {
-            $auth = auth($gate['provider']);
+        if (isset($route['tags'])) {
+            foreach (config('pckg.auth.gates', []) as $gate) {
+                $auth = auth($gate['provider']);
 
-            /**
-             * Check status rules.
-             */
-            if (isset($gate['status'])) {
-                if ($gate['status'] == 'logged-out' && $auth->isLoggedIn()) {
-                    continue;
-
-                } elseif ($gate['status'] == 'logged-in' && !$auth->isLoggedIn()) {
-                    continue;
-
-                }
-            }
-
-            /**
-             * Check user group rules.
-             */
-            if (isset($gate['userGroup'])) {
-                if (!in_array($auth->getGroupId(), $gate['userGroup'])) {
-                    continue;
-
-                }
-            }
-
-            /**
-             * Check if route is excluded in rule.
-             */
-            if (isset($gate['exclude'])) {
-                if (in_array($routeName, $gate['exclude'])) {
-                    continue;
-                }
-
-                foreach ($gate['exclude'] as $route) {
-                    if (preg_match('#' . $route . '#', $routeName)) {
+                /**
+                 * Check for tags.
+                 * All tags should return true value.
+                 */
+                foreach ($route['tags'] ?? [] as $tag) {
+                    if (!in_array($tag, $gate['tags'])) {
                         continue;
                     }
-                }
-            }
 
-            /**
-             * Check if route is included in rule.
-             */
-            if (isset($gate['include']) && !in_array($routeName, $gate['include'])) {
-                $found = false;
-                foreach ($gate['include'] as $route) {
-                    if (preg_match('#' . $route . '#', $routeName)) {
-                        $found = true;
-                        break;
+                    if (!array_key_exists($tag, $tags)) {
+                        throw new Exception('Auth tag ' . $tag . ' not set.');
+                    }
+
+                    if (!Reflect::call($tags[$tag], [$auth])) {
+                        internal(url($gate['redirect']));
                     }
                 }
-                if (!$found) {
-                    continue;
-                }
             }
-
-            /**
-             * Check for callback.
-             */
-            if (isset($gate['callback'])) {
-                if (Reflect::method($gate['callback']['class'], $gate['callback']['method'])) {
-                    continue;
-                }
-            }
-
-            internal(url($gate['redirect']));
         }
 
         return $next();
