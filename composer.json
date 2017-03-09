@@ -1,6 +1,6 @@
 {
   "name": "pckg/auth",
-  "description": "Database, Twitter, Facebook and Google+ authentication",
+  "description": "Provides basic functionality for authentication and authorization users in database, on Twitter, Facebook and with OAuth2 standard",
   "homepage": "https://github.com/pckg/auth",
   "license": "MIT",
   "authors": [
