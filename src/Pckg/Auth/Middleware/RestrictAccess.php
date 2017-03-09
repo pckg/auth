@@ -34,7 +34,13 @@ class RestrictAccess extends AbstractChainOfReponsibility
                     }
 
                     if (!Reflect::call($tags[$tag], [$auth])) {
-                        internal(url($gate['redirect']));
+                        if (isset($gate['redirect'])) {
+                            redirect(url($gate['redirect']));
+                        } else if (isset($gate['internal'])) {
+                            internal(url($gate['internal']));
+                        } else {
+                            redirect('/');
+                        }
                     }
                 }
             }
