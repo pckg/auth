@@ -2,6 +2,7 @@
 
 namespace Pckg\Auth\Service;
 
+use Pckg\Auth\Record\User;
 use Pckg\Concept\Reflect;
 
 class Auth
@@ -56,6 +57,9 @@ class Auth
     }
 
     // user object
+    /**
+     * @return mixed|User
+     */
     public function getUser()
     {
         return $this->getProvider()->getUserById($this->user('id'));
