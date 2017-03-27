@@ -17,10 +17,11 @@ class HandleLoginRequest
             $loginUser = new LoginUser();
             $loginUser->onSuccess(
                 function() {
+                    response()->respondWithSuccessRedirect(auth('frontend')->getUser()->getDashboardUrl());
                     redirect(-1);
                 }
             );
-            $loginUser->executeManual(post('email'), post('password'));
+            $loginUser->executeManual(post('email'), post('password'), post('autologin', false));
         }
 
         return $next();
