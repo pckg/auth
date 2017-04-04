@@ -16,6 +16,8 @@ class Auth
 
     protected $providers = [];
 
+    protected $loggedIn = false;
+
     /**
      * @param ProviderInterface|mixed $provider
      *
@@ -76,10 +78,8 @@ class Auth
 
         if (!$sessionUser) {
             return null;
-
         } else if (!$key) {
             return $sessionUser;
-
         }
 
         return array_key_exists($key, $sessionUser)
@@ -154,7 +154,7 @@ class Auth
     {
         setcookie(
             "pckg_auth_parentlogin",
-            serialize(
+            json_encode(
                 [
                     $this->getProviderKey() => [
                         'hash'    => sha1(config('security.hash') . $this->user('id')),
@@ -173,7 +173,7 @@ class Auth
             return;
         }
 
-        $cookie = unserialize($_COOKIE['pckg_auth_autologin']);
+        $cookie = json_decode($_COOKIE['pckg_auth_autologin'], true);
         foreach ($cookie as $provider => $data) {
             if (isset($data['user_id']) && isset($data['hash'])
                 && sha1(config('security.hash') . $data['user_id']) == $data['hash']
@@ -190,7 +190,7 @@ class Auth
             return;
         }
 
-        $cookie = unserialize($_COOKIE['pckg_auth_autologin']);
+        $cookie = json_decode($_COOKIE['pckg_auth_autologin']);
         foreach ($cookie as $provider => $data) {
             if (isset($data['user_id']) && isset($data['hash'])
                 && sha1(config('security.hash') . $data['user_id']) == $data['hash']
@@ -208,7 +208,7 @@ class Auth
     {
         setcookie(
             "pckg_auth_autologin",
-            serialize(
+            json_encode(
                 [
                     $this->getProviderKey() => [
                         'hash'    => sha1(config('security.hash') . $this->user('id')),
@@ -235,7 +235,7 @@ class Auth
 
         setcookie(
             "pckg_auth_provider_" . $providerKey,
-            serialize(
+            json_encode(
                 [
                     "user" => $user->id,
                     "hash" => $sessionHash,
@@ -244,6 +244,8 @@ class Auth
             time() + (24 * 60 * 60 * 365.25),
             "/"
         );
+
+        $this->loggedIn = true;
 
         return true;
     }
@@ -260,11 +262,11 @@ class Auth
         if (isset($_COOKIE['pckg_auth_parentlogin'])) {
             $this->performParentLogin();
             setcookie('pckg_auth_parentlogin', null, time() - (24 * 60 * 60 * 365.25), '/');
-            
         } else {
             setcookie('pckg_auth_autologin', null, time() - (24 * 60 * 60 * 365.25), '/');
         }
 
+        $this->loggedIn = false;
     }
 
     public function getSessionProvider()
@@ -284,6 +286,10 @@ class Auth
         $this->requestProvider();
         $providerKey = $this->getProviderKey();
         $sessionProvider = $this->getSessionProvider();
+
+        if ($this->loggedIn) {
+            return true;
+        }
 
         /**
          * Session for provider does not exist.
@@ -306,7 +312,7 @@ class Auth
             return false;
         }
 
-        $cookie = unserialize($_COOKIE['pckg_auth_provider_' . $providerKey]);
+        $cookie = json_encode($_COOKIE['pckg_auth_provider_' . $providerKey]);
 
         /**
          * Cookie exists, but hash isn't set.
