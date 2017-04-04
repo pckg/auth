@@ -312,7 +312,7 @@ class Auth
             return false;
         }
 
-        $cookie = json_encode($_COOKIE['pckg_auth_provider_' . $providerKey]);
+        $cookie = json_decode($_COOKIE['pckg_auth_provider_' . $providerKey], true);
 
         /**
          * Cookie exists, but hash isn't set.

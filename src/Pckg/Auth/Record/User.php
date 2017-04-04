@@ -17,7 +17,7 @@ class User extends Record
 
     public function isAdmin()
     {
-        return in_array($this->user_group_id, [1, 2, 3]);
+        return in_array($this->status_id, [1]);
     }
 
 }
