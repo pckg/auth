@@ -161,7 +161,7 @@ class Auth extends Controller
 
     public function getUserHeaderAction()
     {
-        return view('Pckg\Auth:userHeader');
+        return view('Pckg/Auth:userHeader');
     }
 
 }
