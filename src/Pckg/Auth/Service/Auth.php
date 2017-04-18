@@ -190,7 +190,7 @@ class Auth
             return;
         }
 
-        $cookie = json_decode($_COOKIE['pckg_auth_autologin']);
+        $cookie = json_decode($_COOKIE['pckg_auth_autologin'], true);
         foreach ($cookie as $provider => $data) {
             if (isset($data['user_id']) && isset($data['hash'])
                 && sha1(config('security.hash') . $data['user_id']) == $data['hash']
