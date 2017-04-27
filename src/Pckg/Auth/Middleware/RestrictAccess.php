@@ -35,7 +35,7 @@ class RestrictAccess extends AbstractChainOfReponsibility
 
                     if (!Reflect::call($tags[$tag], [$auth])) {
                         if (isset($gate['redirect'])) {
-                            redirect(url(is_callable($gate['redirect']) ? Reflect::call($gate['redirect'], [$auth]) : $gate['redirect']));
+                            redirect(url(is_only_callable($gate['redirect']) ? Reflect::call($gate['redirect'], [$auth]) : $gate['redirect']));
                         } else if (isset($gate['internal'])) {
                             internal(url($gate['internal']));
                         } else {
