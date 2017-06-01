@@ -32,7 +32,7 @@ class Auth extends Controller
         }
 
         return view(
-            'login',
+            'Pckg/Auth:login',
             [
                 'form' => $loginForm,
             ]
