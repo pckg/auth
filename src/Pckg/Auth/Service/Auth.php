@@ -341,6 +341,11 @@ class Auth
         return $this->isLoggedIn() && method_exists($this->getUser(), 'isAdmin') && $this->getUser()->isAdmin();
     }
 
+    public function isCheckin()
+    {
+        return $this->isLoggedIn() && method_exists($this->getUser(), 'isCheckin') && $this->getUser()->isCheckin();
+    }
+
     public function getGroupId()
     {
         $group = $this->getSessionProvider()['user'][config(

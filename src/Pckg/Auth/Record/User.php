@@ -20,4 +20,9 @@ class User extends Record
         return in_array($this->status_id, [1]);
     }
 
+    public function isCheckin()
+    {
+        return in_array($this->status_id, [5]);
+    }
+
 }
