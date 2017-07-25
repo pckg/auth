@@ -29,6 +29,7 @@ class CreateAuthTables extends Migration
         $users->integer('user_group_id')->references('user_groups');
         $users->email();
         $users->password();
+        $users->text('autologin');
     }
 
 }

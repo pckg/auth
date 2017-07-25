@@ -6,15 +6,13 @@ namespace Pckg\Auth\Provider;
 Registers commands, and middlewared on initialization
 */
 
-use Pckg\Auth\Command;
 use Pckg\Auth\Controller\Auth as AuthController;
 use Pckg\Auth\Controller\Facebook;
-use Pckg\Auth\Event;
 use Pckg\Auth\Event\UserLoggedIn;
 use Pckg\Auth\Event\UserRegistered;
-use Pckg\Auth\Middleware;
 use Pckg\Auth\Middleware\HandleLoginRequest;
 use Pckg\Auth\Middleware\HandleLogoutRequest;
+use Pckg\Auth\Middleware\LoginWithAutologinGetParameter;
 use Pckg\Auth\Middleware\LoginWithCookie;
 use Pckg\Auth\Middleware\RestrictAccess;
 use Pckg\Auth\Service\Auth as AuthService;
@@ -27,10 +25,11 @@ class Auth extends Provider
     public function middlewares()
     {
         return [
-            'auth.loginWithCookie'     => LoginWithCookie::class,
-            'auth.handleLogoutRequest' => HandleLogoutRequest::class,
-            'auth.handleLoginRequest'  => HandleLoginRequest::class,
-            'auth.restrictAccess'      => RestrictAccess::class,
+            LoginWithCookie::class,
+            LoginWithAutologinGetParameter::class,
+            HandleLogoutRequest::class,
+            HandleLoginRequest::class,
+            RestrictAccess::class,
         ];
     }
 

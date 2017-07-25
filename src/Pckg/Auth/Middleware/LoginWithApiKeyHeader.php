@@ -1,4 +1,4 @@
-<?php namespace Impero\User\Middleware;
+<?php namespace Pckg\Auth\Middleware;
 
 use Exception;
 use Impero\User\Entity\UserTokens;
@@ -10,23 +10,11 @@ class LoginWithApiKeyHeader
     {
         /**
          * Skip misconfigured requests.
+         * Skip console requests.
+         * Skip already logged in users.
          */
         $headerName = config('pckg.auth.apiHeader');
-        if (!$headerName) {
-            return $next();
-        }
-
-        /**
-         * Skip console requests.
-         */
-        if (!isHttp()) {
-            return $next();
-        }
-
-        /**
-         * Skipp already logged in users.
-         */
-        if (auth()->isLoggedIn()) {
+        if (!$headerName || !isHttp() || auth()->isLoggedIn()) {
             return $next();
         }
 

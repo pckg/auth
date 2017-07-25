@@ -1,6 +1,4 @@
-<?php
-
-namespace Pckg\Auth\Record;
+<?php namespace Pckg\Auth\Record;
 
 use Pckg\Auth\Entity\Users;
 use Pckg\Database\Record;
@@ -17,12 +15,22 @@ class User extends Record
 
     public function isAdmin()
     {
-        return in_array($this->status_id, [1]);
+        return in_array($this->status_id, [1, 3]);
     }
 
     public function isCheckin()
     {
         return in_array($this->status_id, [5]);
+    }
+
+    public function getAutologinUrlAttribute()
+    {
+        return config('url') . '/?' . $this->getAutologinParameterAttribute();
+    }
+
+    public function getAutologinParameterAttribute()
+    {
+        return config('pckg.auth.getParameter', 'autologin') . '=' . $this->autologin;
     }
 
 }
