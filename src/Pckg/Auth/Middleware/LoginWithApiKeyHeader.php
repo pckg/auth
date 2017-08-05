@@ -14,7 +14,7 @@ class LoginWithApiKeyHeader
          * Skip already logged in users.
          */
         $headerName = config('pckg.auth.apiHeader');
-        if (!$headerName || !isHttp() || auth()->isLoggedIn()) {
+        if (!$headerName || !isHttp() || auth()->isLoggedIn() || isConsole()) {
             return $next();
         }
 
