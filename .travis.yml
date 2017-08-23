@@ -1,0 +1,58 @@
+language: php
+php:
+#  - '7.0'
+  - '7.1'
+  - '7.2'
+git:
+  depth: 5
+services:
+  - mysql
+node_js:
+  - "0.10"
+before_script:
+  # XVFB
+  - "export DISPLAY=:99.0"
+  - "Xvfb :99.0 -extension RANDR > /dev/null &"
+install:
+
+  # Selenium server
+  - "wget http://selenium-release.storage.googleapis.com/3.5/selenium-server-standalone-3.5.1.jar"
+  - "sudo java -jar selenium-server-standalone-3.5.1.jar > /dev/null 2>/dev/null &"
+  #- sleep 30 # gives enough time to Selenium to start
+  - "php www/index.php -S 127.0.0.1:8888 -t . >/dev/null 2>&1 &"
+  # Start up the webdriver.
+  - phantomjs --webdriver=4444 >/dev/null 2>&1 &
+  - composer self-update
+  - composer install
+  - "wget http://codeception.com/codecept.phar"
+  - "cp ./codeception.sample.travis.yml ./codeception.yml"
+script:
+  - php ./codecept.phar run
+#deploy:
+#  skip_cleanup: true
+addons:
+  hosts:
+    - derive.travis
+  firefox: latest
+  chrome: stable
+sudo: true
+cache:
+  bundler: true
+  directories:
+    - vendor
+    - bower_components
+    - components
+    - $HOME/.composer/cache
+    - $HOME/.npm
+    - $HOME/.cache # includes bowers cache
+notifications:
+  email: false
+  webhooks:
+    urls:
+      - http://condo.foobar.si/webhook
+      - http://center.foobar.si/webhook
+    on_success: always # default: always
+    on_failure: always # default: always
+    on_start: always   # default: never
+    on_cancel: always # default: always
+    on_error: always # default: always

@@ -1,0 +1,7 @@
+# TESTS ;-)
+tests/_output/*
+tests/acceptance.suite.yml
+codeception.yml
+
+# DEPENDENCIES
+vendor/
