@@ -2,10 +2,9 @@
 
 namespace Pckg\Auth\Service\Provider;
 
+use Derive\Orders\Entity\Users;
+use Pckg\Auth\Record\User;
 use Pckg\Auth\Service\ProviderInterface;
-use Pckg\Framework\Request\Data\Session;
-use Pckg\Framework\Response;
-use Pckg\Framework\Router;
 
 class Facebook implements ProviderInterface
 {
@@ -14,29 +13,39 @@ class Facebook implements ProviderInterface
 
     protected $permissions = [];
 
-    public function __construct(\Facebook\Facebook $facebook, Response $response, Router $router, Session $session)
+    /**
+     * @var \Facebook\Helpers\FacebookRedirectLoginHelper
+     */
+    protected $redirectLoginHelper;
+
+    public function __construct(\Facebook\Facebook $facebook)
     {
         $this->facebook = $facebook;
-        $this->response = $response;
-        $this->router = $router;
-        $this->session = $session;
 
         $this->redirectLoginHelper = $this->facebook->getRedirectLoginHelper();
     }
 
+    /**
+     * @return \Facebook\Facebook
+     */
+    public function getApi()
+    {
+        return $this->facebook;
+    }
+
     public function initPermissions()
     {
-        $this->permissions = ['email'];
+        $this->permissions = ['email', 'manage_pages', 'pages_manage_instant_articles', 'pages_show_list'];
     }
 
     public function redirectToLogin()
     {
         $loginUrl = $this->redirectLoginHelper->getLoginUrl(
-            $this->router->make('takelogin_facebook', [], true),
+            url('takelogin_facebook', [], true),
             $this->permissions
         );
 
-        $this->response->redirect($loginUrl);
+        response()->redirect($loginUrl);
     }
 
     private function getAccessToken()
@@ -44,15 +53,11 @@ class Facebook implements ProviderInterface
         try {
             $accessToken = $this->redirectLoginHelper->getAccessToken();
 
-        } catch (Facebook\Exceptions\FacebookResponseException $e) {
-            throw $e;
-
-        } catch (Facebook\Exceptions\FacebookSDKException $e) {
-            throw $e;
-
-        } finally {
             return $accessToken;
-
+        } catch (\Facebook\Exceptions\FacebookResponseException $e) {
+            throw $e;
+        } catch (\Facebook\Exceptions\FacebookSDKException $e) {
+            throw $e;
         }
     }
 
@@ -61,14 +66,12 @@ class Facebook implements ProviderInterface
         if (!$accessToken) {
             if ($this->redirectLoginHelper->getError()) {
                 throw new \Exception(
-                    $this->redirectLoginHelper->getError() . ' ' . $this->redirectLoginHelper->getErrorCode(
-                    ) . ' ' . $this->redirectLoginHelper->getErrorReason(
-                    ) . ' ' . $this->redirectLoginHelper->getErrorDescription()
+                    $this->redirectLoginHelper->getError() . ' ' . $this->redirectLoginHelper->getErrorCode() . ' ' .
+                    $this->redirectLoginHelper->getErrorReason() . ' ' .
+                    $this->redirectLoginHelper->getErrorDescription()
                 );
-
             } else {
                 throw new \Exception('No access token');
-
             }
         }
     }
@@ -80,9 +83,8 @@ class Facebook implements ProviderInterface
         if (!$accessToken->isLongLived()) {
             try {
                 $accessToken = $oAuth2Client->getLongLivedAccessToken($accessToken);
-            } catch (Facebook\Exceptions\FacebookSDKException $e) {
+            } catch (\Facebook\Exceptions\FacebookSDKException $e) {
                 throw $e;
-
             } finally {
                 return $accessToken;
             }
@@ -93,14 +95,32 @@ class Facebook implements ProviderInterface
 
     public function handleTakelogin()
     {
-        $helper = $this->facebook->getRedirectLoginHelper();
-
+        //$helper = $this->facebook->getRedirectLoginHelper();
+        /**
+         * Make access token actions.
+         */
         $accessToken = $this->getAccessToken();
-        $this->checkAccessToken($helper, $accessToken);
+        $this->checkAccessToken($accessToken);
         $accessToken = $this->setLongLived($accessToken);
 
-        $this->session->auth->fb->fb_access_token = (string)$accessToken;
+        /**
+         * Get user data from facebook.
+         */
+        $body = $this->facebook->get('me?fields=name,email', $accessToken)->getDecodedBody();
+        $email = $body['email'];
+        $fbUserId = $body['id'];
 
+        /**
+         * Link user to facebook user and save long live token.
+         */
+        (new Users())->where('email', $email)->oneAndIf(function(User $user) use ($fbUserId, $accessToken) {
+            $user->setAndSave(['fb_user_id' => $fbUserId, 'fb_long_live_token' => $accessToken]);
+        });
+
+        /**
+         * Save to session for later use.
+         */
+        session()->auth->fb->fb_access_token = (string)$accessToken;
         $_SESSION['Auth']['Facebook']['fb_access_token'] = (string)$accessToken;
 
         return !!$accessToken;
