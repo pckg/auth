@@ -23,6 +23,8 @@ class Facebook implements ProviderInterface
         $this->facebook = $facebook;
 
         $this->redirectLoginHelper = $this->facebook->getRedirectLoginHelper();
+
+        $this->initPermissions();
     }
 
     /**
