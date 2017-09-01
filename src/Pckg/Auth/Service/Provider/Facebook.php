@@ -37,7 +37,7 @@ class Facebook implements ProviderInterface
 
     public function initPermissions()
     {
-        $this->permissions = ['email', 'manage_pages', 'pages_manage_instant_articles', 'pages_show_list'];
+        $this->permissions = ['email', /*'manage_pages', 'pages_manage_instant_articles',*/ 'pages_show_list'];
     }
 
     public function redirectToLogin()
