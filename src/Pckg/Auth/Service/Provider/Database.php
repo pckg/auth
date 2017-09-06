@@ -1,14 +1,8 @@
-<?php
+<?php namespace Pckg\Auth\Service\Provider;
 
-namespace Pckg\Auth\Service\Provider;
-
-use Pckg\Auth\Entity\Users;
 use Pckg\Auth\Service\Auth;
-use Pckg\Auth\Service\ProviderInterface;
-use Pckg\Framework\Response;
-use Pckg\Framework\Router;
 
-class Database implements ProviderInterface
+class Database extends AbstractProvider
 {
 
     /**
@@ -16,38 +10,9 @@ class Database implements ProviderInterface
      */
     protected $auth;
 
-    protected $entity = Users::class;
-
     public function __construct(Auth $auth)
     {
         $this->auth = $auth;
-    }
-
-    public function setEntity($entity)
-    {
-        $this->entity = $entity;
-    }
-
-    public function getEntity()
-    {
-        $class = $this->entity;
-
-        return new $class;
-    }
-
-    public function getUserByEmailAndPassword($email, $password)
-    {
-        return $this->getEntity()->where('email', $email)->where('password', $password)->one();
-    }
-
-    public function getUserByEmail($email)
-    {
-        return $this->getEntity()->where('email', $email)->one();
-    }
-
-    public function getUserById($id)
-    {
-        return $this->getEntity()->where('id', $id)->one();
     }
 
     public function redirectToLogin()
@@ -57,7 +22,6 @@ class Database implements ProviderInterface
 
     public function logout()
     {
-
     }
 
 }

@@ -1,12 +1,9 @@
-<?php
-
-namespace Pckg\Auth\Service\Provider;
+<?php namespace Pckg\Auth\Service\Provider;
 
 use Derive\Orders\Entity\Users;
 use Pckg\Auth\Record\User;
-use Pckg\Auth\Service\ProviderInterface;
 
-class Facebook implements ProviderInterface
+class Facebook extends AbstractProvider
 {
 
     protected $facebook;
@@ -17,6 +14,8 @@ class Facebook implements ProviderInterface
      * @var \Facebook\Helpers\FacebookRedirectLoginHelper
      */
     protected $redirectLoginHelper;
+
+    protected $entity = Users::class;
 
     public function __construct(\Facebook\Facebook $facebook)
     {
