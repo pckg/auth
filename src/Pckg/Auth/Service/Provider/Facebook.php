@@ -37,7 +37,10 @@ class Facebook implements ProviderInterface
 
     public function initPermissions()
     {
-        $this->permissions = ['email', /*'manage_pages', 'pages_manage_instant_articles',*/ 'pages_show_list'];
+        $this->permissions = [
+            'email', /*'manage_pages', 'pages_manage_instant_articles',*/
+            'pages_show_list',
+        ];
     }
 
     public function redirectToLogin()
@@ -115,8 +118,8 @@ class Facebook implements ProviderInterface
         /**
          * Link user to facebook user and save long live token.
          */
-        (new Users())->where('email', $email)->oneAndIf(function(User $user) use ($fbUserId, $accessToken) {
-            $user->setAndSave(['fb_user_id' => $fbUserId, 'fb_long_live_token' => $accessToken]);
+        (new Users())->where('id', auth()->getUser()->id)->oneAndIf(function(User $user) use ($fbUserId, $accessToken) {
+            return $user->setAndSave(['fb_user_id' => $fbUserId, 'fb_long_live_token' => $accessToken]);
         });
 
         /**
