@@ -354,4 +354,14 @@ class Auth
 
         return $group;
     }
+
+    public function isEmail($email)
+    {
+        if (!is_array($email)) {
+            $email = [$email];
+        }
+
+        return in_array($this->user('email'), $email);
+    }
+
 }
