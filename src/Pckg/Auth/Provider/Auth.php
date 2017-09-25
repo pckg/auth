@@ -33,11 +33,11 @@ class Auth extends Provider
         ];
     }
 
-    public function event()
+    public function listeners()
     {
         return [
-            'user.loggedIn'   => UserLoggedIn::class,
-            'user.registered' => UserRegistered::class,
+            \Pckg\Auth\Service\Auth::class . '.userLoggedIn' => UserLoggedIn::class,
+            'user.registered'                                => UserRegistered::class,
         ];
     }
 

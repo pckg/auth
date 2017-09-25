@@ -49,7 +49,6 @@ class LoginUser
                  * @T00D00 - login user on all providers!
                  */
                 $auth->useProvider($provider);
-                trigger('user.loggedIn', [$auth->getUser()]);
                 if ($autologin) {
                     $auth->setAutologin();
                 }

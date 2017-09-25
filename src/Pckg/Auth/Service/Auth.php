@@ -247,6 +247,8 @@ class Auth
 
         $this->loggedIn = true;
 
+        trigger(Auth::class . '.userLoggedIn', [$user]);
+
         return true;
     }
 
