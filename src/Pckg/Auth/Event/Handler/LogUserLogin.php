@@ -5,18 +5,17 @@ namespace Pckg\Auth\Event\Handler;
 use Pckg\Auth\Record\Login;
 use Pckg\Auth\Record\User;
 use Pckg\Concept\AbstractChainOfReponsibility;
-use Pckg\Framework\Request\Data\Session;
 
 class LogUserLogin extends AbstractChainOfReponsibility
 {
 
-    public function handle(User $rUser, Login $rLogin, Session $session)
+    public function handle(User $user)
     {
         Login::create([
-                          'hash'    => $_SESSION['Auth']['hash'],
+                          'hash'    => $_SESSION['Auth']['hash'] ?? null,
                           'ip'      => $_SERVER['REMOTE_ADDR'],
                           'dt_in'   => date('Y-m-d H:i:s'),
-                          'user_id' => $rUser->id,
+                          'user_id' => $user->id,
                       ]);
     }
 
