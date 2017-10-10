@@ -3,9 +3,9 @@
 namespace Pckg\Auth\Entity\Adapter;
 
 use Pckg\Auth\Service\Auth as AuthService;
-use Pckg\Database\Entity\Extension\Adapter\AuthInterface as AuthInterface;
+use Pckg\Database\Entity\Extension\Adapter\AuthInterface;
 
-class AuthInterface implements AuthInterface
+class Auth implements AuthInterface
 {
 
     protected $authService;
