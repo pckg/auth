@@ -64,12 +64,10 @@ class Auth extends Controller
         $logoutUserCommand->onSuccess(
             function() use ($response) {
                 $response->redirect('/');
-
             }
         )->onError(
             function() use ($response) {
                 $response->redirect('/');
-
             }
         )->execute();
     }
@@ -93,12 +91,10 @@ class Auth extends Controller
         $registerUserCommand->onSuccess(
             function() use ($response) {
                 $response->redirect('/auth/registered?successful');
-
             }
         )->onError(
             function() use ($response) {
                 $response->redirect('/auth/register?error');
-
             }
         )->execute();
     }
@@ -114,13 +110,11 @@ class Auth extends Controller
                                    ->onSuccess(
                                        function() use ($response) {
                                            $response->redirect('/auth/activated?succesful');
-
                                        }
                                    )
                                    ->onError(
                                        function() {
                                            return view('vendor/lfw/auth/src/Pckg/Auth/View/activationFailed');
-
                                        }
                                    )->execute();
     }
@@ -144,7 +138,6 @@ class Auth extends Controller
         )->onError(
             function() {
                 $this->response()->respondWithError(['text' => 'Email not found ...']);
-
             }
         )->execute();
     }
