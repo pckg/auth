@@ -9,7 +9,7 @@ use Pckg\Concept\AbstractChainOfReponsibility;
 class LogUserLogin extends AbstractChainOfReponsibility
 {
 
-    public function handle(User $user)
+    public function handle(User $user, callable $next)
     {
         Login::create([
                           'hash'    => $_SESSION['Auth']['hash'] ?? null,
@@ -17,6 +17,8 @@ class LogUserLogin extends AbstractChainOfReponsibility
                           'dt_in'   => date('Y-m-d H:i:s'),
                           'user_id' => $user->id,
                       ]);
+
+        return $next();
     }
 
 }
