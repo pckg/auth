@@ -43,7 +43,13 @@ class Auth extends Controller
     {
         $loginUserCommand->onSuccess(
             function() {
-                $this->response()->respondWithSuccessRedirect($this->auth()->getUser()->getDashboardUrl());
+                $user = $this->auth()->getUser();
+
+                if ($user->isAdmin()) {
+                    trigger(Auth::class . '.adminLoggedIn', [$user]);
+                }
+
+                $this->response()->respondWithSuccessRedirect($user->getDashboardUrl());
             }
         )->onError(
             function() {
