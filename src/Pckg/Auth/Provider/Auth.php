@@ -78,10 +78,6 @@ class Auth extends Provider
                 'controller' => AuthController::class,
             ],
             [
-                '/login-status'               => [
-                    'view' => 'loginStatus',
-                    'name' => 'loginStatus',
-                ],
                 '/login'                      => [
                     'view' => 'login',
                     'name' => 'login',
@@ -105,6 +101,10 @@ class Auth extends Provider
                 ],
                 '/forgot-password/error'      => [
                     'view' => 'forgotPasswordError',
+                ],
+                '/api/auth/loginStatus'       => [
+                    'view' => 'loginStatus',
+                    'name' => 'api.auth.loginStatus',
                 ],
             ]
         );

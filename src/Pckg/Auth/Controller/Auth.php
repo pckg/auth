@@ -25,6 +25,14 @@ use Pckg\Framework\Router;
 class Auth extends Controller
 {
 
+    public function getLoginStatusAction()
+    {
+        return [
+            'loggedIn' => $this->auth()->isLoggedIn(),
+            'user'     => $this->auth()->getUser()->data(),
+        ];
+    }
+
     function getLoginAction(Login $loginForm)
     {
         if (auth()->isLoggedIn()) {
