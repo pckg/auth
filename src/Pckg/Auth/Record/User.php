@@ -30,6 +30,10 @@ class User extends Record
 
     public function getAutologinParameterAttribute()
     {
+        if (!$this->autologin) {
+            $this->setAndSave(['autologin' => sha1(microtime())]);
+        }
+
         return config('pckg.auth.getParameter', 'autologin') . '=' . $this->autologin;
     }
 
