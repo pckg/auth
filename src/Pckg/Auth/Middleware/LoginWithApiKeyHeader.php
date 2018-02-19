@@ -1,7 +1,7 @@
 <?php namespace Pckg\Auth\Middleware;
 
 use Exception;
-use Impero\User\Entity\UserTokens;
+use Pckg\Api\Entity\AppKeys;
 
 class LoginWithApiKeyHeader
 {
@@ -26,13 +26,14 @@ class LoginWithApiKeyHeader
             /**
              * Authenticating user with api key.
              */
-            $token = (new UserTokens())->where('token', $apiKey)->one();
+            $entity = config('pckg.auth.appEntity', AppKeys::class);
+            $token = (new $entity)->where('key', $apiKey)->where('valid')->one();
 
             if (!$token) {
                 throw new Exception('Invalid token');
             }
 
-            auth()->autologin($token->user_id);
+            auth()->autologin($token->app->user_id);
         }
 
         return $next();
