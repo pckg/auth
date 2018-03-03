@@ -27,9 +27,11 @@ class Auth extends Controller
 
     public function getLoginStatusAction()
     {
+        $user = $this->auth()->getUser();
+
         return [
             'loggedIn' => $this->auth()->isLoggedIn(),
-            'user'     => $this->auth()->getUser()->data(),
+            'user'     => $user ? $user->data() : [],
         ];
     }
 
