@@ -89,14 +89,9 @@ class Auth
 
     public function hashedPasswordMatches($hashedPassword, $password)
     {
-        $version = config('pckg.auth.providers.' . $this->getProviderKey() . '.version');
         $hash = config('pckg.auth.providers.' . $this->getProviderKey() . '.hash');
 
-        if ($version == 'secure') {
-            return password_verify($password, $hashedPassword);
-        }
-
-        return sha1($password . $hash) === $hashedPassword;
+        return password_verify($password, $hashedPassword) || sha1($password . $hash) === $hashedPassword;
     }
 
     public function hashPassword($password)
