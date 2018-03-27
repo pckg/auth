@@ -37,4 +37,9 @@ class User extends Record
         return config('pckg.auth.getParameter', 'autologin') . '=' . $this->autologin;
     }
 
+    public function getDashboardUrl()
+    {
+        return '/';
+    }
+
 }
