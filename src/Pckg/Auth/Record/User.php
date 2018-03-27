@@ -37,4 +37,16 @@ class User extends Record
         return config('pckg.auth.getParameter', 'autologin') . '=' . $this->autologin;
     }
 
+    public function setDefaults()
+    {
+        $this->set([
+                       'hash'        => sha1(microtime()),
+                       'status_id'   => 2,
+                       'language_id' => substr(localeManager()->getCurrent(), 0, 2),
+                       'autologin'   => sha1(microtime()),
+                   ]);
+
+        return $this;
+    }
+
 }

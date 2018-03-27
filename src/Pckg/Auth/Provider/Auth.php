@@ -6,6 +6,7 @@ namespace Pckg\Auth\Provider;
 Registers commands, and middlewared on initialization
 */
 
+use Pckg\Auth\Console\CreateGodfather;
 use Pckg\Auth\Controller\Auth as AuthController;
 use Pckg\Auth\Controller\Facebook;
 use Pckg\Auth\Event\UserLoggedIn;
@@ -128,6 +129,13 @@ class Auth extends Provider
                 ],
             ]
         );
+    }
+
+    public function consoles()
+    {
+        return [
+            CreateGodfather::class,
+        ];
     }
 
 }
