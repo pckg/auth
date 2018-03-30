@@ -17,17 +17,13 @@ class CreateAuthTables extends Migration
     {
         $userGroups = $this->table('user_groups');
         $userGroups->slug();
-        $userGroups->integer('mode');
-
-        $userGroupsI18n = $this->translatable('user_groups');
-        $userGroupsI18n->title();
     }
 
     protected function usersUp()
     {
         $users = $this->table('users');
         $users->integer('user_group_id')->references('user_groups');
-        $users->email();
+        $users->email()->index();
         $users->password();
         $users->text('autologin');
     }
