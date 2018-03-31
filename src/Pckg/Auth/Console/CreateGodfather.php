@@ -3,8 +3,7 @@
 use Exception;
 use Pckg\Auth\Entity\Users;
 use Pckg\Auth\Record\User;
-use Pckg\Database\Entity;
-use Pckg\Database\Record;
+use Pckg\Auth\Record\UserGroup;
 use Pckg\Framework\Console\Command;
 
 class CreateGodfather extends Command
@@ -27,9 +26,8 @@ class CreateGodfather extends Command
         }
 
         $statuses = ['Super admin', 'User', 'Administrator', 'PR', 'Checkin'];
-        $entity = (new Entity())->setTable('statuses');
         foreach ($statuses as $status) {
-            Record::create(['title' => $status], $entity);
+            UserGroup::create(['slug' => $status]);
         }
 
         $user = (new User(['email' => $this->argument('email')]))->setDefaults()->setAndSave(['status_id' => 1]);
