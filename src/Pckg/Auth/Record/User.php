@@ -15,12 +15,12 @@ class User extends Record
 
     public function isAdmin()
     {
-        return in_array($this->status_id, [1, 3]);
+        return in_array($this->user_group_id, [1, 3]);
     }
 
     public function isCheckin()
     {
-        return in_array($this->status_id, [5]);
+        return in_array($this->user_group_id, [5]);
     }
 
     public function getAutologinUrlAttribute()
@@ -46,7 +46,7 @@ class User extends Record
     {
         $this->set([
                        'hash'        => sha1(microtime()),
-                       'status_id'   => 2,
+                       'user_group_id'   => 2,
                        'language_id' => substr(localeManager()->getCurrent(), 0, 2),
                        'autologin'   => sha1(microtime()),
                    ]);

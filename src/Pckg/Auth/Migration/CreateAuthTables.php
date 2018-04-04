@@ -16,7 +16,7 @@ class CreateAuthTables extends Migration
     protected function userGroupsUp()
     {
         $userGroups = $this->table('user_groups');
-        $userGroups->slug();
+        $userGroups->title();
     }
 
     protected function usersUp()
