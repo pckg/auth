@@ -168,9 +168,4 @@ class Auth extends Controller
         return view("vendor/lfw/auth/src/Pckg/Auth/View/forgotPasswordError");
     }
 
-    public function getUserHeaderAction()
-    {
-        return view('Pckg/Auth:userHeader');
-    }
-
 }
