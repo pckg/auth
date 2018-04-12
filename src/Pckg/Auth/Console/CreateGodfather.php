@@ -27,7 +27,7 @@ class CreateGodfather extends Command
 
         $statuses = ['Super admin', 'User', 'Administrator', 'PR', 'Checkin'];
         foreach ($statuses as $status) {
-            UserGroup::create(['slug' => $status]);
+            UserGroup::create(['title' => $status]);
         }
 
         $user = (new User(['email' => $this->argument('email')]))->setDefaults()->setAndSave(['user_group_id' => 1]);
