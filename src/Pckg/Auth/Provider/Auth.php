@@ -104,9 +104,13 @@ class Auth extends Provider
                 '/forgot-password/error'      => [
                     'view' => 'forgotPasswordError',
                 ],
-                '/api/auth/loginStatus'       => [
-                    'view' => 'loginStatus',
-                    'name' => 'api.auth.loginStatus',
+                '/api/auth/user'              => [
+                    'view' => 'user',
+                    'name' => 'api.auth.user',
+                ],
+                '/api/auth/user/addresses'    => [
+                    'view' => 'userAddresses',
+                    'name' => 'api.auth.user.addresses',
                 ],
             ]
         );

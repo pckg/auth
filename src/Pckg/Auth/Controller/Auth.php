@@ -25,13 +25,22 @@ use Pckg\Framework\Router;
 class Auth extends Controller
 {
 
-    public function getLoginStatusAction()
+    public function getUserAction()
     {
         $user = $this->auth()->getUser();
 
         return [
             'loggedIn' => $this->auth()->isLoggedIn(),
-            'user'     => $user ? $user->data() : [],
+            'user'     => $user ? only($user->data(), ['id', 'email', 'name', 'surname', 'user_group_id']) : [],
+        ];
+    }
+
+    public function getUserAddressesAction()
+    {
+        $user = $this->auth()->getUser();
+
+        return [
+            'addresses' => $user ? $user->addresses : [],
         ];
     }
 
