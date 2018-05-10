@@ -24,7 +24,14 @@ class Users extends Entity
     public function getUserByEmailAndPassword($email, $password)
     {
         return $this->where('email', $email)
-                    ->where('password', $password)
-                    ->one();
+            ->where('password', $password)
+            ->one();
     }
+
+    public function logins()
+    {
+        return $this->hasMany(Logins::class)
+            ->foreignKey('user_id');
+    }
+
 }
