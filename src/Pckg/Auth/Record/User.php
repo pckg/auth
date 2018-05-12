@@ -58,17 +58,24 @@ class User extends Record
 
     public function getHasValidEmailAttribute()
     {
-        if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
+        $email = $this->email;
+
+        if (!$email) {
             return false;
         }
 
-        list($name, $host) = explode('@', $this->email);
-
-        if (!checkdnsrr($host, 'MX')) {
+        if (!strpos($email, '@')) {
             return false;
         }
 
-        return true;
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return false;
+        }
+
+        list($address, $host) = explode('@', $email);
+        $dnsr = checkdnsrr(idn_to_ascii($host, IDNA_NONTRANSITIONAL_TO_ASCII, INTL_IDNA_VARIANT_UTS46) . '.', 'MX');
+
+        return !!$dnsr;
     }
 
 }
