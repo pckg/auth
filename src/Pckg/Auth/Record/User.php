@@ -44,14 +44,31 @@ class User extends Record
 
     public function setDefaults()
     {
-        $this->set([
-                       'hash'        => sha1(microtime()),
-                       'user_group_id'   => 2,
-                       'language_id' => substr(localeManager()->getCurrent(), 0, 2),
-                       'autologin'   => sha1(microtime()),
-                   ]);
+        $this->set(
+            [
+                'hash'          => sha1(microtime()),
+                'user_group_id' => 2,
+                'language_id'   => substr(localeManager()->getCurrent(), 0, 2),
+                'autologin'     => sha1(microtime()),
+            ]
+        );
 
         return $this;
+    }
+
+    public function getHasValidEmailAttribute()
+    {
+        if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
+            return false;
+        }
+
+        list($name, $host) = explode('@', $this->email);
+
+        if (!checkdnsrr($host, 'MX')) {
+            return false;
+        }
+
+        return true;
     }
 
 }
