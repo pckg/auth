@@ -13,9 +13,12 @@ class CreateGodfather extends Command
     {
         $this->setName('auth:create-godfather')
              ->setDescription('Create godfather user')
-             ->addArguments([
-                                'email' => 'Godfather email',
-                            ]);
+             ->addArguments(
+                 [
+                     'email' => 'Godfather email',
+                     'password' => 'Hashed godfather password',
+                 ]
+             );
     }
 
     public function handle()
@@ -30,7 +33,9 @@ class CreateGodfather extends Command
             UserGroup::create(['title' => $status]);
         }
 
-        $user = (new User(['email' => $this->argument('email')]))->setDefaults()->setAndSave(['user_group_id' => 1]);
+        $user = (new User(
+            ['email' => $this->argument('email'), 'password' => $this->argument('password')]
+        ))->setDefaults()->setAndSave(['user_group_id' => 1]);
 
         $this->output('Godfather #' . $user->id . ' created');
     }
