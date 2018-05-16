@@ -56,26 +56,9 @@ class User extends Record
         return $this;
     }
 
-    public function getHasValidEmailAttribute()
+    public function getHasValidEmailAttribute($dns = false)
     {
-        $email = $this->email;
-
-        if (!$email) {
-            return false;
-        }
-
-        if (!strpos($email, '@')) {
-            return false;
-        }
-
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return false;
-        }
-
-        list($address, $host) = explode('@', $email);
-        $dnsr = checkdnsrr(idn_to_ascii($host, IDNA_NONTRANSITIONAL_TO_ASCII, INTL_IDNA_VARIANT_UTS46) . '.', 'MX');
-
-        return !!$dnsr;
+        return isValidEmail($this->email);
     }
 
 }
