@@ -2,6 +2,7 @@
 
 namespace Pckg\Auth\Service;
 
+use Pckg\Auth\Entity\Users;
 use Pckg\Auth\Record\User;
 use Pckg\Concept\Reflect;
 
@@ -17,6 +18,11 @@ class Auth
     protected $providers = [];
 
     protected $loggedIn = false;
+
+    /**
+     * @var User
+     */
+    protected $user;
 
     /**
      * @param ProviderInterface|mixed $provider
@@ -99,11 +105,14 @@ class Auth
         $version = config('pckg.auth.providers.' . $this->getProviderKey() . '.version');
         $hash = config('pckg.auth.providers.' . $this->getProviderKey() . '.hash');
 
-        if ($version == 'secure') {
-            return password_hash($password, PASSWORD_DEFAULT);
+        /**
+         * @T00D00 - at some point remove unsecure (sha1) version and add salt to password
+         */
+        if ($version != 'secure') {
+            return sha1($password . $hash);
         }
 
-        return sha1($password . $hash);
+        return password_hash($password, PASSWORD_DEFAULT);
     }
 
     public function createPassword($length = 10)
@@ -321,11 +330,22 @@ class Auth
         /**
          * Hash and user matches.
          */
-        if ($cookie['hash'] === $sessionProvider['hash'] && $cookie['user'] === $sessionProvider['user']['id']) {
-            return true;
+        if ($cookie['hash'] != $sessionProvider['hash'] || $cookie['user'] != $sessionProvider['user']['id']) {
+            return false;
         }
 
-        return false;
+        /**
+         * User exists in database.
+         */
+        if (!$this->user) {
+            $this->user = (new Users())->nonDeleted()->where('id', $sessionProvider['user']['id'])->one();
+        }
+
+        if (!$this->user) {
+            return false;
+        }
+
+        return true;
     }
 
     public function isGuest()
