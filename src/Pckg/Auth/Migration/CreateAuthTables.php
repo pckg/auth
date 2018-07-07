@@ -26,6 +26,7 @@ class CreateAuthTables extends Migration
         $users->email()->index();
         $users->password();
         $users->text('autologin');
+        $users->deletable();
     }
 
 }
