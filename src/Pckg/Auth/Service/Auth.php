@@ -70,7 +70,11 @@ class Auth
      */
     public function getUser()
     {
-        return $this->getProvider()->getUserById($this->user('id'));
+        if ($this->user) {
+            return $this->user;
+        }
+
+        return $this->user = $this->getProvider()->getUserById($this->user('id'));
     }
 
     public function is()
@@ -251,6 +255,8 @@ class Auth
 
         $this->loggedIn = true;
 
+        $this->user = $user;
+
         trigger(Auth::class . '.userLoggedIn', [$user]);
 
         return true;
@@ -273,6 +279,7 @@ class Auth
         }
 
         $this->loggedIn = false;
+        $this->user = null;
     }
 
     public function getSessionProvider()
