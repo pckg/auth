@@ -32,7 +32,7 @@ abstract class AbstractProvider implements ProviderInterface
 
     public function getUserById($id)
     {
-        return $this->getEntity()->where('id', $id)->one();
+        return $this->getEntity()->where('id', $id)->cache('2minutes')->one();
     }
 
 }

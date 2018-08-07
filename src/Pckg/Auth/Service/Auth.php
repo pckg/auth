@@ -345,7 +345,7 @@ class Auth
          * User exists in database.
          */
         if (!$this->user) {
-            $this->user = (new Users())->nonDeleted()->where('id', $sessionProvider['user']['id'])->one();
+            $this->user = (new Users())->nonDeleted()->where('id', $sessionProvider['user']['id'])->cache('1minute')->one();
         }
 
         if (!$this->user) {
