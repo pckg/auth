@@ -88,11 +88,23 @@ class Auth extends Controller
     {
         $logoutUserCommand->onSuccess(
             function() use ($response) {
-                $response->redirect('/');
+                if ($this->request()->isJson()) {
+                    $response->respond([
+                        'success' => true,
+                                       ]);
+                } else {
+                    $response->redirect('/');
+                }
             }
         )->onError(
             function() use ($response) {
-                $response->redirect('/');
+                if ($this->request()->isJson()) {
+                    $response->respond([
+                                           'success' => false,
+                                       ]);
+                } else {
+                    $response->redirect('/');
+                }
             }
         )->execute();
     }
