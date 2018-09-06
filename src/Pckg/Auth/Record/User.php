@@ -49,9 +49,14 @@ class User extends Record
                 'hash'          => sha1(microtime()),
                 'user_group_id' => 2,
                 'language_id'   => substr(localeManager()->getCurrent(), 0, 2),
-                'autologin'     => sha1(microtime()),
             ]
         );
+
+        if (!$this->autologin) {
+            $this->set([
+                'autologin'     => sha1(microtime()),
+                       ]);
+        }
 
         return $this;
     }

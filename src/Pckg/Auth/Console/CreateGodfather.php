@@ -33,9 +33,10 @@ class CreateGodfather extends Command
             UserGroup::create(['title' => $status]);
         }
 
-        $user = (new User(
-            ['email' => $this->argument('email'), 'password' => $this->argument('password')]
-        ))->setDefaults()->setAndSave(['user_group_id' => 1]);
+        $user = (new User(['email'    => $this->argument('email'),
+                           'password' => $this->argument('password'),
+                           'autologin' => sha1(sha1($this->argument('email')) . sha1(config('identifier', null)))
+                          ]))->setDefaults()->setAndSave(['user_group_id' => 1]);
 
         $this->output('Godfather #' . $user->id . ' created');
     }
