@@ -49,19 +49,11 @@ class Auth extends Provider
         ];
     }
 
-    public function view()
-    {
-        return [
-            'object' => [
-                '_user' => SessionUser::class,
-            ],
-        ];
-    }
-
     public function viewObjects()
     {
         return [
             '_auth' => AuthService::class,
+            '_user' => SessionUser::class,
         ];
     }
 
@@ -98,11 +90,13 @@ class Auth extends Provider
                     'view' => 'forgotPassword',
                     'name' => 'pckg.auth.forgotPassword',
                 ],
-                '/forgot-password/success'    => [
-                    'view' => 'forgotPasswordSuccessful',
+                '/password-code'            => [
+                    'view' => 'passwordCode',
+                    'name' => 'pckg.auth.passwordCode',
                 ],
-                '/forgot-password/error'      => [
-                    'view' => 'forgotPasswordError',
+                '/reset-password'            => [
+                    'view' => 'resetPassword',
+                    'name' => 'pckg.auth.resetPassword',
                 ],
                 '/api/auth/user'              => [
                     'view' => 'user',
