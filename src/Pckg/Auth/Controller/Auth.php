@@ -46,20 +46,20 @@ class Auth extends Controller
         ];
     }
 
-    function getLoginAction(Login $loginForm)
+    public function getLoginAction()
     {
         if (auth()->isLoggedIn()) {
             return $this->response()->redirect($this->auth()->getUser()->getDashboardUrl());
         }
 
-        return view('Pckg/Auth:login',
-                    [
-                        'form' => $loginForm,
-                    ]);
+        return '';
     }
 
-    function postLoginAction(LoginUserViaForm $loginUserCommand)
+    function postLoginAction(Login $loginForm, LoginUserViaForm $loginUserCommand)
     {
+        /**
+         * Form is valid, we need to check for password.
+         */
         $loginUserCommand->onSuccess(function() {
             $user = $this->auth()->getUser();
 
@@ -75,7 +75,6 @@ class Auth extends Controller
                 return;
             }
 
-            flash('pckg.auth.error', __('pckg.auth.error'));
             $this->response()->respondWithErrorRedirect();
         })->execute();
     }

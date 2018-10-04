@@ -2,6 +2,7 @@
 
 namespace Pckg\Auth\Form;
 
+use Pckg\Auth\Form\Validator\ExistingUser;
 use Pckg\Auth\Form\Validator\UserEmail;
 use Pckg\Htmlbuilder\Element\Form\Bootstrap;
 use Pckg\Htmlbuilder\Element\Form\ResolvesOnRequest;
@@ -23,7 +24,7 @@ class Login extends Bootstrap implements ResolvesOnRequest
 
         $fieldset->addText('email')
                  ->setLabel('Email:')
-                 ->addValidator(new UserEmail())
+                 ->addValidator(new ExistingUser())
                  ->required();
 
         $fieldset->addPassword('password')
