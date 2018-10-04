@@ -6,6 +6,7 @@ use Pckg\Auth\Command\LoginUserViaForm;
 use Pckg\Auth\Command\LogoutUser;
 use Pckg\Auth\Command\RegisterUser;
 use Pckg\Auth\Command\SendPasswordCode;
+use Pckg\Auth\Entity\UserPasswordResets;
 use Pckg\Auth\Entity\Users;
 use Pckg\Auth\Form\ForgotPassword;
 use Pckg\Auth\Form\Login;
@@ -177,26 +178,6 @@ class Auth extends Controller
 
     public function postPasswordCodeAction(PasswordCode $passwordCodeForm)
     {
-        /**
-         * Receive email from sent data.
-         */
-        $data = $passwordCodeForm->getData();
-
-        /**
-         * Fetch user.
-         */
-        $user = (new Users())->where('email', $data['email'])->oneOrFail();
-
-        /**
-         * Set new password.
-         */
-        // $user->setAndSave(['password' => $this->auth('frontend')->hashPassword($data['password'])]);
-
-        /**
-         * Login user.
-         */
-        // $this->auth('frontend')->performLogin($user);
-
         return [
             'success' => true,
         ];
@@ -204,19 +185,36 @@ class Auth extends Controller
 
     public function postResetPasswordAction(ResetPassword $resetPasswordForm)
     {
+        /**
+         * Receive email from sent data.
+         */
+        $data = $resetPasswordForm->getData();
+
+        /**
+         * Fetch user.
+         */
+        $user = (new Users())->where('email', $data['email'])->oneOrFail();
+        $code = (new UserPasswordResets())->joinUser()
+                                          ->where('email', $data['email'])
+                                          ->where('created_at', date('Y-m-d H:i:s', strtotime('-1day')), '>=')
+                                          ->where('used_at', null)
+                                          ->where('code', $data['code'])
+                                          ->oneOrFail();
+
+        /**
+         * Set new password.
+         */
+        $user->setAndSave(['password' => $this->auth('frontend')->hashPassword($data['password'])]);
+        $code->setAndSave(['used_at' => date('Y-m-d H:i:s')]);
+
+        /**
+         * Login user.
+         */
+        $this->auth('frontend')->performLogin($user);
+
         return [
             'success' => true,
         ];
-    }
-
-    function getForgotPasswordSuccessAction()
-    {
-        return view("vendor/lfw/auth/src/Pckg/Auth/View/forgotPasswordSuccess");
-    }
-
-    function getForgotPasswordErrorAction()
-    {
-        return view("vendor/lfw/auth/src/Pckg/Auth/View/forgotPasswordError");
     }
 
 }

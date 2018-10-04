@@ -4,6 +4,7 @@ namespace Pckg\Auth\Command;
 
 use Derive\Orders\Entity\Users;
 use Derive\User\Service\Mail\User;
+use Pckg\Auth\Record\UserPasswordReset;
 use Pckg\Concept\CommandInterface;
 
 /**
@@ -43,21 +44,22 @@ class SendPasswordCode
          * We have generated code, we need to save code and timestamp to database and link it to user.
          * This code will expire after 24h.
          */
-        UsersPasswordResets::create([
-                                        'user_id'    => $this->user->id,
-                                        'created_at' => date('Y-m-d H:i:s'),
-                                        'code'       => $code,
-                                    ]);
+        UserPasswordReset::create([
+                                      'user_id'    => $this->user->id,
+                                      'created_at' => date('Y-m-d H:i:s'),
+                                      'code'       => $code,
+                                  ]);
 
         /**
          * Send email.
          */
-        email('user:password-code',
+        email('user-password-reset',
               new User($this->user),
               [
                   'data'  => [
                       'niceCode' => $niceCode,
                       'code'     => $code,
+                      'link'     => config('url') . '#passwordSent-' . $this->user->email . '-' . $code,
                   ],
                   'fetch' => [
                       'user' => [
