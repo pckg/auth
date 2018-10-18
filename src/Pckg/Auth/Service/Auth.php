@@ -171,7 +171,10 @@ class Auth
                 ]
             ),
             time() + (24 * 60 * 60 * 365.25),
-            "/"
+            "/",
+            '',
+            true,
+            true
         );
     }
 
@@ -225,7 +228,10 @@ class Auth
                 ]
             ),
             time() + (24 * 60 * 60 * 365.25),
-            "/"
+            "/",
+            '',
+            true,
+            true
         );
     }
 
@@ -250,7 +256,10 @@ class Auth
                 ]
             ),
             time() + (24 * 60 * 60 * 365.25),
-            "/"
+            "/",
+            '',
+            true,
+            true
         );
 
         $this->loggedIn = true;
@@ -268,14 +277,23 @@ class Auth
         unset($_SESSION['Pckg']['Auth']['Provider']);
 
         foreach ($providerKeys as $providerKey) {
-            setcookie('pckg_auth_provider_' . $providerKey, null, time() - (24 * 60 * 60 * 365.25), '/');
+            setcookie('pckg_auth_provider_' . $providerKey, null, time() - (24 * 60 * 60 * 365.25), '/',
+                      '',
+                      true,
+                      true);
         }
 
         if (isset($_COOKIE['pckg_auth_parentlogin'])) {
             $this->performParentLogin();
-            setcookie('pckg_auth_parentlogin', null, time() - (24 * 60 * 60 * 365.25), '/');
+            setcookie('pckg_auth_parentlogin', null, time() - (24 * 60 * 60 * 365.25), '/',
+                      '',
+                      true,
+                      true);
         } else {
-            setcookie('pckg_auth_autologin', null, time() - (24 * 60 * 60 * 365.25), '/');
+            setcookie('pckg_auth_autologin', null, time() - (24 * 60 * 60 * 365.25), '/',
+                      '',
+                      true,
+                      true);
         }
 
         $this->loggedIn = false;
