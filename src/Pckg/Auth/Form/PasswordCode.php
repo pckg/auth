@@ -3,15 +3,16 @@
 namespace Pckg\Auth\Form;
 
 use Pckg\Auth\Form\Validator\ExistingUser;
+use Pckg\Auth\Form\Validator\ValidCode;
 use Pckg\Htmlbuilder\Element\Form\Bootstrap;
 use Pckg\Htmlbuilder\Element\Form\ResolvesOnRequest;
 
 /**
- * Class ForgotPassword
+ * Class PasswordCode
  *
  * @package Pckg\Auth\Form
  */
-class ForgotPassword extends Bootstrap implements ResolvesOnRequest
+class PasswordCode extends Bootstrap implements ResolvesOnRequest
 {
 
     /**
@@ -20,6 +21,8 @@ class ForgotPassword extends Bootstrap implements ResolvesOnRequest
     public function initFields()
     {
         $this->addEmail('email')->setLabel('Email')->addValidator(new ExistingUser())->required();
+
+        $this->addEmail('code')->setLabel('Code')->addValidator(new ValidCode())->required();
 
         $this->addSubmit();
 

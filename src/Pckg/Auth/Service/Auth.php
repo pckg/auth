@@ -50,6 +50,10 @@ class Auth
 
     public function getProvider()
     {
+        if (!$this->provider) {
+            $this->useProvider('frontend');
+        }
+
         return $this->provider;
     }
 
