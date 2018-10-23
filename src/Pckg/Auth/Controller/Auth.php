@@ -2,6 +2,7 @@
 
 namespace Pckg\Auth\Controller;
 
+use Derive\Orders\Record\Order;
 use Pckg\Auth\Command\LoginUserViaForm;
 use Pckg\Auth\Command\LogoutUser;
 use Pckg\Auth\Command\RegisterUser;
@@ -42,8 +43,10 @@ class Auth extends Controller
     {
         $user = $this->auth()->getUser();
 
+        $addresses = $user ? $user->addresses : [];
+
         return [
-            'addresses' => $user ? $user->addresses : [],
+            'addresses' => $addresses,
         ];
     }
 
