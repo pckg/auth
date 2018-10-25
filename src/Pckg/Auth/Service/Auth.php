@@ -251,6 +251,10 @@ class Auth
             "flags" => [],
         ];
 
+        /**
+         * @T00D00 - allow local http cookie or force dev to https.
+         */
+        $secure = config('identifier') !== 'dev-local';
         setcookie(
             "pckg_auth_provider_" . $providerKey,
             json_encode(
@@ -262,8 +266,8 @@ class Auth
             time() + (24 * 60 * 60 * 365.25),
             "/",
             '',
-            true,
-            true
+            $secure,
+            $secure
         );
 
         $this->loggedIn = true;

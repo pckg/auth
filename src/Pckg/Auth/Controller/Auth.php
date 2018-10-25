@@ -56,7 +56,7 @@ class Auth extends Controller
             return $this->response()->redirect($this->auth()->getUser()->getDashboardUrl());
         }
 
-        return '';
+        return '<derive-user-auth-full :initial-visible="true"></derive-user-auth-full>';
     }
 
     function postLoginAction(Login $loginForm, LoginUserViaForm $loginUserCommand)
