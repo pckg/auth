@@ -69,6 +69,7 @@ class Auth
     }
 
     // user object
+
     /**
      * @return mixed|User
      */
@@ -92,13 +93,11 @@ class Auth
 
         if (!$sessionUser) {
             return null;
-        } else if (!$key) {
+        } elseif (!$key) {
             return $sessionUser;
         }
 
-        return array_key_exists($key, $sessionUser)
-            ? $sessionUser[$key]
-            : null;
+        return array_key_exists($key, $sessionUser) ? $sessionUser[$key] : null;
     }
 
     public function hashedPasswordMatches($hashedPassword, $password)
@@ -114,12 +113,8 @@ class Auth
         $hash = config('pckg.auth.providers.' . $this->getProviderKey() . '.hash');
 
         /**
-         * @T00D00 - at some point remove unsecure (sha1) version and add salt to password
+         * @T00D00 ... add salt to password
          */
-        if ($version != 'secure') {
-            return sha1($password . $hash);
-        }
-
         return password_hash($password, PASSWORD_DEFAULT);
     }
 
@@ -136,8 +131,7 @@ class Auth
 
     public function login($email, $password)
     {
-        $rUser = $this->getProvider()
-                      ->getUserByEmail($email);
+        $rUser = $this->getProvider()->getUserByEmail($email);
 
         if (!$rUser || !$this->hashedPasswordMatches($rUser->password, $password)) {
             return false;
@@ -152,8 +146,7 @@ class Auth
 
     public function autologin($id)
     {
-        $rUser = $this->getProvider()
-                      ->getUserById($id);
+        $rUser = $this->getProvider()->getUserById($id);
 
         if ($rUser) {
             return $this->performLogin($rUser);
@@ -164,22 +157,15 @@ class Auth
 
     public function setParentLogin()
     {
-        setcookie(
-            "pckg_auth_parentlogin",
-            json_encode(
-                [
-                    $this->getProviderKey() => [
-                        'hash'    => sha1(config('security.hash') . $this->user('id')),
-                        'user_id' => $this->user('id'),
-                    ],
-                ]
-            ),
-            time() + (24 * 60 * 60 * 365.25),
-            "/",
-            '',
-            true,
-            true
-        );
+        setcookie("pckg_auth_parentlogin", json_encode([
+                                                           $this->getProviderKey() => [
+                                                               'hash'    => password_hash(config('security.hash') .
+                                                                                          $this->user('id') .
+                                                                                          $this->user('autologin'),
+                                                                                          PASSWORD_DEFAULT),
+                                                               'user_id' => $this->user('id'),
+                                                           ],
+                                                       ]), time() + (60 * 60), "/", '', true, true);
     }
 
     public function performAutologin()
@@ -189,30 +175,49 @@ class Auth
         }
 
         $cookie = json_decode($_COOKIE['pckg_auth_autologin'], true);
-        foreach ($cookie as $provider => $data) {
-            if (isset($data['user_id']) && isset($data['hash'])
-                && sha1(config('security.hash') . $data['user_id']) == $data['hash']
-            ) {
-                auth()->useProvider($provider);
-                auth()->autologin($data['user_id']);
-            }
-        }
+        $this->performLoginFromStorage($cookie);
     }
 
     public function performParentLogin()
     {
-        if (!isset($_COOKIE['pckg_auth_autologin'])) {
+        if (!isset($_COOKIE['pckg_auth_parentlogin'])) {
             return;
         }
 
-        $cookie = json_decode($_COOKIE['pckg_auth_autologin'], true);
-        foreach ($cookie as $provider => $data) {
-            if (isset($data['user_id']) && isset($data['hash'])
-                && sha1(config('security.hash') . $data['user_id']) == $data['hash']
-            ) {
-                auth()->useProvider($provider);
-                auth()->autologin($data['user_id']);
+        $cookie = json_decode($_COOKIE['pckg_auth_parentlogin'], true);
+        $this->performLoginFromStorage($cookie);
+    }
+
+    protected function performLoginFromStorage(array $storage)
+    {
+        foreach ($storage as $provider => $data) {
+            if (!is_array($data)) {
+                continue;
             }
+
+            $userId = $data['user_id'] ?? null;
+            $hash = $data['hash'] ?? null;
+
+            if (!$userId || !$hash) {
+                continue;
+            }
+
+            $this->useProvider($provider);
+
+            $user = $this->getProvider()->getUserById($userId);
+
+            if (!$user) {
+                continue;
+            }
+
+            $entry = config('security.hash') . $user->id . $user->autologin;
+            if (!password_verify($entry, $hash)) {
+                continue;
+            }
+
+            $this->performLogin($user);
+
+            return true;
         }
     }
 
@@ -221,29 +226,21 @@ class Auth
      */
     public function setAutologin()
     {
-        setcookie(
-            "pckg_auth_autologin",
-            json_encode(
-                [
-                    $this->getProviderKey() => [
-                        'hash'    => sha1(config('security.hash') . $this->user('id')),
-                        'user_id' => $this->user('id'),
-                    ],
-                ]
-            ),
-            time() + (24 * 60 * 60 * 365.25),
-            "/",
-            '',
-            true,
-            true
-        );
+        setcookie("pckg_auth_autologin", json_encode([
+                                                         $this->getProviderKey() => [
+                                                             'hash'    => password_hash(config('security.hash') .
+                                                                                        $this->user('id') .
+                                                                                        $this->user('autologin'),
+                                                                                        PASSWORD_DEFAULT),
+                                                             'user_id' => $this->user('id'),
+                                                         ],
+                                                     ]), time() + (24 * 60 * 60 * 365.25), "/", '', true, true);
     }
 
     public function performLogin($user)
     {
         $providerKey = $this->getProviderKey();
-
-        $sessionHash = sha1(microtime() . sha1($user->id));
+        $sessionHash = password_hash(config('security.hash') . session_id(), PASSWORD_DEFAULT);
 
         $_SESSION['Pckg']['Auth']['Provider'][$providerKey] = [
             "user"  => $user->toArray(),
@@ -254,21 +251,11 @@ class Auth
         /**
          * @T00D00 - allow local http cookie or force dev to https.
          */
-        $secure = config('identifier') !== 'dev-local';
-        setcookie(
-            "pckg_auth_provider_" . $providerKey,
-            json_encode(
-                [
-                    "user" => $user->id,
-                    "hash" => $sessionHash,
-                ]
-            ),
-            time() + (24 * 60 * 60 * 365.25),
-            "/",
-            '',
-            $secure,
-            $secure
-        );
+        setcookie("pckg_auth_provider_" . $providerKey, json_encode([
+                                                                        "user" => $user->id,
+                                                                        "hash" => $sessionHash,
+                                                                    ]), time() + (24 * 60 * 60 * 365.25), "/", '', true,
+                  true);
 
         $this->loggedIn = true;
 
@@ -285,23 +272,15 @@ class Auth
         unset($_SESSION['Pckg']['Auth']['Provider']);
 
         foreach ($providerKeys as $providerKey) {
-            setcookie('pckg_auth_provider_' . $providerKey, null, time() - (24 * 60 * 60 * 365.25), '/',
-                      '',
-                      true,
+            setcookie('pckg_auth_provider_' . $providerKey, null, time() - (24 * 60 * 60 * 365.25), '/', '', true,
                       true);
         }
 
         if (isset($_COOKIE['pckg_auth_parentlogin'])) {
             $this->performParentLogin();
-            setcookie('pckg_auth_parentlogin', null, time() - (24 * 60 * 60 * 365.25), '/',
-                      '',
-                      true,
-                      true);
+            setcookie('pckg_auth_parentlogin', null, time() - (24 * 60 * 60 * 365.25), '/', '', true, true);
         } else {
-            setcookie('pckg_auth_autologin', null, time() - (24 * 60 * 60 * 365.25), '/',
-                      '',
-                      true,
-                      true);
+            setcookie('pckg_auth_autologin', null, time() - (24 * 60 * 60 * 365.25), '/', '', true, true);
         }
 
         $this->loggedIn = false;
@@ -398,9 +377,8 @@ class Auth
 
     public function getGroupId()
     {
-        $group = $this->getSessionProvider()['user'][config(
-                'pckg.auth.providers.' . $this->getProviderKey() . '.userGroup'
-            )] ?? null;
+        $group = $this->getSessionProvider()['user'][config('pckg.auth.providers.' . $this->getProviderKey() .
+                                                            '.userGroup')] ?? null;
 
         return $group;
     }
