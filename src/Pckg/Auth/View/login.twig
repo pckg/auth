@@ -4,11 +4,7 @@
             <h1>{{ __('frontend.login.title') }}</h1>
         </div>
         <div>
-            {% if flash('pckg.auth.error', false) %}
-                <pckg-bootstrap-alert style="danger" text="{{ flash('pckg.auth.error') }}"></pckg-bootstrap-alert>
-            {% endif %}
-
-            {{ form | raw }}
+            <pckg-auth-full></pckg-auth-full>
         </div>
     </div>
 </div>
