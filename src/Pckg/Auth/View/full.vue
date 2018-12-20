@@ -107,7 +107,7 @@
         created: function () {
             let hash = document.URL.substring(document.URL.lastIndexOf("#") + 1);
 
-            if (hash == 'loginModal' || window.location.pathname == '/login') {
+            if (hash == 'loginModal') {
                 if (this.isLoggedIn) {
                     http.redirect('/profile');
                     return;
