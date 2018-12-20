@@ -235,10 +235,16 @@
                             passwordRepeat: this.passwordRepeat
                         }, function (data) {
                             this.loading = false;
-                            if (data.success) {
-                                $dispatcher.$emit('auth:user:loggedIn');
-                                // $dispatcher.$emit('notification:success', 'Successfully logged in');
-                                this.visible = false;
+                            if (!data.success) {
+                                return;
+                            }
+
+                            $dispatcher.$emit('auth:user:loggedIn');
+                            // $dispatcher.$emit('notification:success', 'Successfully logged in');
+                            this.visible = false;
+
+                            if (window.location.pathname.indexOf('/basket') < 0) {
+                                http.redirect();
                                 return;
                             }
                         }.bind(this),
