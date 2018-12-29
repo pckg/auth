@@ -1,11 +1,11 @@
 <template>
     <div class="pckg-auth-full">
-        <div v-html="__('auth.' + step + '.intro')" v-if="step != 'login' || emailModel.length > 0"></div>
+        <div v-html="__('auth.' + step + '.intro')" v-if="step != 'login' || (email && email.length > 0)"></div>
 
         <div class="form-group"
              v-if="['login', 'forgottenPassword', 'passwordSent', 'resetPassword', 'signup'].indexOf(step) >= 0">
             <label>{{ __('auth.label.email') }}</label>
-            <a class="as-link font-size-xs pull-right" href="#" v-if="step == 'login'"
+            <a class="as-link font-size-xs pull-right" href="#" v-if="false && step == 'login'"
                @click.prevent="step = 'signup'">{{ __('auth.signup.question') }}</a>
             <div>
                 <template v-if="['passwordSent', 'resetPassword'].indexOf(step) == -1">
