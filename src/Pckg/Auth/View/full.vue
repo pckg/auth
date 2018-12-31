@@ -9,7 +9,7 @@
                @click.prevent="step = 'signup'">{{ __('auth.signup.question') }}</a>
             <div>
                 <template v-if="['passwordSent', 'resetPassword'].indexOf(step) == -1">
-                    <input type="email" v-model="emailModel"/>
+                    <input type="email" v-model="emailModel" autocomplete="email"/>
 
                     <htmlbuilder-validator-error :bag="errors" name="email"></htmlbuilder-validator-error>
                 </template>
@@ -42,7 +42,7 @@
         <div class="form-group" v-if="['resetPassword'].indexOf(step) >= 0">
             <label>{{ __('auth.label.newPassword') }}</label>
             <div>
-                <input type="password" v-model="password"/>
+                <input type="password" v-model="password" autocomplete="password"/>
                 <div class="help">{{ __('auth.help.newPassword') }}</div>
 
                 <htmlbuilder-validator-error :bag="errors" name="password"></htmlbuilder-validator-error>
@@ -52,7 +52,7 @@
         <div class="form-group" v-if="['resetPassword'].indexOf(step) >= 0">
             <label>{{ __('auth.label.repeatPassword') }}</label>
             <div>
-                <input type="password" v-model="passwordRepeat"/>
+                <input type="password" v-model="passwordRepeat" autocomplete="password"/>
 
                 <htmlbuilder-validator-error :bag="errors" name="passwordRepeat"></htmlbuilder-validator-error>
             </div>
@@ -76,7 +76,7 @@
 
         <div class="centered margin-top-md margin-bottom-sm">
             <a class="as-link" href="#" v-if="step == 'forgottenPassword'"
-               @click.prevent="step = 'signup'" :key="'btnBelowForgottenPassword'">{{ __('auth.signup.question')
+               @click.prevent="step = 'login'" :key="'btnBelowForgottenPassword'">{{ __('auth.login.question')
                 }}</a>
             <a class="as-link" href="#" v-else-if="step == 'signup'"
                @click.prevent="step = 'login'" :key="'btnBelowSignup'">{{ __('auth.login.question') }}</a>
@@ -156,6 +156,7 @@
                                 return;
                             }
 
+                            this.$emit('close');
                             this.visible = false;
                             return;
                         }
@@ -241,6 +242,7 @@
 
                             $dispatcher.$emit('auth:user:loggedIn');
                             // $dispatcher.$emit('notification:success', 'Successfully logged in');
+                            this.$emit('close');
                             this.visible = false;
 
                             if (window.location.pathname.indexOf('/basket') < 0) {
