@@ -3,19 +3,15 @@
         <div v-html="__('auth.' + step + '.intro')" v-if="step != 'login' || (email && email.length > 0)"></div>
 
         <div class="form-group"
-             v-if="['login', 'forgottenPassword', 'passwordSent', 'resetPassword', 'signup'].indexOf(step) >= 0">
+             v-if="['login', 'forgottenPassword', 'passwordSent', 'resetPassword'].indexOf(step) >= 0">
             <label>{{ __('auth.label.email') }}</label>
-            <a class="as-link font-size-xs pull-right" href="#" v-if="false && step == 'login'"
-               @click.prevent="step = 'signup'">{{ __('auth.signup.question') }}</a>
-            <div>
-                <template v-if="['passwordSent', 'resetPassword'].indexOf(step) == -1">
-                    <input type="email" v-model="emailModel" autocomplete="email"/>
+            <div v-if="['passwordSent', 'resetPassword'].indexOf(step) == -1">
+                <input type="email" v-model="emailModel" autocomplete="email"/>
 
-                    <htmlbuilder-validator-error :bag="errors" name="email"></htmlbuilder-validator-error>
-                </template>
-                <template v-else>
-                    {{ emailModel }}
-                </template>
+                <htmlbuilder-validator-error :bag="errors" name="email"></htmlbuilder-validator-error>
+            </div>
+            <div v-else>
+                {{ emailModel }}
             </div>
         </div>
 
@@ -28,7 +24,7 @@
             </div>
         </div>
 
-        <div class="form-group" v-if="['login', 'signup'].indexOf(step) >= 0">
+        <div class="form-group" v-if="['login'].indexOf(step) >= 0">
             <label>{{ __('auth.label.password') }}</label>
             <a class="as-link font-size-xs pull-right" href="#" v-if="step == 'login'"
                @click.prevent="step = 'forgottenPassword'">{{ __('auth.forgottenPassword.question') }}</a>
@@ -78,8 +74,6 @@
             <a class="as-link" href="#" v-if="step == 'forgottenPassword'"
                @click.prevent="step = 'login'" :key="'btnBelowForgottenPassword'">{{ __('auth.login.question')
                 }}</a>
-            <a class="as-link" href="#" v-else-if="step == 'signup'"
-               @click.prevent="step = 'login'" :key="'btnBelowSignup'">{{ __('auth.login.question') }}</a>
         </div>
     </div>
 </template>
