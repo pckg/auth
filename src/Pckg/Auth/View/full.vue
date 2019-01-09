@@ -26,7 +26,7 @@
 
         <div class="form-group" v-if="['login'].indexOf(step) >= 0">
             <label>{{ __('auth.label.password') }}</label>
-            <a class="as-link font-size-xs pull-right" href="#" v-if="step == 'login'"
+            <a class="as-link font-size-xs pull-right" href="#" tabindex="-1" v-if="step == 'login'"
                @click.prevent="step = 'forgottenPassword'">{{ __('auth.forgottenPassword.question') }}</a>
             <div>
                 <input type="password" v-model="password"/>
