@@ -6,7 +6,7 @@
              v-if="['login', 'forgottenPassword', 'passwordSent', 'resetPassword'].indexOf(myStep) >= 0">
             <label>{{ __('auth.label.email') }}</label>
             <div v-if="['passwordSent', 'resetPassword'].indexOf(myStep) == -1">
-                <input type="email" v-model="emailModel" autocomplete="email"/>
+                <input type="email" v-model="emailModel" name="email" />
 
                 <htmlbuilder-validator-error :bag="errors" name="email"></htmlbuilder-validator-error>
             </div>
@@ -18,7 +18,7 @@
         <div class="form-group" v-if="['passwordSent'].indexOf(myStep) >= 0">
             <label>{{ __('auth.label.securityCode') }}</label>
             <div>
-                <input type="text" v-model="code"/>
+                <input type="text" v-model="code" name="code" />
 
                 <htmlbuilder-validator-error :bag="errors" name="code"></htmlbuilder-validator-error>
             </div>
@@ -29,7 +29,7 @@
             <a class="as-link font-size-xs pull-right" href="#" tabindex="-1" v-if="myStep == 'login'"
                @click.prevent="myStep = 'forgottenPassword'">{{ __('auth.forgottenPassword.question') }}</a>
             <div>
-                <input type="password" v-model="password"/>
+                <input type="password" v-model="password" name="password"/>
 
                 <htmlbuilder-validator-error :bag="errors" name="password"></htmlbuilder-validator-error>
             </div>
@@ -38,7 +38,7 @@
         <div class="form-group" v-if="['resetPassword'].indexOf(myStep) >= 0">
             <label>{{ __('auth.label.newPassword') }}</label>
             <div>
-                <input type="password" v-model="password" autocomplete="password"/>
+                <input type="password" v-model="password" />
                 <div class="help">{{ __('auth.help.newPassword') }}</div>
 
                 <htmlbuilder-validator-error :bag="errors" name="password"></htmlbuilder-validator-error>
@@ -48,7 +48,7 @@
         <div class="form-group" v-if="['resetPassword'].indexOf(myStep) >= 0">
             <label>{{ __('auth.label.repeatPassword') }}</label>
             <div>
-                <input type="password" v-model="passwordRepeat" autocomplete="password"/>
+                <input type="password" v-model="passwordRepeat" />
 
                 <htmlbuilder-validator-error :bag="errors" name="passwordRepeat"></htmlbuilder-validator-error>
             </div>
