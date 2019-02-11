@@ -367,7 +367,9 @@ class Auth
 
     public function isAdmin()
     {
-        return $this->isLoggedIn() && method_exists($this->getUser(), 'isAdmin') && $this->getUser()->isAdmin();
+        $is = $this->isLoggedIn() && method_exists($this->getUser(), 'isAdmin') && $this->getUser()->isAdmin();
+
+        return $is;
     }
 
     public function isCheckin()
