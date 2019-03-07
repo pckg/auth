@@ -6,7 +6,7 @@
              v-if="['login', 'forgottenPassword', 'passwordSent', 'resetPassword'].indexOf(myStep) >= 0">
             <label>{{ __('auth.label.email') }}</label>
             <div v-if="['passwordSent', 'resetPassword'].indexOf(myStep) == -1">
-                <input type="email" v-model="emailModel" name="email" />
+                <input type="email" v-model="emailModel" name="email" @keyup.enter="executeAction" />
 
                 <htmlbuilder-validator-error :bag="errors" name="email"></htmlbuilder-validator-error>
             </div>
@@ -18,7 +18,7 @@
         <div class="form-group" v-if="['passwordSent'].indexOf(myStep) >= 0">
             <label>{{ __('auth.label.securityCode') }}</label>
             <div>
-                <input type="text" v-model="code" name="code" />
+                <input type="text" v-model="code" name="code" @keyup.enter="executeAction" />
 
                 <htmlbuilder-validator-error :bag="errors" name="code"></htmlbuilder-validator-error>
             </div>
@@ -29,7 +29,7 @@
             <a class="as-link font-size-xs pull-right" href="#" tabindex="-1" v-if="myStep == 'login'"
                @click.prevent="myStep = 'forgottenPassword'">{{ __('auth.forgottenPassword.question') }}</a>
             <div>
-                <input type="password" v-model="password" name="password"/>
+                <input type="password" v-model="password" name="password" @keyup.enter="executeAction"/>
 
                 <htmlbuilder-validator-error :bag="errors" name="password"></htmlbuilder-validator-error>
             </div>
@@ -38,7 +38,7 @@
         <div class="form-group" v-if="['resetPassword'].indexOf(myStep) >= 0">
             <label>{{ __('auth.label.newPassword') }}</label>
             <div>
-                <input type="password" v-model="password" />
+                <input type="password" v-model="password" @keyup.enter="executeAction" />
                 <div class="help">{{ __('auth.help.newPassword') }}</div>
 
                 <htmlbuilder-validator-error :bag="errors" name="password"></htmlbuilder-validator-error>
@@ -48,20 +48,20 @@
         <div class="form-group" v-if="['resetPassword'].indexOf(myStep) >= 0">
             <label>{{ __('auth.label.repeatPassword') }}</label>
             <div>
-                <input type="password" v-model="passwordRepeat" />
+                <input type="password" v-model="passwordRepeat" @keyup.enter="executeAction" />
 
                 <htmlbuilder-validator-error :bag="errors" name="passwordRepeat"></htmlbuilder-validator-error>
             </div>
         </div>
 
-        <div class="form-group" v-if="['login'].indexOf(myStep) >= 0">
+        <!--<div class="form-group" v-if="['login'].indexOf(myStep) >= 0">
             <label>{{ __('auth.label.rememberMe') }}</label>
             <pckg-tooltip icon="question-circle"
                           :content="__('auth.help.rememberMe')"></pckg-tooltip>
             <div>
                 <d-input-checkbox v-model="rememberMe" :value="1"></d-input-checkbox>
             </div>
-        </div>
+        </div>-->
 
         <div class="alert alert-danger clear-both" v-if="error.length > 0">{{ error }}</div>
 
@@ -94,7 +94,7 @@
                 emailModel: this.email || '',
                 password: '',
                 passwordRepeat: '',
-                rememberMe: null,
+                // rememberMe: null,
                 code: '',
                 myStep: this.step,
                 error: '',
@@ -151,7 +151,7 @@
                     http.post('/login', {
                         email: this.emailModel,
                         password: this.password,
-                        autologin: this.rememberMe
+                        // autologin: this.rememberMe
                     }, function (data) {
                         this.loading = false;
                         if (data.success) {

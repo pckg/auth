@@ -32,9 +32,9 @@ class LoginUserViaForm extends LoginUser
      */
     public function execute()
     {
-        $data = $this->loginForm->getRawData(['email', 'password', 'autologin']);
+        $data = $this->loginForm->getRawData(['email', 'password']);
 
-        $this->executeManual($data['email'], $data['password'], isset($data['autologin']));
+        $this->executeManual($data['email'], $data['password'], true);
     }
 
 }
