@@ -31,9 +31,6 @@ class Login extends Bootstrap implements ResolvesOnRequest
                  ->setLabel('Password:')
                  ->required();
 
-        $fieldset->addCheckbox('autologin')
-                 ->setLabel('Autologin?');
-
         $this->addSubmit();
 
         return $this;
