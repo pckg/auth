@@ -268,7 +268,10 @@
                         }.bind(this));
                 }
             },
-            openLoginModal: function () {
+            openLoginModal: function (data) {
+                if (data && data.email) {
+                    this.emailModel = data.email;
+                }
                 this.myStep = 'login';
                 this.$emit('opened');
             },
