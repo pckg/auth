@@ -19,17 +19,17 @@ class LoginWithAutologinGetParameter
             return $next();
         }
 
-        if (auth()->isLoggedIn()) {
-            $this->redirectWithoutParam($headerName);
-
-            return $next();
-        }
-
         /**
          * Process request with header.
          */
         $autologin = get($headerName);
         if (!$autologin || !is_string($autologin)) {
+            return $next();
+        }
+
+        if (auth()->isLoggedIn()) {
+            $this->redirectWithoutParam($headerName);
+
             return $next();
         }
 
