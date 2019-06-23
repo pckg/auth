@@ -15,7 +15,13 @@ class LoginWithAutologinGetParameter
          */
         $headerName = config('pckg.auth.getParameter');
 
-        if (!$headerName || !isHttp() || auth()->isLoggedIn()) {
+        if (!$headerName || !isHttp()) {
+            return $next();
+        }
+
+        if (auth()->isLoggedIn()) {
+            $this->redirectWithoutParam($headerName);
+
             return $next();
         }
 
@@ -30,23 +36,25 @@ class LoginWithAutologinGetParameter
         /**
          * Authenticating user with autologin.
          */
-        (new Users())->where('autologin', $autologin)
-                     ->oneAndIf(
-                         function(User $user) use ($headerName) {
-                             auth()->autologin($user->id);
-                         }
-                     );
+        (new Users())->where('autologin', $autologin)->oneAndIf(function(User $user) use ($headerName) {
+                auth()->autologin($user->id);
+            });
 
         /**
          * Remove autologin parameter and redirect to same url.
          */
+        $this->redirectWithoutParam($headerName);
+
+        return $next();
+    }
+
+    protected function redirectWithoutParam($headerName)
+    {
         $get = get()->all();
         unset($get[$headerName]);
         $query = http_build_query($get);
         $url = request()->getUrl();
         redirect($url . ($query ? '?' . $query : ''));
-
-        return $next();
     }
 
 }
