@@ -80,8 +80,8 @@ class Auth extends Provider
                     'view' => 'logout',
                     'name' => 'pckg.auth.logout',
                 ],
-                '/register'                   => [
-                    'view' => 'register',
+                '/api/auth/signup'                   => [
+                    'view' => 'signup',
                 ],
                 '/activate-user/[activation]' => [
                     'view' => 'activate',

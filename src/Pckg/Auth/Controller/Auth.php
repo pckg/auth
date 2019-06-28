@@ -9,11 +9,13 @@ use Pckg\Auth\Command\RegisterUser;
 use Pckg\Auth\Command\SendPasswordCode;
 use Pckg\Auth\Entity\UserPasswordResets;
 use Pckg\Auth\Entity\Users;
+use Pckg\Auth\Factory\User;
 use Pckg\Auth\Form\ForgotPassword;
 use Pckg\Auth\Form\Login;
 use Pckg\Auth\Form\PasswordCode;
 use Pckg\Auth\Form\Register;
 use Pckg\Auth\Form\ResetPassword;
+use Pckg\Auth\Form\SignupUser;
 use Pckg\Auth\Service\Auth as AuthService;
 use Pckg\Concept\Event\Dispatcher;
 use Pckg\Framework\Controller;
@@ -104,31 +106,35 @@ class Auth extends Controller
         })->execute();
     }
 
-    function getRegisterAction(Register $registerForm, AuthService $authHelper, Response $response)
+    /**
+     * @param SignupUser $signupUser
+     *
+     * @return array
+     */
+    function postSignupAction(SignupUser $signupUser)
     {
-        if ($authHelper->isLoggedIn()) {
-            $response->redirect('/');
-        }
+        return [
+            'success' => true,
+        ];
+        $data = $signupUser->getData();
 
-        return view("vendor/lfw/auth/src/Pckg/Auth/View/register",
-                    [
-                        'form' => $registerForm->initFields(),
-                    ]);
-    }
+        $user = User::create([
+                                 'email'    => $data['email'],
+                                 'password' => auth()->hashPassword($data['password']),
+                             ]);
 
-    function postRegisterAction(RegisterUser $registerUserCommand, Dispatcher $dispatcher, Response $response)
-    {
-        $registerUserCommand->onSuccess(function() use ($response) {
-            $response->redirect('/auth/registered?successful');
-        })->onError(function() use ($response) {
-            $response->redirect('/auth/register?error');
-        })->execute();
+        /**
+         * We would probably like to notify user about account creation and let him confirm it?
+         */
+
+        return [
+            'success' => true,
+        ];
     }
 
     function getActivateAction(ActivateUser $activateUserCommand, Router $router, Users $eUsers, Response $response)
     {
-        $rUser = $eUsers->where('activation',
-                                $router->get('activation'))
+        $rUser = $eUsers->where('activation', $router->get('activation'))
                         ->oneOrFail(new NotFound('User not found. Maybe it was already activated?'));
 
         return $activateUserCommand->setUser($rUser)->onSuccess(function() use ($response) {
@@ -140,10 +146,9 @@ class Auth extends Controller
 
     function getForgotPasswordAction(ForgotPassword $forgotPasswordForm)
     {
-        return view("vendor/lfw/auth/src/Pckg/Auth/View/forgotPassword",
-                    [
-                        'form' => $forgotPasswordForm->initFields(),
-                    ]);
+        return view("vendor/lfw/auth/src/Pckg/Auth/View/forgotPassword", [
+            'form' => $forgotPasswordForm->initFields(),
+        ]);
     }
 
     /**
