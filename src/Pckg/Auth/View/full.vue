@@ -287,6 +287,7 @@
                 this.$emit('opened');
             },
             setStep: function (step) {
+                this.myStep = step;
                 this.$emit('steps', step);
             }
         },
