@@ -113,9 +113,6 @@ class Auth extends Controller
      */
     function postSignupAction(SignupUser $signupUser)
     {
-        return [
-            'success' => true,
-        ];
         $data = $signupUser->getData();
 
         $user = User::create([
@@ -126,22 +123,20 @@ class Auth extends Controller
         /**
          * We would probably like to notify user about account creation and let him confirm it?
          */
+        email('user.registered', new \Pckg\Mail\Service\Mail\Adapter\User($user), [
+            'data' => [
+                'confirmAccountUrl' => url('pckg.auth.activate', ['activation' => sha1($user->hash . $user->autologin)], true),
+            ],
+        ]);
 
         return [
             'success' => true,
         ];
     }
 
-    function getActivateAction(ActivateUser $activateUserCommand, Router $router, Users $eUsers, Response $response)
+    function getActivateAction($activation)
     {
-        $rUser = $eUsers->where('activation', $router->get('activation'))
-                        ->oneOrFail(new NotFound('User not found. Maybe it was already activated?'));
-
-        return $activateUserCommand->setUser($rUser)->onSuccess(function() use ($response) {
-            $response->redirect('/auth/activated?succesful');
-        })->onError(function() {
-            return view('vendor/lfw/auth/src/Pckg/Auth/View/activationFailed');
-        })->execute();
+        $user = (new Users())->where('enabled', null)->whereRaw('SHA1(CONCAT(users.hash, users.autologin)) = ?', [$activation])->one();
     }
 
     function getForgotPasswordAction(ForgotPassword $forgotPasswordForm)
