@@ -13,6 +13,7 @@ use Pckg\Auth\Event\UserLoggedIn;
 use Pckg\Auth\Event\UserRegistered;
 use Pckg\Auth\Middleware\HandleLoginRequest;
 use Pckg\Auth\Middleware\HandleLogoutRequest;
+use Pckg\Auth\Middleware\LoginWithApiKeyHeader;
 use Pckg\Auth\Middleware\LoginWithAutologinGetParameter;
 use Pckg\Auth\Middleware\LoginWithCookie;
 use Pckg\Auth\Middleware\RestrictAccess;
@@ -28,6 +29,7 @@ class Auth extends Provider
         return [
             LoginWithCookie::class,
             LoginWithAutologinGetParameter::class,
+            LoginWithApiKeyHeader::class,
             HandleLogoutRequest::class,
             HandleLoginRequest::class,
             RestrictAccess::class,

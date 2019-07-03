@@ -22,19 +22,30 @@ class LoginWithApiKeyHeader
          * Process request with header.
          */
         $headers = getallheaders();
-        if ($apiKey = $headers[$headerName] ?? null) {
-            /**
-             * Authenticating user with api key.
-             */
-            $entity = config('pckg.auth.appEntity', AppKeys::class);
-            $token = (new $entity)->where('key', $apiKey)->where('valid')->one();
-
-            if (!$token) {
-                throw new Exception('Invalid token');
-            }
-
-            auth()->autologin($token->app->user_id);
+        if (!array_key_exists($headerName, $headers)) {
+            return $next();
         }
+
+        $apiKey = $headers[$headerName];
+
+        if (!$apiKey) {
+            response()->forbidden();
+        }
+
+        /**
+         * Authenticating user with api key.
+         */
+        $entity = config('pckg.auth.appEntity', AppKeys::class);
+        $field = config('pckg.auth.apiEntityField', 'key');
+        $entity = new $entity;
+        $token = $entity->where($field, $apiKey)->where('valid')->oneOrFail(function() use ($entity, $field) {
+            response()->forbidden();
+        });
+
+        /**
+         * Authenticate user
+         */
+        auth()->authenticate($token->app->user);
 
         return $next();
     }

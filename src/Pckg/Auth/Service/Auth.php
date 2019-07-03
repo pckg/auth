@@ -237,6 +237,23 @@ class Auth
                                                      ]), time() + (24 * 60 * 60 * 365.25), "/", '', true, true);
     }
 
+    public function authenticate($user)
+    {
+        $providerKey = $this->getProviderKey();
+        $sessionHash = password_hash(config('security.hash') . session_id(), PASSWORD_DEFAULT);
+
+        $_SESSION['Pckg']['Auth']['Provider'][$providerKey] = [
+            "user"  => $user->toArray(),
+            "hash"  => $sessionHash,
+            "flags" => [],
+        ];
+
+        $this->loggedIn = true;
+        $this->user = $user;
+
+        trigger(Auth::class . '.userLoggedIn', [$user]);
+    }
+
     public function performLogin($user)
     {
         $providerKey = $this->getProviderKey();
