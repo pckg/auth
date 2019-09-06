@@ -13,6 +13,11 @@ class User extends Record
 
     protected $entity = Users::class;
 
+    protected $protect = [
+        'password',
+        'autologin',
+    ];
+
     public function isAdmin()
     {
         return in_array($this->user_group_id, [1, 3]);
