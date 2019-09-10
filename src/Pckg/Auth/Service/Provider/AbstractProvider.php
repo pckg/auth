@@ -17,7 +17,7 @@ abstract class AbstractProvider implements ProviderInterface
     {
         $class = $this->entity;
 
-        return new $class;
+        return (new $class)->nonDeleted();
     }
 
     public function getUserByEmailAndPassword($email, $password)
