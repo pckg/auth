@@ -16,6 +16,7 @@ use Pckg\Auth\Form\PasswordCode;
 use Pckg\Auth\Form\Register;
 use Pckg\Auth\Form\ResetPassword;
 use Pckg\Auth\Form\SignupUser;
+use Pckg\Auth\Record\UserPasswordReset;
 use Pckg\Auth\Service\Auth as AuthService;
 use Pckg\Concept\Event\Dispatcher;
 use Pckg\Framework\Controller;
@@ -125,7 +126,8 @@ class Auth extends Controller
          */
         email('user.registered', new \Pckg\Mail\Service\Mail\Adapter\User($user), [
             'data' => [
-                'confirmAccountUrl' => url('pckg.auth.activate', ['activation' => sha1($user->hash . $user->autologin)], true),
+                'confirmAccountUrl' => url('pckg.auth.activate', ['activation' => sha1($user->hash . $user->autologin)],
+                                           true),
             ],
         ]);
 
@@ -136,7 +138,9 @@ class Auth extends Controller
 
     function getActivateAction($activation)
     {
-        $user = (new Users())->where('enabled', null)->whereRaw('SHA1(CONCAT(users.hash, users.autologin)) = ?', [$activation])->one();
+        $user = (new Users())->where('enabled', null)
+                             ->whereRaw('SHA1(CONCAT(users.hash, users.autologin)) = ?', [$activation])
+                             ->one();
     }
 
     function getForgotPasswordAction(ForgotPassword $forgotPasswordForm)
@@ -164,6 +168,17 @@ class Auth extends Controller
          * Fetch user.
          */
         $user = (new Users())->where('email', $data['email'])->oneOrFail();
+
+        /**
+         * Fetch last request.
+         */
+        $userPasswordReset = (new UserPasswordResets())->where('user_id', $user->id)->orderBy('id DESC')->one();
+        if ($userPasswordReset && $userPasswordReset->hasRequestedTooSoon()) {
+            return [
+                'success' => false,
+                'Please wait 5 minutes before making a new request.',
+            ];
+        }
 
         /**
          * Generate code and send email.

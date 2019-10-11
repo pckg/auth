@@ -4,7 +4,7 @@
              v-if="myStep != 'login' || (email && email.length > 0)"></div>
 
         <div class="form-group"
-             v-if="['login', 'forgottenPassword', 'passwordSent', 'resetPassword', 'signup'].indexOf(myStep) >= 0">
+             v-if="['login', 'forgottenPassword', 'passwordSent', 'resetPassword', 'signup', 'activateAccount'].indexOf(myStep) >= 0">
             <label>{{ __('auth.label.email') }}</label>
             <div v-if="['passwordSent', 'resetPassword'].indexOf(myStep) == -1">
                 <input type="email" v-model="emailModel" name="email" @keyup.enter="executeAction" autocomplete="username"/>

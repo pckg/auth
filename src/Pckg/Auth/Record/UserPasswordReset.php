@@ -8,4 +8,9 @@ class UserPasswordReset extends Record
 
     protected $entity = UserPasswordResets::class;
 
+    public function hasRequestedTooSoon()
+    {
+        return time() - strtotime($this->created_at) < (60 * 5);
+    }
+
 }
