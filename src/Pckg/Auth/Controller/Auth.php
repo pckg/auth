@@ -75,9 +75,9 @@ class Auth extends Controller
             }
 
             $this->response()->respondWithSuccessRedirect($user->getDashboardUrl());
-        })->onError(function() {
+        })->onError(function($data) {
             if ($this->request()->isAjax()) {
-                $this->response()->respondWithError(['text' => __('pckg.auth.error')]);
+                $this->response()->respondWithError(array_merge(['text' => __('pckg.auth.error')], $data ?? []));
 
                 return;
             }

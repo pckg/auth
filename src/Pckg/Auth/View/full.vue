@@ -1,10 +1,10 @@
 <template>
     <form class="pckg-auth-full">
-        <div v-html="__('auth.' + myStep + '.intro')"
+        <div v-html="__('auth.' + myStep + '.intro', { email: emailModel })"
              v-if="myStep != 'login' || (email && email.length > 0)"></div>
 
         <div class="form-group"
-             v-if="['login', 'forgottenPassword', 'passwordSent', 'resetPassword', 'signup', 'activateAccount'].indexOf(myStep) >= 0">
+             v-if="['login', 'forgottenPassword', 'passwordSent', 'resetPassword', 'signup'].indexOf(myStep) >= 0">
             <label>{{ __('auth.label.email') }}</label>
             <div v-if="['passwordSent', 'resetPassword'].indexOf(myStep) == -1">
                 <input type="email" v-model="emailModel" name="email" @keyup.enter="executeAction" autocomplete="username"/>
@@ -170,6 +170,12 @@
                         }
 
                         this.errors.clear();
+
+                        if (data.type === 'activateAccount') {
+                            this.setStep('activateAccount');
+                            return;
+                        }
+
                         this.error = data.text || 'Unknown error';
                     }.bind(this), function (response) {
                         this.loading = false;
@@ -202,7 +208,7 @@
                 if (this.myStep === 'accountCreated') {
                     this.setStep('login');
                 }
-                if (this.myStep == 'forgottenPassword') {
+                if (['forgottenPassword', 'activateAccount'].indexOf(this.myStep) >= 0) {
                     this.loading = true;
                     http.post('/forgot-password', {
                         email: this.emailModel

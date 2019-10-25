@@ -37,6 +37,16 @@ class LoginUser
             }
 
             /**
+             * If password is not set.
+             */
+            if (!$user->password) {
+                $this->error([
+                    'type' => 'activateAccount',
+                             ]);
+                continue;
+            }
+
+            /**
              * If password is incorrect ...
              */
             $hashedPassword = $user->password;
