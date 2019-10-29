@@ -13,6 +13,7 @@ use Pckg\Auth\Event\UserLoggedIn;
 use Pckg\Auth\Event\UserRegistered;
 use Pckg\Auth\Middleware\HandleLoginRequest;
 use Pckg\Auth\Middleware\HandleLogoutRequest;
+use Pckg\Auth\Middleware\LoginWithApiKeyHeader;
 use Pckg\Auth\Middleware\LoginWithAutologinGetParameter;
 use Pckg\Auth\Middleware\LoginWithCookie;
 use Pckg\Auth\Middleware\RestrictAccess;
@@ -28,6 +29,7 @@ class Auth extends Provider
         return [
             LoginWithCookie::class,
             LoginWithAutologinGetParameter::class,
+            LoginWithApiKeyHeader::class,
             HandleLogoutRequest::class,
             HandleLoginRequest::class,
             RestrictAccess::class,
@@ -66,67 +68,62 @@ class Auth extends Provider
 
     protected function baseRoutes()
     {
-        return array_merge_array(
-            [
-                'controller' => AuthController::class,
-            ],
-            [
-                '/login'                      => [
-                    'view' => 'login',
-                    'name' => 'login',
-                    'tags' => ['auth:out', 'layout:frontend'],
-                ],
-                '/logout'                     => [
-                    'view' => 'logout',
-                    'name' => 'pckg.auth.logout',
-                ],
-                '/register'                   => [
-                    'view' => 'register',
-                ],
-                '/activate-user/[activation]' => [
-                    'view' => 'activate',
-                ],
-                '/forgot-password'            => [
-                    'view' => 'forgotPassword',
-                    'name' => 'pckg.auth.forgotPassword',
-                ],
-                '/password-code'            => [
-                    'view' => 'passwordCode',
-                    'name' => 'pckg.auth.passwordCode',
-                ],
-                '/reset-password'            => [
-                    'view' => 'resetPassword',
-                    'name' => 'pckg.auth.resetPassword',
-                ],
-                '/api/auth/user'              => [
-                    'view' => 'user',
-                    'name' => 'api.auth.user',
-                ],
-                '/api/auth/user/addresses'    => [
-                    'view' => 'userAddresses',
-                    'name' => 'api.auth.user.addresses',
-                ],
-            ]
-        );
+        return array_merge_array([
+                                     'controller' => AuthController::class,
+                                 ], [
+                                     '/login'                      => [
+                                         'view' => 'login',
+                                         'name' => 'login',
+                                         'tags' => ['auth:out', 'layout:frontend'],
+                                     ],
+                                     '/logout'                     => [
+                                         'view' => 'logout',
+                                         'name' => 'pckg.auth.logout',
+                                     ],
+                                     '/api/auth/signup'            => [
+                                         'view' => 'signup',
+                                     ],
+                                     '/activate-user/[activation]' => [
+                                         'view' => 'activate',
+                                         'name' => 'pckg.auth.activate',
+                                     ],
+                                     '/forgot-password'            => [
+                                         'view' => 'forgotPassword',
+                                         'name' => 'pckg.auth.forgotPassword',
+                                     ],
+                                     '/password-code'              => [
+                                         'view' => 'passwordCode',
+                                         'name' => 'pckg.auth.passwordCode',
+                                     ],
+                                     '/reset-password'             => [
+                                         'view' => 'resetPassword',
+                                         'name' => 'pckg.auth.resetPassword',
+                                     ],
+                                     '/api/auth/user'              => [
+                                         'view' => 'user',
+                                         'name' => 'api.auth.user',
+                                     ],
+                                     '/api/auth/user/addresses'    => [
+                                         'view' => 'userAddresses',
+                                         'name' => 'api.auth.user.addresses',
+                                     ],
+                                 ]);
     }
 
     protected function facebookRoutes()
     {
-        return array_merge_array(
-            [
-                'controller' => Facebook::class,
-            ],
-            [
-                '/login/facebook'     => [
-                    'view' => 'login',
-                    'name' => 'login_facebook',
-                ],
-                '/takelogin/facebook' => [
-                    'view' => 'takelogin',
-                    'name' => 'takelogin_facebook',
-                ],
-            ]
-        );
+        return array_merge_array([
+                                     'controller' => Facebook::class,
+                                 ], [
+                                     '/login/facebook'     => [
+                                         'view' => 'login',
+                                         'name' => 'login_facebook',
+                                     ],
+                                     '/takelogin/facebook' => [
+                                         'view' => 'takelogin',
+                                         'name' => 'takelogin_facebook',
+                                     ],
+                                 ]);
     }
 
     public function consoles()

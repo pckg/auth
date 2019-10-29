@@ -9,11 +9,14 @@ use Pckg\Auth\Command\RegisterUser;
 use Pckg\Auth\Command\SendPasswordCode;
 use Pckg\Auth\Entity\UserPasswordResets;
 use Pckg\Auth\Entity\Users;
+use Pckg\Auth\Factory\User;
 use Pckg\Auth\Form\ForgotPassword;
 use Pckg\Auth\Form\Login;
 use Pckg\Auth\Form\PasswordCode;
 use Pckg\Auth\Form\Register;
 use Pckg\Auth\Form\ResetPassword;
+use Pckg\Auth\Form\SignupUser;
+use Pckg\Auth\Record\UserPasswordReset;
 use Pckg\Auth\Service\Auth as AuthService;
 use Pckg\Concept\Event\Dispatcher;
 use Pckg\Framework\Controller;
@@ -72,9 +75,9 @@ class Auth extends Controller
             }
 
             $this->response()->respondWithSuccessRedirect($user->getDashboardUrl());
-        })->onError(function() {
+        })->onError(function($data) {
             if ($this->request()->isAjax()) {
-                $this->response()->respondWithError(['text' => __('pckg.auth.error')]);
+                $this->response()->respondWithError(array_merge(['text' => __('pckg.auth.error')], $data ?? []));
 
                 return;
             }
@@ -104,46 +107,47 @@ class Auth extends Controller
         })->execute();
     }
 
-    function getRegisterAction(Register $registerForm, AuthService $authHelper, Response $response)
+    /**
+     * @param SignupUser $signupUser
+     *
+     * @return array
+     */
+    function postSignupAction(SignupUser $signupUser)
     {
-        if ($authHelper->isLoggedIn()) {
-            $response->redirect('/');
-        }
+        $data = $signupUser->getData();
 
-        return view("vendor/lfw/auth/src/Pckg/Auth/View/register",
-                    [
-                        'form' => $registerForm->initFields(),
-                    ]);
+        $user = User::create([
+                                 'email'    => $data['email'],
+                                 'password' => auth()->hashPassword($data['password']),
+                             ]);
+
+        /**
+         * We would probably like to notify user about account creation and let him confirm it?
+         */
+        email('user.registered', new \Pckg\Mail\Service\Mail\Adapter\User($user), [
+            'data' => [
+                'confirmAccountUrl' => url('pckg.auth.activate', ['activation' => sha1($user->hash . $user->autologin)],
+                                           true),
+            ],
+        ]);
+
+        return [
+            'success' => true,
+        ];
     }
 
-    function postRegisterAction(RegisterUser $registerUserCommand, Dispatcher $dispatcher, Response $response)
+    function getActivateAction($activation)
     {
-        $registerUserCommand->onSuccess(function() use ($response) {
-            $response->redirect('/auth/registered?successful');
-        })->onError(function() use ($response) {
-            $response->redirect('/auth/register?error');
-        })->execute();
-    }
-
-    function getActivateAction(ActivateUser $activateUserCommand, Router $router, Users $eUsers, Response $response)
-    {
-        $rUser = $eUsers->where('activation',
-                                $router->get('activation'))
-                        ->oneOrFail(new NotFound('User not found. Maybe it was already activated?'));
-
-        return $activateUserCommand->setUser($rUser)->onSuccess(function() use ($response) {
-            $response->redirect('/auth/activated?succesful');
-        })->onError(function() {
-            return view('vendor/lfw/auth/src/Pckg/Auth/View/activationFailed');
-        })->execute();
+        $user = (new Users())->where('enabled', null)
+                             ->whereRaw('SHA1(CONCAT(users.hash, users.autologin)) = ?', [$activation])
+                             ->one();
     }
 
     function getForgotPasswordAction(ForgotPassword $forgotPasswordForm)
     {
-        return view("vendor/lfw/auth/src/Pckg/Auth/View/forgotPassword",
-                    [
-                        'form' => $forgotPasswordForm->initFields(),
-                    ]);
+        return view("vendor/lfw/auth/src/Pckg/Auth/View/forgotPassword", [
+            'form' => $forgotPasswordForm->initFields(),
+        ]);
     }
 
     /**
@@ -164,6 +168,17 @@ class Auth extends Controller
          * Fetch user.
          */
         $user = (new Users())->where('email', $data['email'])->oneOrFail();
+
+        /**
+         * Fetch last request.
+         */
+        $userPasswordReset = (new UserPasswordResets())->where('user_id', $user->id)->orderBy('id DESC')->one();
+        if ($userPasswordReset && $userPasswordReset->hasRequestedTooSoon()) {
+            return [
+                'success' => false,
+                'Please wait 5 minutes before making a new request.',
+            ];
+        }
 
         /**
          * Generate code and send email.

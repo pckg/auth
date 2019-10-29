@@ -23,7 +23,7 @@ class CreateAuthTables extends Migration
     {
         $users = $this->table('users');
         $users->integer('user_group_id')->references('user_groups');
-        $users->email()->index();
+        $users->email()->unique();
         $users->password();
         $users->text('autologin');
         $users->deletable();

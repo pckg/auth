@@ -1,12 +1,13 @@
 <template>
-    <div class="pckg-auth-full">
-        <div v-html="__('auth.' + myStep + '.intro')" v-if="myStep != 'login' || (email && email.length > 0)"></div>
+    <form class="pckg-auth-full">
+        <div v-html="__('auth.' + myStep + '.intro', { email: emailModel })"
+             v-if="myStep != 'login' || (email && email.length > 0)"></div>
 
         <div class="form-group"
-             v-if="['login', 'forgottenPassword', 'passwordSent', 'resetPassword'].indexOf(myStep) >= 0">
+             v-if="['login', 'forgottenPassword', 'passwordSent', 'resetPassword', 'signup'].indexOf(myStep) >= 0">
             <label>{{ __('auth.label.email') }}</label>
             <div v-if="['passwordSent', 'resetPassword'].indexOf(myStep) == -1">
-                <input type="email" v-model="emailModel" name="email" />
+                <input type="email" v-model="emailModel" name="email" @keyup.enter="executeAction" autocomplete="username"/>
 
                 <htmlbuilder-validator-error :bag="errors" name="email"></htmlbuilder-validator-error>
             </div>
@@ -18,7 +19,7 @@
         <div class="form-group" v-if="['passwordSent'].indexOf(myStep) >= 0">
             <label>{{ __('auth.label.securityCode') }}</label>
             <div>
-                <input type="text" v-model="code" name="code" />
+                <input type="text" v-model="code" name="code" @keyup.enter="executeAction" autocomplete="off"/>
 
                 <htmlbuilder-validator-error :bag="errors" name="code"></htmlbuilder-validator-error>
             </div>
@@ -27,55 +28,56 @@
         <div class="form-group" v-if="['login'].indexOf(myStep) >= 0">
             <label>{{ __('auth.label.password') }}</label>
             <a class="as-link font-size-xs pull-right" href="#" tabindex="-1" v-if="myStep == 'login'"
-               @click.prevent="myStep = 'forgottenPassword'">{{ __('auth.forgottenPassword.question') }}</a>
+               @click.prevent="setStep('forgottenPassword')">{{ __('auth.forgottenPassword.question') }}</a>
             <div>
-                <input type="password" v-model="password" name="password"/>
+                <input type="password" v-model="password" name="password" @keyup.enter="executeAction" autocomplete="current-password" />
 
                 <htmlbuilder-validator-error :bag="errors" name="password"></htmlbuilder-validator-error>
             </div>
         </div>
 
-        <div class="form-group" v-if="['resetPassword'].indexOf(myStep) >= 0">
+        <div class="form-group" v-if="['resetPassword', 'signup'].indexOf(myStep) >= 0">
             <label>{{ __('auth.label.newPassword') }}</label>
             <div>
-                <input type="password" v-model="password" />
+                <input type="password" v-model="password" @keyup.enter="executeAction" autocomplete="new-password"/>
                 <div class="help">{{ __('auth.help.newPassword') }}</div>
 
                 <htmlbuilder-validator-error :bag="errors" name="password"></htmlbuilder-validator-error>
             </div>
         </div>
 
-        <div class="form-group" v-if="['resetPassword'].indexOf(myStep) >= 0">
+        <div class="form-group" v-if="['resetPassword', 'signup'].indexOf(myStep) >= 0">
             <label>{{ __('auth.label.repeatPassword') }}</label>
             <div>
-                <input type="password" v-model="passwordRepeat" />
+                <input type="password" v-model="passwordRepeat" @keyup.enter="executeAction" autocomplete="new-password"/>
 
                 <htmlbuilder-validator-error :bag="errors" name="passwordRepeat"></htmlbuilder-validator-error>
             </div>
         </div>
 
-        <div class="form-group" v-if="['login'].indexOf(myStep) >= 0">
+        <!--<div class="form-group" v-if="['login'].indexOf(myStep) >= 0">
             <label>{{ __('auth.label.rememberMe') }}</label>
             <pckg-tooltip icon="question-circle"
                           :content="__('auth.help.rememberMe')"></pckg-tooltip>
             <div>
                 <d-input-checkbox v-model="rememberMe" :value="1"></d-input-checkbox>
             </div>
-        </div>
+        </div>-->
 
         <div class="alert alert-danger clear-both" v-if="error.length > 0">{{ error }}</div>
 
         <button class="button btn-block" @click.prevent="executeAction" :key="'btnAction'" :disabled="loading">
-            <template v-if="loading"><i class="fa fa-spinner fa-spin"></i></template>
+            <template v-if="loading"><i class="fal fa-spinner fa-spin"></i></template>
             <template v-else>{{ __('auth.' + myStep + '.btn') }}</template>
         </button>
 
         <div class="centered margin-top-md margin-bottom-sm">
-            <a class="as-link" href="#" v-if="myStep == 'forgottenPassword'"
-               @click.prevent="myStep = 'login'" :key="'btnBelowForgottenPassword'">{{ __('auth.login.question')
-                }}</a>
+            <a class="as-link" href="#" v-if="myStep == 'login'"
+               @click.prevent="setStep('signup')">{{ __('auth.signup.question') }}</a>
+            <a class="as-link" href="#" v-if="['forgottenPassword', 'signup'].indexOf(myStep) >= 0"
+               @click.prevent="setStep('login')">{{ __('auth.login.question') }}</a>
         </div>
-    </div>
+    </form>
 </template>
 
 <script>
@@ -94,7 +96,7 @@
                 emailModel: this.email || '',
                 password: '',
                 passwordRepeat: '',
-                rememberMe: null,
+                // rememberMe: null,
                 code: '',
                 myStep: this.step,
                 error: '',
@@ -122,7 +124,7 @@
                 let parts = hash.split('-');
 
                 this.$emit('opened');
-                this.myStep = 'passwordSent';
+                this.setStep('passwordSent');
                 this.emailModel = parts[1];
                 this.code = parts[2];
                 this.executeAction();
@@ -138,7 +140,7 @@
             emailModel: function () {
                 this.existingUser = false;
             },
-            step: function (myStep) {
+            step: function (step) {
                 this.myStep = step;
                 this.error = '';
             }
@@ -151,7 +153,7 @@
                     http.post('/login', {
                         email: this.emailModel,
                         password: this.password,
-                        autologin: this.rememberMe
+                        // autologin: this.rememberMe
                     }, function (data) {
                         this.loading = false;
                         if (data.success) {
@@ -168,6 +170,12 @@
                         }
 
                         this.errors.clear();
+
+                        if (data.type === 'activateAccount') {
+                            this.setStep('activateAccount');
+                            return;
+                        }
+
                         this.error = data.text || 'Unknown error';
                     }.bind(this), function (response) {
                         this.loading = false;
@@ -181,33 +189,38 @@
                     }.bind(this));
                 }
                 if (this.myStep == 'signup') {
-                    this.myStep = 'forgottenPassword';
-                    return;
-                    http.post('/signup', {}, function (data) {
-
-                    }.bind(this), function () {
-
-                    });
+                    this.loading = true;
+                    http.post('/api/auth/signup', {
+                        email: this.emailModel,
+                        password: this.password,
+                        passwordRepeat: this.passwordRepeat,
+                    }, function (data) {
+                        this.loading = false;
+                        if (data.success) {
+                            this.setStep('accountCreated');
+                            return;
+                        }
+                    }.bind(this), function (response) {
+                        this.loading = false;
+                        this.hydrateErrorResponse(response);
+                    }.bind(this));
                 }
-                if (this.myStep == 'forgottenPassword') {
+                if (this.myStep === 'accountCreated') {
+                    this.setStep('login');
+                }
+                if (['forgottenPassword', 'activateAccount'].indexOf(this.myStep) >= 0) {
                     this.loading = true;
                     http.post('/forgot-password', {
                         email: this.emailModel
                     }, function (data) {
                         this.loading = false;
                         if (data.success) {
-                            this.myStep = 'passwordSent';
+                            this.setStep('passwordSent');
                             return;
                         }
                     }.bind(this), function (response) {
                         this.loading = false;
-                        http.postError(response);
-
-                        this.errors.clear();
-                        $.each(response.responseJSON.descriptions || [], function (name, message) {
-                            this.errors.remove(name);
-                            this.errors.add({field: name, msg: message});
-                        }.bind(this));
+                        this.hydrateErrorResponse();
                     }.bind(this));
                 }
                 if (this.myStep == 'passwordSent') {
@@ -218,7 +231,7 @@
                         }, function (data) {
                             this.loading = false;
                             if (data.success) {
-                                this.myStep = 'resetPassword';
+                                this.setStep('resetPassword');
                                 return;
                             }
                         }.bind(this),
@@ -268,13 +281,20 @@
                         }.bind(this));
                 }
             },
-            openLoginModal: function () {
-                this.myStep = 'login';
+            openLoginModal: function (data) {
+                if (data && data.email) {
+                    this.emailModel = data.email;
+                }
+                this.setStep('login');
                 this.$emit('opened');
             },
             openForgottenPasswordModal: function () {
-                this.myStep = 'forgottenPassword';
+                this.setStep('forgottenPassword');
                 this.$emit('opened');
+            },
+            setStep: function (step) {
+                this.myStep = step;
+                this.$emit('steps', step);
             }
         },
         computed: {
