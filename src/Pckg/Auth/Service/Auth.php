@@ -382,6 +382,13 @@ class Auth
         return !$this->isLoggedIn();
     }
 
+    public function isSuperadmin()
+    {
+        $is = $this->isLoggedIn() && method_exists($this->getUser(), 'isSuperadmin') && $this->getUser()->isSuperadmin();
+
+        return $is;
+    }
+
     public function isAdmin()
     {
         $is = $this->isLoggedIn() && method_exists($this->getUser(), 'isAdmin') && $this->getUser()->isAdmin();

@@ -18,6 +18,11 @@ class User extends Record
         'autologin',
     ];
 
+    public function isSuperadmin()
+    {
+        return in_array($this->user_group_id, [1]);
+    }
+
     public function isAdmin()
     {
         return in_array($this->user_group_id, [1, 3]);
