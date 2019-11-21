@@ -81,6 +81,7 @@
 </template>
 
 <script>
+
     export default {
         name: 'pckg-auth-full',
         mixins: [pckgFormValidator, pckgTranslations],
@@ -299,7 +300,7 @@
         },
         computed: {
             isLoggedIn: function () {
-                return $store.getters.isLoggedIn;
+                return this.$store.getters.isLoggedIn;
             }
         }
     }

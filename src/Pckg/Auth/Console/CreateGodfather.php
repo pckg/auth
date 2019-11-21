@@ -30,7 +30,7 @@ class CreateGodfather extends Command
             throw new Exception("There are already users in database");
         }
 
-        $statuses = ['Super admin', 'User', 'Administrator', 'PR', 'Checkin', 'Cashier'];
+        $statuses = ['Super admin', 'User', 'Administrator', 'PR', 'Checkin', 'Cashier', 'Analyst'];
         foreach ($statuses as $status) {
             UserGroup::create(['title' => $status]);
         }

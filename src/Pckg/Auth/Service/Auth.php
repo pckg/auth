@@ -82,6 +82,21 @@ class Auth
         return $this->user = $this->getProvider()->getUserById($this->user('id'));
     }
 
+    public function getUserDataArray()
+    {
+        $user = $this->getUser();
+        $data = $user ? $user->jsonSerialize() : [];
+        $data['tags'] = collect(config('pckg.auth.tags', []))->map(function($callable, $tag){
+            if (!Reflect::call($callable)) {
+                return;
+            }
+
+            return $tag;
+        })->removeEmpty()->values();
+
+        return $data;
+    }
+
     public function is()
     {
         return !!$this->getUser();
