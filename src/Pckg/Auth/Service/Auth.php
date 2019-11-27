@@ -86,13 +86,22 @@ class Auth
     {
         $user = $this->getUser();
         $data = $user ? $user->jsonSerialize() : [];
-        $data['tags'] = collect(config('pckg.auth.tags', []))->map(function($callable, $tag){
+        $data['tags'] = collect(config('pckg.auth.tags', []))->map(function($callable, $tag) {
             if (!Reflect::call($callable)) {
                 return;
             }
 
             return $tag;
         })->removeEmpty()->values();
+
+        /**
+         * We want to enrich our user with some custom values.
+         */
+        trigger(Auth::class .'.getUserDataArray', [$user, $data, function($newData) use (&$data){
+            foreach ($newData as $key => $val) {
+                $data[$key] = $val;
+            }
+        }]);
 
         return $data;
     }
