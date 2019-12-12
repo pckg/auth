@@ -179,11 +179,22 @@ class Auth
         return false;
     }
 
+    public function getSecurityHash()
+    {
+        $hash = config('security.hash', null);
+
+        if (dev() && strlen($hash) < 64) {
+            throw new Exception('Make sure security hash is set!');
+        }
+
+        return $hash;
+    }
+
     public function setParentLogin()
     {
         setcookie("pckg_auth_parentlogin", json_encode([
                                                            $this->getProviderKey() => [
-                                                               'hash'    => password_hash(config('security.hash') .
+                                                               'hash'    => password_hash($this->getSecurityHash() .
                                                                                           $this->user('id') .
                                                                                           $this->user('autologin'),
                                                                                           PASSWORD_DEFAULT),
@@ -234,7 +245,7 @@ class Auth
                 continue;
             }
 
-            $entry = config('security.hash') . $user->id . $user->autologin;
+            $entry = $this->getSecurityHash() . $user->id . $user->autologin;
             if (!password_verify($entry, $hash)) {
                 continue;
             }
@@ -252,7 +263,7 @@ class Auth
     {
         setcookie("pckg_auth_autologin", json_encode([
                                                          $this->getProviderKey() => [
-                                                             'hash'    => password_hash(config('security.hash') .
+                                                             'hash'    => password_hash($this->getSecurityHash() .
                                                                                         $this->user('id') .
                                                                                         $this->user('autologin'),
                                                                                         PASSWORD_DEFAULT),
@@ -264,7 +275,7 @@ class Auth
     public function authenticate($user)
     {
         $providerKey = $this->getProviderKey();
-        $sessionHash = password_hash(config('security.hash') . session_id(), PASSWORD_DEFAULT);
+        $sessionHash = password_hash($this->getSecurityHash() . session_id(), PASSWORD_DEFAULT);
 
         $_SESSION['Pckg']['Auth']['Provider'][$providerKey] = [
             "user"  => $user->toArray(),
@@ -281,7 +292,7 @@ class Auth
     public function performLogin($user)
     {
         $providerKey = $this->getProviderKey();
-        $sessionHash = password_hash(config('security.hash') . session_id(), PASSWORD_DEFAULT);
+        $sessionHash = password_hash($this->getSecurityHash() . session_id(), PASSWORD_DEFAULT);
 
         $_SESSION['Pckg']['Auth']['Provider'][$providerKey] = [
             "user"  => $user->toArray(),
@@ -440,6 +451,18 @@ class Auth
         }
 
         return in_array($this->user('email'), $email);
+    }
+
+    public function getNewInternalGetParameter()
+    {
+        $data = [
+            'timestamp' => date('Y-m-d H:i:s'),
+        ];
+
+        $data['hash'] = auth()->hashPassword(config('identifier', null) . $data['timestamp'] . $this->getSecurityHash());
+        $data['signature'] = sha1(json_encode($data));
+
+        return base64_encode(json_encode($data));
     }
 
 }
