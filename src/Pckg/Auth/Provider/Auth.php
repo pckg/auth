@@ -7,6 +7,7 @@ Registers commands, and middlewared on initialization
 */
 
 use Pckg\Auth\Console\CreateGodfather;
+use Pckg\Auth\Console\CreateUserGroups;
 use Pckg\Auth\Controller\Auth as AuthController;
 use Pckg\Auth\Controller\Facebook;
 use Pckg\Auth\Event\UserLoggedIn;
@@ -130,6 +131,7 @@ class Auth extends Provider
     {
         return [
             CreateGodfather::class,
+            CreateUserGroups::class,
         ];
     }
 

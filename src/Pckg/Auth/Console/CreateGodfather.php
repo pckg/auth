@@ -12,15 +12,11 @@ class CreateGodfather extends Command
 
     protected function configure()
     {
-        $this->setName('auth:create-godfather')
-             ->setDescription('Create godfather user')
-             ->addArguments(
-                 [
-                     'email' => 'Godfather email',
-                     'password' => 'Hashed godfather password',
-                 ],
-                 InputArgument::REQUIRED
-             );
+        $this->setName('auth:create-godfather')->setDescription('Create godfather user')->addArguments([
+                                                                                                           'email'    => 'Godfather email',
+                                                                                                           'password' => 'Hashed godfather password',
+                                                                                                       ],
+                                                                                                       InputArgument::REQUIRED);
     }
 
     public function handle()
@@ -30,14 +26,12 @@ class CreateGodfather extends Command
             throw new Exception("There are already users in database");
         }
 
-        $statuses = ['Super admin', 'User', 'Administrator', 'PR', 'Checkin', 'Cashier', 'Analyst'];
-        foreach ($statuses as $status) {
-            UserGroup::create(['title' => $status]);
-        }
+        (new CreateUserGroups())->executeManually();
 
-        $user = (new User(['email'    => $this->argument('email'),
-                           'password' => $this->argument('password'),
-                           'autologin' => sha1(sha1($this->argument('email')) . sha1(config('identifier', null)))
+        $user = (new User([
+                              'email'     => $this->argument('email'),
+                              'password'  => $this->argument('password'),
+                              'autologin' => sha1(sha1($this->argument('email')) . sha1(config('identifier', null))),
                           ]))->setDefaults()->setAndSave(['user_group_id' => 1]);
 
         $this->output('Godfather #' . $user->id . ' created');
