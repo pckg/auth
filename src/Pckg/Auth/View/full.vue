@@ -221,7 +221,7 @@
                         }
                     }.bind(this), function (response) {
                         this.loading = false;
-                        this.hydrateErrorResponse();
+                        this.hydrateErrorResponse(response);
                     }.bind(this));
                 }
                 if (this.myStep == 'passwordSent') {
@@ -238,13 +238,7 @@
                         }.bind(this),
                         function (response) {
                             this.loading = false;
-                            http.postError(response);
-
-                            this.errors.clear();
-                            $.each(response.responseJSON.descriptions || [], function (name, message) {
-                                this.errors.remove(name);
-                                this.errors.add({field: name, msg: message});
-                            }.bind(this));
+                            this.hydrateErrorResponse(response);
                         }.bind(this));
                 }
                 if (this.myStep == 'resetPassword') {
@@ -272,13 +266,7 @@
                         }.bind(this),
                         function (response) {
                             this.loading = false;
-                            http.postError(response);
-
-                            this.errors.clear();
-                            $.each(response.responseJSON.descriptions || [], function (name, message) {
-                                this.errors.remove(name);
-                                this.errors.add({field: name, msg: message});
-                            }.bind(this));
+                            this.hydrateErrorResponse(response);
                         }.bind(this));
                 }
             },
