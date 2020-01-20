@@ -28,9 +28,8 @@ class LoginWithApiKeyHeader
         }
 
         $apiKey = $headers[$headerName];
-
         if (!$apiKey) {
-            response()->forbidden();
+            response()->forbidden('Missing API key');
         }
 
         /**
@@ -40,7 +39,7 @@ class LoginWithApiKeyHeader
         $field = config('pckg.auth.apiEntityField', 'key');
         $entity = new $entity;
         $token = $entity->where($field, $apiKey)->where('valid')->oneOrFail(function() use ($entity, $field) {
-            response()->forbidden();
+            response()->forbidden('Invalid API key');
         });
 
         /**
