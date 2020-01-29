@@ -18,17 +18,9 @@ class CreateUserGroups extends Command
     public function handle()
     {
         $this->outputDated('Updating');
-        $statuses = [
-            1 => 'Super admin',
-            2 => 'User',
-            3 => 'Administrator',
-            4 => 'PR',
-            5 => 'Checkin',
-            6 => 'Cashier',
-            7 => 'Analyst',
-        ];
-        foreach ($statuses as $id => $status) {
-            UserGroup::getAndUpdateOrCreate(['id' => $id], ['id' => $id, 'title' => $status]);
+        $statuses = config('pckg.auth.groups', []);
+        foreach ($statuses as $id => $data) {
+            UserGroup::getAndUpdateOrCreate(['id' => $id], $data);
         }
         $this->outputDated('Updated');
     }
