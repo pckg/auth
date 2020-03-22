@@ -339,7 +339,8 @@ class Auth
 
     public function setCookie($name, $value, $time)
     {
-        setcookie($name, $value, $time, '/; samesite=strict', '', true, true);
+        //setcookie($name, $value, $time, '/; samesite=strict', '', true, true);
+        setcookie($name, $value, $time, '', '', true, true);
     }
 
     public function getSessionProvider()
