@@ -184,7 +184,7 @@ class Auth
         $hash = config('security.hash', null);
 
         if (dev() && strlen($hash) < 64) {
-            throw new Exception('Make sure security hash is set!');
+            message('Make sure security hash is set (min length 64, current length ' . strlen($hash) . '!');
         }
 
         return $hash;
@@ -192,7 +192,7 @@ class Auth
 
     public function setParentLogin()
     {
-        setcookie("pckg_auth_parentlogin", json_encode([
+        $this->setCookie("pckg_auth_parentlogin", json_encode([
                                                            $this->getProviderKey() => [
                                                                'hash'    => password_hash($this->getSecurityHash() .
                                                                                           $this->user('id') .
@@ -200,7 +200,7 @@ class Auth
                                                                                           PASSWORD_DEFAULT),
                                                                'user_id' => $this->user('id'),
                                                            ],
-                                                       ]), time() + (60 * 60), "/", '', true, true);
+                                                       ]), time() + (60 * 60));
     }
 
     public function performAutologin()
@@ -261,7 +261,7 @@ class Auth
      */
     public function setAutologin()
     {
-        setcookie("pckg_auth_autologin", json_encode([
+        $this->setCookie("pckg_auth_autologin", json_encode([
                                                          $this->getProviderKey() => [
                                                              'hash'    => password_hash($this->getSecurityHash() .
                                                                                         $this->user('id') .
@@ -269,7 +269,7 @@ class Auth
                                                                                         PASSWORD_DEFAULT),
                                                              'user_id' => $this->user('id'),
                                                          ],
-                                                     ]), time() + (24 * 60 * 60 * 365.25), "/", '', true, true);
+                                                     ]), time() + (24 * 60 * 60 * 365.25));
     }
 
     public function authenticate($user)
@@ -303,11 +303,10 @@ class Auth
         /**
          * @T00D00 - allow local http cookie or force dev to https.
          */
-        setcookie("pckg_auth_provider_" . $providerKey, json_encode([
+        $this->setCookie("pckg_auth_provider_" . $providerKey, json_encode([
                                                                         "user" => $user->id,
                                                                         "hash" => $sessionHash,
-                                                                    ]), time() + (24 * 60 * 60 * 365.25), "/", '', true,
-                  true);
+                                                                    ]), time() + (24 * 60 * 60 * 365.25));
 
         $this->loggedIn = true;
 
@@ -324,19 +323,23 @@ class Auth
         unset($_SESSION['Pckg']['Auth']['Provider']);
 
         foreach ($providerKeys as $providerKey) {
-            setcookie('pckg_auth_provider_' . $providerKey, null, time() - (24 * 60 * 60 * 365.25), '/', '', true,
-                      true);
+            $this->setCookie('pckg_auth_provider_' . $providerKey, null, time() - (24 * 60 * 60 * 365.25));
         }
 
         if (isset($_COOKIE['pckg_auth_parentlogin'])) {
             $this->performParentLogin();
-            setcookie('pckg_auth_parentlogin', null, time() - (24 * 60 * 60 * 365.25), '/', '', true, true);
+            $this->setCookie('pckg_auth_parentlogin', null, time() - (24 * 60 * 60 * 365.25));
         } else {
-            setcookie('pckg_auth_autologin', null, time() - (24 * 60 * 60 * 365.25), '/', '', true, true);
+            $this->setCookie('pckg_auth_autologin', null, time() - (24 * 60 * 60 * 365.25));
         }
 
         $this->loggedIn = false;
         $this->user = null;
+    }
+
+    public function setCookie($name, $value, $time)
+    {
+        setcookie($name, $value, $time, '/; samesite=strict', '', true, true);
     }
 
     public function getSessionProvider()
