@@ -97,7 +97,7 @@ class Auth
         /**
          * We want to enrich our user with some custom values.
          */
-        trigger(Auth::class .'.getUserDataArray', [$user, $data, function($newData) use (&$data){
+        trigger(Auth::class .'.getUserDataArray', ['user' => $user, 'data' => $data, 'setter' => function($newData) use (&$data){
             foreach ($newData as $key => $val) {
                 $data[$key] = $val;
             }
