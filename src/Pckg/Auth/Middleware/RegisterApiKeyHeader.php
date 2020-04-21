@@ -17,7 +17,7 @@ class RegisterApiKeyHeader
         if (!$headerName || !isHttp() || !auth()->isLoggedIn() || isConsole()) {
             return $next();
         }
-        $headers = getallheaders();
+        $headers = request()->getHeaders();
         $apiKey = $headers[$headerName] ?? null;
 
         if (!$apiKey) {

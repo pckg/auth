@@ -22,7 +22,7 @@ class LoginWithApiKeyHeader
         /**
          * Process request with header.
          */
-        $headers = getallheaders();
+        $headers = request()->getHeaders();
         if (!array_key_exists($headerName, $headers)) {
             return $next();
         }
