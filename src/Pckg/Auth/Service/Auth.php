@@ -309,7 +309,7 @@ class Auth
         /**
          * @T00D00 - allow local http cookie or force dev to https.
          */
-        $this->setCookie("pckg_auth_provider_" . $providerKey, base64_decode(json_encode([
+        $this->setCookie("pckg_auth_provider_" . $providerKey, base64_encode(json_encode([
                                                                         "user" => $user->id,
                                                                         "hash" => $sessionHash,
                                                                     ])), time() + (24 * 60 * 60 * 365.25));
