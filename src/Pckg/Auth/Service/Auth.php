@@ -210,6 +210,9 @@ class Auth
         }
 
         $cookie = json_decode(base64_decode($_COOKIE['pckg_auth_autologin']), true);
+        if (!$cookie) {
+            return;
+        }
         $this->performLoginFromStorage($cookie);
     }
 
@@ -220,6 +223,9 @@ class Auth
         }
 
         $cookie = json_decode(base64_decode($_COOKIE['pckg_auth_parentlogin']), true);
+        if (!$cookie) {
+            return;
+        }
         $this->performLoginFromStorage($cookie);
     }
 
@@ -303,10 +309,10 @@ class Auth
         /**
          * @T00D00 - allow local http cookie or force dev to https.
          */
-        $this->setCookie("pckg_auth_provider_" . $providerKey, json_encode([
+        $this->setCookie("pckg_auth_provider_" . $providerKey, base64_decode(json_encode([
                                                                         "user" => $user->id,
                                                                         "hash" => $sessionHash,
-                                                                    ]), time() + (24 * 60 * 60 * 365.25));
+                                                                    ])), time() + (24 * 60 * 60 * 365.25));
 
         $this->loggedIn = true;
 
@@ -386,7 +392,7 @@ class Auth
             return false;
         }
 
-        $cookie = json_decode($_COOKIE['pckg_auth_provider_' . $providerKey], true);
+        $cookie = json_decode(base64_decode($_COOKIE['pckg_auth_provider_' . $providerKey]), true);
 
         /**
          * Cookie exists, but hash isn't set.
