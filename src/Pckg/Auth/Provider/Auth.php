@@ -75,7 +75,7 @@ class Auth extends Provider
                                      '/login'                      => [
                                          'view' => 'login',
                                          'name' => 'login',
-                                         'tags' => ['auth:out', 'layout:frontend'],
+                                         'tags' => ['auth:out', 'layout:frontend', 'seo:title' => 'Login'],
                                      ],
                                      '/logout'                     => [
                                          'view' => 'logout',

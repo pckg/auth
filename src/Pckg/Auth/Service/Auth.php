@@ -192,7 +192,7 @@ class Auth
 
     public function setParentLogin()
     {
-        $this->setCookie("pckg_auth_parentlogin", json_encode([
+        $this->setCookie("pckg_auth_parentlogin", base64_encode(json_encode([
                                                            $this->getProviderKey() => [
                                                                'hash'    => password_hash($this->getSecurityHash() .
                                                                                           $this->user('id') .
@@ -200,7 +200,7 @@ class Auth
                                                                                           PASSWORD_DEFAULT),
                                                                'user_id' => $this->user('id'),
                                                            ],
-                                                       ]), time() + (60 * 60));
+                                                       ])), time() + (60 * 60));
     }
 
     public function performAutologin()
@@ -209,7 +209,7 @@ class Auth
             return;
         }
 
-        $cookie = json_decode($_COOKIE['pckg_auth_autologin'], true);
+        $cookie = json_decode(base64_decode($_COOKIE['pckg_auth_autologin']), true);
         $this->performLoginFromStorage($cookie);
     }
 
@@ -219,7 +219,7 @@ class Auth
             return;
         }
 
-        $cookie = json_decode($_COOKIE['pckg_auth_parentlogin'], true);
+        $cookie = json_decode(base64_decode($_COOKIE['pckg_auth_parentlogin']), true);
         $this->performLoginFromStorage($cookie);
     }
 
@@ -261,7 +261,7 @@ class Auth
      */
     public function setAutologin()
     {
-        $this->setCookie("pckg_auth_autologin", json_encode([
+        $this->setCookie("pckg_auth_autologin", base64_encode(json_encode([
                                                          $this->getProviderKey() => [
                                                              'hash'    => password_hash($this->getSecurityHash() .
                                                                                         $this->user('id') .
@@ -269,7 +269,7 @@ class Auth
                                                                                         PASSWORD_DEFAULT),
                                                              'user_id' => $this->user('id'),
                                                          ],
-                                                     ]), time() + (24 * 60 * 60 * 365.25));
+                                                     ])), time() + (24 * 60 * 60 * 365.25));
     }
 
     public function authenticate($user)
@@ -340,7 +340,7 @@ class Auth
     public function setCookie($name, $value, $time)
     {
         //setcookie($name, $value, $time, '/; samesite=strict', '', true, true);
-        setcookie($name, $value, $time, '', '', true, true);
+        setcookie($name, $value, $time, '/; samesite=Strict', '', true, true);
     }
 
     public function getSessionProvider()
