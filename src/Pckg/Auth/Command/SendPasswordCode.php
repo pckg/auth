@@ -2,8 +2,8 @@
 
 namespace Pckg\Auth\Command;
 
-use Derive\Orders\Entity\Users;
-use Derive\User\Service\Mail\User;
+use Pckg\Auth\Entity\Users;
+use Pckg\Mail\Service\Mail\Adapter\User;
 use Pckg\Auth\Record\UserPasswordReset;
 use Pckg\Concept\CommandInterface;
 

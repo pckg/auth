@@ -14,9 +14,10 @@ class CreateGodfather extends Command
     {
         $this->setName('auth:create-godfather')->setDescription('Create godfather user')->addArguments([
                                                                                                            'email'    => 'Godfather email',
-                                                                                                           'password' => 'Hashed godfather password',
                                                                                                        ],
-                                                                                                       InputArgument::REQUIRED);
+                                                                                                       InputArgument::REQUIRED)->addArguments([
+            'password' => 'Hashed godfather password',
+        ], InputArgument::OPTIONAL);
     }
 
     public function handle()
@@ -28,9 +29,34 @@ class CreateGodfather extends Command
 
         (new CreateUserGroups())->executeManually();
 
+        $password = $this->argument('password');
+
+        /**
+         * Ask for password if not set.
+         */
+        $manual = false;
+        if (!$password) {
+            $manual = true;
+            $password = $this->askQuestion('Enter password:');
+        }
+
+        /**
+         * Throw exception when not set.
+         */
+        if (!$password) {
+            throw new Exception('No password set');
+        }
+
+        /**
+         * Hash when manually entered.
+         */
+        if ($manual) {
+            $password = auth()->hashPassword($password);
+        }
+
         $user = (new User([
                               'email'     => $this->argument('email'),
-                              'password'  => $this->argument('password'),
+                              'password'  => $password,
                               'autologin' => sha1(sha1($this->argument('email')) . sha1(config('identifier', null))),
                           ]))->setDefaults()->setAndSave(['user_group_id' => 1]);
 

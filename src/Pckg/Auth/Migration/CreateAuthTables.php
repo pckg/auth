@@ -9,6 +9,7 @@ class CreateAuthTables extends Migration
     {
         $this->userGroupsUp();
         $this->usersUp();
+        $this->userPasswordResetsUp();
 
         $this->save();
     }
@@ -27,6 +28,15 @@ class CreateAuthTables extends Migration
         $users->password();
         $users->text('autologin');
         $users->deletable();
+    }
+
+    protected function userPasswordResetsUp()
+    {
+        $userPasswordResets = $this->table('user_password_resets');
+        $userPasswordResets->integer('user_id')->references('users');
+        $userPasswordResets->datetime('created_at');
+        $userPasswordResets->datetime('used_at');
+        $userPasswordResets->varchar('code');
     }
 
 }

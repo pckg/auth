@@ -1,10 +1,4 @@
-<?php
-
-namespace Pckg\Auth\Provider;
-
-/*
-Registers commands, and middlewared on initialization
-*/
+<?php namespace Pckg\Auth\Provider;
 
 use Pckg\Auth\Console\CreateGodfather;
 use Pckg\Auth\Console\CreateUserGroups;
@@ -25,15 +19,11 @@ use Pckg\Framework\Request\Session\SessionUser;
 class Auth extends Provider
 {
 
-    public function middlewares()
+    public function providers()
     {
         return [
-            LoginWithCookie::class,
-            LoginWithAutologinGetParameter::class,
-            LoginWithApiKeyHeader::class,
-            HandleLogoutRequest::class,
-            HandleLoginRequest::class,
-            RestrictAccess::class,
+            BasicAuth::class,
+            FacebookAuth::class,
         ];
     }
 
@@ -63,13 +53,7 @@ class Auth extends Provider
     public function routes()
     {
         return [
-            'url' => $this->baseRoutes() + $this->facebookRoutes(),
-        ];
-    }
-
-    protected function baseRoutes()
-    {
-        return array_merge_array([
+            'url' => array_merge_array([
                                      'controller' => AuthController::class,
                                  ], [
                                      '/login'                      => [
@@ -108,30 +92,7 @@ class Auth extends Provider
                                          'view' => 'userAddresses',
                                          'name' => 'api.auth.user.addresses',
                                      ],
-                                 ]);
-    }
-
-    protected function facebookRoutes()
-    {
-        return array_merge_array([
-                                     'controller' => Facebook::class,
-                                 ], [
-                                     '/login/facebook'     => [
-                                         'view' => 'login',
-                                         'name' => 'login_facebook',
-                                     ],
-                                     '/takelogin/facebook' => [
-                                         'view' => 'takelogin',
-                                         'name' => 'takelogin_facebook',
-                                     ],
-                                 ]);
-    }
-
-    public function consoles()
-    {
-        return [
-            CreateGodfather::class,
-            CreateUserGroups::class,
+                                 ])
         ];
     }
 

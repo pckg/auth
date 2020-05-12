@@ -36,7 +36,7 @@ class RestrictAccess extends AbstractChainOfReponsibility
                 }
 
                 if (!Reflect::call($tags[$tag], [$auth])) {
-                    if (request()->isJson() || request()->isAjax()) {
+                    if (request()->isJson() || request()->isAjax() || request()->isPost()) {
                         response()->{auth()->isLoggedIn() ? 'forbidden' : 'unauthorized'}();
                     }
 
