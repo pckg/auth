@@ -57,7 +57,7 @@ class CreateUser extends Command
             'email' => $email,
             'password' => $password,
             'autologin' => sha1(sha1($email) . sha1(config('identifier', null))),
-        ]))->setDefaults()->setAndSave(['user_group_id' => 1]);
+        ]))->setDefaults()->setAndSave(['user_group_id' => 2]);
 
         $this->output('User #' . $user->id . ' created');
     }

@@ -8,6 +8,13 @@ const Basic = {
         step: {
             type: String,
             default: 'login'
+        },
+        options: {
+            default: function(){
+                return {
+                    disable: {}
+                };
+            }
         }
     },
     data: function () {
@@ -21,6 +28,7 @@ const Basic = {
             error: '',
             loading: false,
             existingUser: false,
+            disable: this.options.disable || {}
         };
     },
     created: function () {
@@ -209,7 +217,13 @@ const Basic = {
             return this.$store.getters.isLoggedIn;
         },
         stepBtnText: function () {
-            return utils.ucfirst(this.myStep);
+            return {
+                login: 'Login',
+                forgottenPassword: 'Send security code',
+                passwordSent: 'Confirm security code',
+                resetPassword: 'Set new password',
+                activateAccount: 'Send security code'
+            }[this.myStep] || utils.ucfirst(this.myStep);
         }
     }
 };

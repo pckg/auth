@@ -55,16 +55,6 @@ class SendPasswordCode
         $niceCode = implode(' ', str_split($code, strlen($max) / 2));
 
         /**
-         * We have generated code, we need to save code and timestamp to database and link it to user.
-         * This code will expire after 24h.
-         */
-        UserPasswordReset::create([
-                                      'user_id'    => $this->user->id,
-                                      'created_at' => date('Y-m-d H:i:s'),
-                                      'code'       => $code,
-                                  ]);
-
-        /**
          * Send email.
          */
         email($this->template, new User($this->user), [
@@ -79,6 +69,16 @@ class SendPasswordCode
                                      ],
                                  ],
                              ]);
+
+        /**
+         * We have generated code, we need to save code and timestamp to database and link it to user.
+         * This code will expire after 24h.
+         */
+        UserPasswordReset::create([
+            'user_id'    => $this->user->id,
+            'created_at' => date('Y-m-d H:i:s'),
+            'code'       => $code,
+        ]);
 
         return $thi;
     }
