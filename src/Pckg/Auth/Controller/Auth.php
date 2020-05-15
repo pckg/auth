@@ -216,7 +216,7 @@ class Auth extends Controller
                                           ->where('email', $data['email'])
                                           ->where('created_at', date('Y-m-d H:i:s', strtotime('-1day')), '>=')
                                           ->where('used_at', null)
-                                          ->where('code', $data['code'])
+                                          ->where('code', str_replace(' ', '', $data['code']))
                                           ->oneOrFail();
 
         /**
