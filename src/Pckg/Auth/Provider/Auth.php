@@ -56,7 +56,7 @@ class Auth extends Provider
     {
         return [
             '_auth' => AuthService::class,
-            '_user' => SessionUser::class,
+            //'_user' => SessionUser::class,
         ];
     }
 
