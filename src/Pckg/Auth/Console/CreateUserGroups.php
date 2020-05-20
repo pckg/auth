@@ -7,6 +7,10 @@ use Pckg\Auth\Record\UserGroup;
 use Pckg\Framework\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 
+/**
+ * Class CreateUserGroups
+ * @package Pckg\Auth\Console
+ */
 class CreateUserGroups extends Command
 {
 

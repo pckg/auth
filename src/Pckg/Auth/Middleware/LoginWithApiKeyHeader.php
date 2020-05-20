@@ -29,7 +29,8 @@ class LoginWithApiKeyHeader
 
         $apiKey = $headers[$headerName];
         if (!$apiKey) {
-            response()->forbidden('Missing API key');
+            return $next();
+            // response()->forbidden('Missing API key');
         }
 
         /**

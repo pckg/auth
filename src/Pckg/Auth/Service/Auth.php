@@ -295,23 +295,27 @@ class Auth
         trigger(Auth::class . '.userLoggedIn', [$user]);
     }
 
+    public function getUserSecuritySessionPass($user)
+    {
+        return $this->getSecurityHash() . '_' . $user->id . '_' . session_id();
+    }
+
     public function performLogin($user)
     {
         $providerKey = $this->getProviderKey();
-        $sessionHash = password_hash($this->getSecurityHash() . session_id(), PASSWORD_DEFAULT);
+        $sessionHash = password_hash($this->getUserSecuritySessionPass($user), PASSWORD_DEFAULT);
 
         $_SESSION['Pckg']['Auth']['Provider'][$providerKey] = [
             "user"  => $user->toArray(),
             "hash"  => $sessionHash,
+            "date" => date('Y-m-d H:i:s'),
             "flags" => [],
         ];
 
-        /**
-         * @T00D00 - allow local http cookie or force dev to https.
-         */
         $this->setCookie("pckg_auth_provider_" . $providerKey, base64_encode(json_encode([
                                                                         "user" => $user->id,
                                                                         "hash" => $sessionHash,
+                                                                        "date" => date('Y-m-d H:i:s'),
                                                                     ])), time() + (24 * 60 * 60 * 365.25));
 
         $this->loggedIn = true;
@@ -345,8 +349,22 @@ class Auth
 
     public function setCookie($name, $value, $time)
     {
-        //setcookie($name, $value, $time, '/; samesite=strict', '', true, true);
-        setcookie($name, $value, $time, '/; samesite=Strict', '', true, true);
+        /**
+         * There are issues with some version?
+         */
+        if (PHP_VERSION_ID >= 70300) {
+            setcookie($name, $value, [
+                'expires' => $time,
+                'path' => '/',
+                'secure' => true,
+                'samesite' => 'strict',
+            ]);
+            return;
+        }
+
+        setcookie($name, $value, $time, '/; samesite=strict', '', true, true);
+        //setcookie($name, $value, $time, '/; samesite=strict', server('HTTP_HOST'), true, true);
+        //setcookie($name, $value, $time, '/', '', true, true);
     }
 
     public function getSessionProvider()
@@ -388,12 +406,12 @@ class Auth
         /**
          * Cookie for provider does not exist.
          */
-        if (!isset($_COOKIE['pckg_auth_provider_' . $providerKey])) {
+        $cookieKey = 'pckg_auth_provider_' . $providerKey;
+        if (!isset($_COOKIE[$cookieKey])) {
             return false;
         }
 
-        $cookie = json_decode(base64_decode($_COOKIE['pckg_auth_provider_' . $providerKey]), true);
-
+        $cookie = json_decode(base64_decode($_COOKIE[$cookieKey]), true);
         /**
          * Cookie exists, but hash isn't set.
          */
@@ -416,6 +434,10 @@ class Auth
         }
 
         if (!$this->user) {
+            return false;
+        }
+
+        if (!password_verify($this->getUserSecuritySessionPass($this->user), $sessionProvider['hash'])) {
             return false;
         }
 

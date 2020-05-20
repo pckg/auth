@@ -19,6 +19,7 @@ class RestrictAccess extends AbstractChainOfReponsibility
         if (!isset($route['tags'])) {
             return $next();
         }
+
         $gates = config('pckg.auth.gates', []);
         foreach ($route['tags'] ?? [] as $tag) {
             foreach ($gates as $gate) {
@@ -36,11 +37,11 @@ class RestrictAccess extends AbstractChainOfReponsibility
                 }
 
                 if (!Reflect::call($tags[$tag], [$auth])) {
-                    if (request()->isJson() || request()->isAjax()) {
+                    if (request()->isJson() || request()->isAjax() || request()->isPost()) {
                         response()->{auth()->isLoggedIn() ? 'forbidden' : 'unauthorized'}();
                     }
 
-                    $redir = '?loginredirect=' . get('loginredirect', router()->getURL());
+                    $redir = !$auth->isLoggedIn() ? '?loginredirect=' . get('loginredirect', router()->getURL()) : '';
                     $url = ($gate['redirect'] ?? $gate['internal']) . $redir;
                     redirect($url);
                 }
