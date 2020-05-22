@@ -2,6 +2,7 @@
 
 use Exception;
 use Pckg\Api\Entity\AppKeys;
+use Pckg\Auth\Service\Auth;
 use Pckg\Mailo\Record\App;
 
 class LoginWithApiKeyHeader
@@ -47,6 +48,7 @@ class LoginWithApiKeyHeader
          * Authenticate user
          */
         auth()->authenticate($token->app->user);
+        context()->bind(Auth::class . ':api', $token);
 
         return $next();
     }
