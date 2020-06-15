@@ -138,7 +138,7 @@ class Auth extends Controller
 
     function getActivateAction($activation)
     {
-        $user = (new Users())->where('enabled', null)
+        $user = (new Users())->where('password', null)
                              ->whereRaw('SHA1(CONCAT(users.hash, users.autologin)) = ?', [$activation])
                              ->one();
     }
