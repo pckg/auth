@@ -25,7 +25,6 @@ class BasicAuth extends Provider {
         return [
             LoginWithCookie::class,
             LoginWithAutologinGetParameter::class,
-            LoginWithApiKeyHeader::class,
             HandleLogoutRequest::class,
             HandleLoginRequest::class,
             RestrictAccess::class,
