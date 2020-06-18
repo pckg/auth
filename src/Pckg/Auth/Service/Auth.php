@@ -300,9 +300,29 @@ class Auth
         return $this->getSecurityHash() . '_' . $user->id . '_' . session_id();
     }
 
+    public function regenerateSession()
+    {
+        $_SESSION['deactivated'] = time();
+        session_regenerate_id();
+        unset($_SESSION['deactivated']);
+    }
+
     public function performLogin($user)
     {
         $providerKey = $this->getProviderKey();
+
+        $this->loggedIn = true;
+
+        $this->user = $user;
+
+        /**
+         * Get new session id specific to the $user.
+         */
+        $this->regenerateSession();
+
+        /**
+         * Generate session hash for user for current session.
+         */
         $sessionHash = password_hash($this->getUserSecuritySessionPass($user), PASSWORD_DEFAULT);
 
         $_SESSION['Pckg']['Auth']['Provider'][$providerKey] = [
@@ -318,10 +338,6 @@ class Auth
                                                                         "date" => date('Y-m-d H:i:s'),
                                                                     ])), time() + (24 * 60 * 60 * 365.25));
 
-        $this->loggedIn = true;
-
-        $this->user = $user;
-
         trigger(Auth::class . '.userLoggedIn', [$user]);
 
         return true;
@@ -331,6 +347,7 @@ class Auth
     {
         $providerKeys = array_keys($_SESSION['Pckg']['Auth']['Provider'] ?? []);
         unset($_SESSION['Pckg']['Auth']['Provider']);
+        $this->regenerateSession();
 
         foreach ($providerKeys as $providerKey) {
             $this->setCookie('pckg_auth_provider_' . $providerKey, null, time() - (24 * 60 * 60 * 365.25));
