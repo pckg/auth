@@ -35,7 +35,7 @@ class Auth
             if (!array_key_exists($provider, $this->providers)) {
                 $config = config('pckg.auth.providers.' . $provider);
                 $this->providers[$provider] = Reflect::create($config['type'], [$this]);
-                $this->providers[$provider]->setEntity($config['entity']);
+                $this->providers[$provider]->applyConfig($config);
             }
 
             $provider = $this->providers[$provider];
