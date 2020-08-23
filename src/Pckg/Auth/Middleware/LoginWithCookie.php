@@ -10,7 +10,7 @@ class LoginWithCookie extends AbstractChainOfReponsibility
 
     public function execute(callable $next)
     {
-        if (!isset($_COOKIE['pckg_auth_autologin']) || !isHttp() || /*!request()->isGet() || */ auth()->isLoggedIn()
+        if (!isHttp() || auth()->isLoggedIn() || !isset($_COOKIE['pckg_auth_autologin']) /*!request()->isGet() || */
         ) {
             return $next();
         }

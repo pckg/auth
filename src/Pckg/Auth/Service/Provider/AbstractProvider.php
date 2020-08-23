@@ -7,6 +7,8 @@ abstract class AbstractProvider implements ProviderInterface
 
     protected $entity;
 
+    protected $config = [];
+
     public function setEntity($entity)
     {
         $this->entity = $entity;
@@ -22,6 +24,7 @@ abstract class AbstractProvider implements ProviderInterface
     public function applyConfig($config)
     {
         $this->setEntity($config['entity']);
+        $this->config = $config;
     }
 
     public function getUserByEmailAndPassword($email, $password)
