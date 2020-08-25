@@ -52,6 +52,7 @@ class Auth
         }
         
         $this->providers[$provider] = Reflect::create($config['type'], [$this]);
+        $this->providers[$provider]->setIdentifier($provider);
         $this->providers[$provider]->applyConfig($config);
 
         $this->provider = $this->providers[$provider];

@@ -147,7 +147,13 @@ class OAuth2 extends AbstractProvider
          */
         $userRecord = $this->getUserByEmail($user['user']['email']);
         if (!$userRecord) {
-            $userRecord = User::create(['email' => $user['user']['email']]);
+            $userData = [
+                'email' => $user['user']['email'],
+            ];
+            if ($this->identifier) {
+                $userData[$this->identifier . '_user_id'] = $user['user']['id'];
+            }
+            $userRecord = User::create($userData);
         }
 
         /**
