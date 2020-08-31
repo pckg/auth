@@ -23,6 +23,7 @@ use Pckg\Framework\Controller;
 use Pckg\Framework\Exception\NotFound;
 use Pckg\Framework\Response;
 use Pckg\Framework\Router;
+use Pckg\Manager\Meta;
 
 /**
  * Class Auth
@@ -32,13 +33,14 @@ use Pckg\Framework\Router;
 class Auth extends Controller
 {
 
-    public function getUserAction()
+    public function getUserAction(Meta $meta)
     {
         $user = $this->auth()->getUser();
 
         return [
             'loggedIn' => $this->auth()->isLoggedIn(),
             'user'     => $user ? only($user->data(), ['id', 'email', 'name', 'surname', 'user_group_id']) : [],
+            'csrf'     => $meta->getCsrfValue(),
         ];
     }
 
