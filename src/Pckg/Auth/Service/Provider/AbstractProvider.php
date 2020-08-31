@@ -1,12 +1,15 @@
 <?php namespace Pckg\Auth\Service\Provider;
 
-use Derive\Orders\Entity\Users;
 use Pckg\Auth\Service\ProviderInterface;
 
 abstract class AbstractProvider implements ProviderInterface
 {
 
-    protected $entity = Users::class;
+    protected $entity;
+
+    protected $config = [];
+
+    protected $identifier;
 
     public function setEntity($entity)
     {
@@ -18,6 +21,17 @@ abstract class AbstractProvider implements ProviderInterface
         $class = $this->entity;
 
         return (new $class)->nonDeleted();
+    }
+
+    public function applyConfig($config)
+    {
+        $this->setEntity($config['entity']);
+        $this->config = $config;
+    }
+
+    public function setIdentifier(string $identifier)
+    {
+        $this->identifier = $identifier;
     }
 
     public function getUserByEmailAndPassword($email, $password)

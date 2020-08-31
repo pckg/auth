@@ -2,6 +2,7 @@
 
 namespace Pckg\Auth\Service;
 
+use http\Exception;
 use Pckg\Auth\Entity\Users;
 use Pckg\Auth\Record\User;
 use Pckg\Concept\Reflect;
@@ -31,19 +32,30 @@ class Auth
      */
     public function useProvider($provider, $providerKey = 'frontend')
     {
-        if (is_string($provider)) {
-            if (!array_key_exists($provider, $this->providers)) {
-                $config = config('pckg.auth.providers.' . $provider);
-                $this->providers[$provider] = Reflect::create($config['type'], [$this]);
-                $this->providers[$provider]->setEntity($config['entity']);
-            }
-
-            $provider = $this->providers[$provider];
-        } else {
-            $this->providers[$providerKey] = $provider;
+        if (is_object($provider)) {
+            $this->provider = $provider;
+            return $this;
         }
 
-        $this->provider = $provider;
+        if (array_key_exists($provider, $this->providers)) {
+            $this->provider = $this->providers[$provider];
+            return $this;
+        }
+
+        if (!is_string($provider)) {
+            throw new \Exception('Invalid provider');
+        }
+
+        $config = config('pckg.auth.providers.' . $provider);
+        if (!$config) {
+            throw new \Exception('Empty provider config');
+        }
+        
+        $this->providers[$provider] = Reflect::create($config['type'], [$this]);
+        $this->providers[$provider]->setIdentifier($provider);
+        $this->providers[$provider]->applyConfig($config);
+
+        $this->provider = $this->providers[$provider];
 
         return $this;
     }
@@ -391,9 +403,11 @@ class Auth
 
     public function requestProvider()
     {
-        if (!$this->provider) {
-            $this->useProvider('frontend');
+        if ($this->provider) {
+            return;
         }
+        
+        $this->useProvider(array_keys($_SESSION['Pckg']['Auth']['Provider'] ?? [])[0] ?? 'frontend');
     }
 
     public function isLoggedIn()
