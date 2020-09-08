@@ -5,6 +5,7 @@ use Pckg\Auth\Console\CreateUser;
 use Pckg\Auth\Console\CreateUserGroups;
 use Pckg\Auth\Middleware\HandleLoginRequest;
 use Pckg\Auth\Middleware\HandleLogoutRequest;
+use Pckg\Auth\Middleware\LoginWithAllowedIP;
 use Pckg\Auth\Middleware\LoginWithApiKeyHeader;
 use Pckg\Auth\Middleware\LoginWithAutologinGetParameter;
 use Pckg\Auth\Middleware\LoginWithCookie;
@@ -26,6 +27,7 @@ class BasicAuth extends Provider {
             LoginWithCookie::class,
             LoginWithAutologinGetParameter::class,
             LoginWithApiKeyHeader::class,
+            LoginWithAllowedIP::class,
             HandleLogoutRequest::class,
             HandleLoginRequest::class,
             RestrictAccess::class,

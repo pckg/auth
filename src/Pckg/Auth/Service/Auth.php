@@ -410,6 +410,17 @@ class Auth
         $this->useProvider(array_keys($_SESSION['Pckg']['Auth']['Provider'] ?? [])[0] ?? 'frontend');
     }
 
+    /**
+     * @param bool $loggedIn
+     * @return $this
+     */
+    public function setLoggedIn(bool $loggedIn = true)
+    {
+        $this->loggedIn = $loggedIn;
+
+        return $this;
+    }
+
     public function isLoggedIn()
     {
         $this->requestProvider();
