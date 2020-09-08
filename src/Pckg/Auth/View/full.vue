@@ -20,7 +20,7 @@
         <div class="form-group" v-if="['passwordSent'].indexOf(myStep) >= 0">
             <label>{{ __('auth.label.securityCode') }}</label>
             <div>
-                <input type="text" v-model="code" name="code" @keyup.enter="executeAction" autocomplete="off"/>
+                <input type="text" v-model="code" name="code" @keyup.enter="executeAction" autocomplete="one-time-code"/>
 
                 <htmlbuilder-validator-error :bag="errors" name="code"></htmlbuilder-validator-error>
             </div>
