@@ -13,7 +13,11 @@ class User
             'autologin'     => sha1(microtime()),
         ]);
 
-        return \Pckg\Auth\Record\User::create($data);
+        $user = \Pckg\Auth\Record\User::create($data);
+        
+        trigger(User::class . '.created', [$user]);
+
+        return $user;
     }
 
 }
