@@ -59,6 +59,8 @@ class Auth extends Controller
     {
         if (auth()->isLoggedIn()) {
             return $this->response()->redirect($this->auth()->getUser()->getDashboardUrl());
+        } else if (config('pckg.auth.providers.frontend.inactive')) {
+            return $this->response()->redirect('/');
         }
 
         return view('Pckg/Auth:login');
