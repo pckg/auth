@@ -161,7 +161,15 @@ class OAuth2 extends AbstractProvider
          */
         $this->auth->performLogin($userRecord);
 
-        response()->redirect('/');
+        /**
+         * Redirect user to the refering URL.
+         */
+        $referer = session()->get('authReferer', '/');
+        if ($referer !== '/') {
+            session()->delete('authReferer');
+        }
+
+        response()->redirect($referer);
     }
 
 }
