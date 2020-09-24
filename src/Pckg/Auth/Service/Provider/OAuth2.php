@@ -169,6 +169,10 @@ class OAuth2 extends AbstractProvider
             session()->delete('authReferer');
         }
 
+        /**
+         * When we open auth session in popup, we have to close it and refresh parent.
+         */
+        response()->respond('<script>try { if (window.opener.location.href !== window.location.href) { window.close(); } } catch (e) { console.log(e); } window.location.href = ' . json_encode($redirect) . ';</script>');
         response()->redirect($referer);
     }
 
