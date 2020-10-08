@@ -325,6 +325,9 @@ class Auth
 
         $this->loggedIn = true;
 
+        /**
+         * Fetch user from correct entity?
+         */
         $this->user = $user;
 
         /**
@@ -386,7 +389,7 @@ class Auth
                 'expires' => $time,
                 'path' => '/',
                 'secure' => true,
-                'samesite' => 'strict',
+                'samesite' => 'strict', // httponly?
             ]);
             return;
         }

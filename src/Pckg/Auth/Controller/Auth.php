@@ -250,5 +250,15 @@ class Auth extends Controller
             'user' => $data,
         ];
     }
+    
+    /**
+     * @param string $provider
+     * @param AuthService $auth
+     * @throws \Exception
+     */
+    public function getOauthAction(string $provider, \Pckg\Auth\Service\Auth $auth)
+    {
+        $auth->useProvider($provider)->getProvider()->process();
+    }
 
 }
