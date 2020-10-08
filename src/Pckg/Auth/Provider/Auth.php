@@ -92,6 +92,14 @@ class Auth extends Provider
                                          'view' => 'userAddresses',
                                          'name' => 'api.auth.user.addresses',
                                      ],
+                '/oauth/[provider]/resource' => [
+                    'view' => 'me',
+                    'name' => 'oauth.provider.me',
+                ],
+                '/oauth/[provider]' => [
+                    'view' => 'oauth',
+                    'name' => 'oauth.provider',
+                ],
                                  ])
         ];
     }

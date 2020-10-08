@@ -39,8 +39,8 @@ class Auth extends Controller
 
         return [
             'loggedIn' => $this->auth()->isLoggedIn(),
-            'user'     => $user ? only($user->data(), ['id', 'email', 'name', 'surname', 'user_group_id']) : [],
-            'csrf'     => $meta->getCsrfValue(),
+            'user' => $user ? only($user->data(), ['id', 'email', 'name', 'surname', 'user_group_id']) : [],
+            'csrf' => $meta->getCsrfValue(),
         ];
     }
 
@@ -71,15 +71,17 @@ class Auth extends Controller
         /**
          * Form is valid, we need to check for password.
          */
-        $loginUserCommand->onSuccess(function() {
+        $loginUserCommand->onSuccess(function () {
             $user = $this->auth()->getUser();
 
             if ($user->isAdmin()) {
                 trigger(Auth::class . '.adminLoggedIn', [$user]);
+            } else {
+                trigger(Auth::class . '.userLoggedIn', [$user]);
             }
 
             $this->response()->respondWithSuccessRedirect($user->getDashboardUrl());
-        })->onError(function($data) {
+        })->onError(function ($data) {
             if ($this->request()->isAjax()) {
                 $this->response()->respondWithError(array_merge(['text' => __('pckg.auth.error')], $data ?? []));
 
@@ -92,19 +94,19 @@ class Auth extends Controller
 
     function getLogoutAction(LogoutUser $logoutUserCommand, Response $response)
     {
-        $logoutUserCommand->onSuccess(function() use ($response) {
+        $logoutUserCommand->onSuccess(function () use ($response) {
             if ($this->request()->isJson()) {
                 $response->respond([
-                                       'success' => true,
-                                   ]);
+                    'success' => true,
+                ]);
             } else {
                 $response->redirect('/');
             }
-        })->onError(function() use ($response) {
+        })->onError(function () use ($response) {
             if ($this->request()->isJson()) {
                 $response->respond([
-                                       'success' => false,
-                                   ]);
+                    'success' => false,
+                ]);
             } else {
                 $response->redirect('/');
             }
@@ -121,9 +123,9 @@ class Auth extends Controller
         $data = $signupUser->getData();
 
         $user = User::create([
-                                 'email'    => $data['email'],
-                                 'password' => auth()->hashPassword($data['password']),
-                             ]);
+            'email' => $data['email'],
+            'password' => auth()->hashPassword($data['password']),
+        ]);
 
         /**
          * We would probably like to notify user about account creation and let him confirm it?
@@ -131,7 +133,7 @@ class Auth extends Controller
         email('user.registered', new \Pckg\Mail\Service\Mail\Adapter\User($user), [
             'data' => [
                 'confirmAccountUrl' => url('pckg.auth.activate', ['activation' => sha1($user->hash . $user->autologin)],
-                                           true),
+                    true),
             ],
         ]);
 
@@ -143,8 +145,8 @@ class Auth extends Controller
     function getActivateAction($activation)
     {
         $user = (new Users())->where('password', null)
-                             ->whereRaw('SHA1(CONCAT(users.hash, users.autologin)) = ?', [$activation])
-                             ->one();
+            ->whereRaw('SHA1(CONCAT(users.hash, users.autologin)) = ?', [$activation])
+            ->one();
     }
 
     function getForgotPasswordAction(ForgotPassword $forgotPasswordForm)
@@ -217,11 +219,11 @@ class Auth extends Controller
          */
         $user = (new Users())->where('email', $data['email'])->oneOrFail();
         $code = (new UserPasswordResets())->joinUser()
-                                          ->where('email', $data['email'])
-                                          ->where('created_at', date('Y-m-d H:i:s', strtotime('-1day')), '>=')
-                                          ->where('used_at', null)
-                                          ->where('code', str_replace(' ', '', $data['code']))
-                                          ->oneOrFail();
+            ->where('email', $data['email'])
+            ->where('created_at', date('Y-m-d H:i:s', strtotime('-1day')), '>=')
+            ->where('used_at', null)
+            ->where('code', str_replace(' ', '', $data['code']))
+            ->oneOrFail();
 
         /**
          * Set new password.
@@ -237,6 +239,26 @@ class Auth extends Controller
         return [
             'success' => true,
         ];
+    }
+
+    public function getMeAction()
+    {
+        $user = $this->auth()->getUser();
+        $data = only($user, ['id', 'email']);
+
+        return [
+            'user' => $data,
+        ];
+    }
+    
+    /**
+     * @param string $provider
+     * @param AuthService $auth
+     * @throws \Exception
+     */
+    public function getOauthAction(string $provider, \Pckg\Auth\Service\Auth $auth)
+    {
+        $auth->useProvider($provider)->getProvider()->process();
     }
 
 }

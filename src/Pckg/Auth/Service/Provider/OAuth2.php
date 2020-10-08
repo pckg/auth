@@ -1,6 +1,7 @@
 <?php namespace Pckg\Auth\Service\Provider;
 
 use GuzzleHttp\Client;
+use http\Exception\BadConversionException;
 use League\OAuth2\Client\Provider\GenericProvider;
 use Pckg\Auth\Factory\User;
 use Pckg\Auth\Service\Auth;
@@ -34,7 +35,6 @@ class OAuth2 extends AbstractProvider
     {
         $provider = $this->getOAuth2Provider();
         $authorizationUrl = $provider->getAuthorizationUrl();
-
         session()->set('oauth2state', $provider->getState());
 
         response()->redirect($authorizationUrl);
@@ -47,10 +47,14 @@ class OAuth2 extends AbstractProvider
     /**
      * @return GenericProvider
      */
-    private function getOAuth2Provider()
+    protected function getOAuth2Provider()
     {
         if (!$this->oauth2) {
-            $this->oauth2 = new GenericProvider($this->config['oauth2']);
+            $config = $this->config['oauth2'];
+            if (!($config['redirectUri'] ?? null)) {
+                $config['redirectUri'] = url('oauth.provider', ['provider' => $this->identifier], true);
+            }
+            $this->oauth2 = new GenericProvider($config);
         }
         return $this->oauth2;
     }
@@ -82,7 +86,7 @@ class OAuth2 extends AbstractProvider
     public function fetchTokenFromCode($code)
     {
         $accessToken = $this->getOAuth2Provider()->getAccessToken('authorization_code', [
-            'code' => $code
+            'code' => $code,
         ]);
 
         $token = $accessToken->getToken();
@@ -100,7 +104,7 @@ class OAuth2 extends AbstractProvider
         }
 
         $response = (new Client())->get(
-            "https://auth.whitespark.ca/api/me", [
+            $this->config['oauth2']['urlResourceOwnerDetails'], [
             'headers' => [
                 'Authorization' => 'Bearer ' . $oauth2token,
             ],
@@ -144,16 +148,30 @@ class OAuth2 extends AbstractProvider
 
         /**
          * We have to create user in our database.
+         * And add a OAuth2 provider user ID.
          */
-        $userRecord = $this->getUserByEmail($user['user']['email']);
+        $email = $user['user']['email'];
+        $userRecord = null;
+        if ($email) {
+            $userRecord = $this->getUserByEmail($email);
+        }
+        if (!$userRecord && auth()->isLoggedIn()) {
+            $userRecord = auth()->getUser();
+        }
         if (!$userRecord) {
             $userData = [
                 'email' => $user['user']['email'],
             ];
-            if ($this->identifier) {
-                $userData[$this->identifier . '_user_id'] = $user['user']['id'];
-            }
             $userRecord = User::create($userData);
+        }
+
+        /**
+         * Connect it to the user.
+         */
+        if ($this->identifier && !($user->{$this->identifier . '_user_id'} ?? null)) {
+            $userRecord->setAndSave([
+                $this->identifier . '_user_id' => $user['user']['id'] ?? str_replace('/users/', '', $user['uri']),
+            ]);
         }
 
         /**
@@ -172,7 +190,7 @@ class OAuth2 extends AbstractProvider
         /**
          * When we open auth session in popup, we have to close it and refresh parent.
          */
-        response()->respond('<script>try { if (window.opener.location.href !== window.location.href) { window.close(); } } catch (e) { console.log(e); } window.location.href = ' . json_encode($redirect) . ';</script>');
+        response()->respond('<script>try { if (window.opener.location.href !== window.location.href) { window.close(); } } catch (e) { console.log(e); } window.location.href = ' . json_encode($referer) . ';</script>');
         response()->redirect($referer);
     }
 

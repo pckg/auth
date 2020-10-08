@@ -50,7 +50,7 @@ class Auth
 
         $config = config('pckg.auth.providers.' . $provider);
         if (!$config) {
-            throw new \Exception('Empty provider config');
+            throw new \Exception('Empty provider config (' . $provider . ')');
         }
         
         $this->providers[$provider] = Reflect::create($config['type'], [$this]);
@@ -327,6 +327,9 @@ class Auth
 
         $this->loggedIn = true;
 
+        /**
+         * Fetch user from correct entity?
+         */
         $this->user = $user;
 
         /**
@@ -388,7 +391,7 @@ class Auth
                 'expires' => $time,
                 'path' => '/',
                 'secure' => true,
-                'samesite' => 'strict',
+                'samesite' => 'strict', // httponly?
             ]);
             return;
         }
@@ -474,7 +477,7 @@ class Auth
          * User exists in database.
          */
         if (!$this->user) {
-            $this->user = (new Users())->nonDeleted()->where('id', $sessionProvider['user']['id'])->one();
+            $this->user = $this->getProvider()->getUserById($sessionProvider['user']['id']);
         }
 
         if (!$this->user) {
