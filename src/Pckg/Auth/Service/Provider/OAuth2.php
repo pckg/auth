@@ -144,16 +144,23 @@ class OAuth2 extends AbstractProvider
 
         /**
          * We have to create user in our database.
+         * And add a OAuth2 provider user ID.
          */
         $userRecord = $this->getUserByEmail($user['user']['email']);
         if (!$userRecord) {
             $userData = [
                 'email' => $user['user']['email'],
             ];
-            if ($this->identifier) {
-                $userData[$this->identifier . '_user_id'] = $user['user']['id'];
-            }
             $userRecord = User::create($userData);
+        }
+
+        /**
+         * Connect it to the user.
+         */
+        if ($this->identifier && !($user->{$this->identifier . '_user_id'} ?? null)) {
+            $userRecord->setAndSave([
+                $this->identifier . '_user_id' => $user['user']['id'],
+            ]);
         }
 
         /**
@@ -172,7 +179,7 @@ class OAuth2 extends AbstractProvider
         /**
          * When we open auth session in popup, we have to close it and refresh parent.
          */
-        response()->respond('<script>try { if (window.opener.location.href !== window.location.href) { window.close(); } } catch (e) { console.log(e); } window.location.href = ' . json_encode($redirect) . ';</script>');
+        response()->respond('<script>try { if (window.opener.location.href !== window.location.href) { window.close(); } } catch (e) { console.log(e); } window.location.href = ' . json_encode($referer) . ';</script>');
         response()->redirect($referer);
     }
 

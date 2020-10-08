@@ -8,7 +8,7 @@
             <label>{{ __('auth.label.email') }}</label>
             <div v-if="['passwordSent', 'resetPassword'].indexOf(myStep) == -1">
                 <input type="email" v-model="emailModel" name="email" @keyup.enter="executeAction"
-                       autocomplete="username"/>
+                       autocomplete="username" />
 
                 <htmlbuilder-validator-error :bag="errors" name="email"></htmlbuilder-validator-error>
             </div>
@@ -28,7 +28,7 @@
 
         <div class="form-group" v-if="['login'].indexOf(myStep) >= 0">
             <label>{{ __('auth.label.password') }}</label>
-            <a class="as-link font-size-xs pull-right" href="#" tabindex="-1" v-if="myStep == 'login'"
+            <a class="as-link font-size-xs pull-right __help-label-link" href="#" tabindex="-1" v-if="myStep == 'login'"
                @click.prevent="setStep('forgottenPassword')">{{ __('auth.forgottenPassword.question') }}</a>
             <div>
                 <input type="password" v-model="password" name="password" @keyup.enter="executeAction"
@@ -75,9 +75,9 @@
         </button>
 
         <div class="centered margin-top-md margin-bottom-sm">
-            <a class="as-link" href="#" v-if="myStep == 'login'"
+            <a class="as-link font-size-xs" href="#" v-if="myStep == 'login'"
                @click.prevent="setStep('signup')">{{ __('auth.signup.question') }}</a>
-            <a class="as-link" href="#" v-if="['forgottenPassword', 'signup'].indexOf(myStep) >= 0"
+            <a class="as-link font-size-xs" href="#" v-if="['forgottenPassword', 'signup'].indexOf(myStep) >= 0"
                @click.prevent="setStep('login')">{{ __('auth.login.question') }}</a>
         </div>
     </form>
