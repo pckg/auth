@@ -25,6 +25,8 @@ class Auth
      */
     protected $user;
 
+    const GEN_ALPHANUM = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
     /**
      * @param ProviderInterface|mixed $provider
      *
@@ -154,9 +156,9 @@ class Auth
         return password_hash($password, PASSWORD_DEFAULT);
     }
 
-    public function createPassword($length = 10)
+    public function createPassword($length = 10, $chars = self::GEN_ALPHANUM)
     {
-        $characters = str_split('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 1);
+        $characters = str_split($chars, 1);
         $password = '';
         for ($i = 0; $i < $length; $i++) {
             $password .= $characters[array_rand($characters)];
