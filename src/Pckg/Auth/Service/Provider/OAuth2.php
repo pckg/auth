@@ -164,18 +164,13 @@ class OAuth2 extends AbstractProvider
             ];
             $userRecord = User::create($userData);
         }
-        if ($this->identifier) {
-            $userRecord->setAndSave([
-                $this->identifier . '_user_id' => $user['user']['id'] ?? str_replace('/users/', '', $user['uri']),
-            ]);
-        }
 
         /**
          * Connect it to the user.
          */
         if ($this->identifier && !($user->{$this->identifier . '_user_id'} ?? null)) {
             $userRecord->setAndSave([
-                $this->identifier . '_user_id' => $user['user']['id'],
+                $this->identifier . '_user_id' => $user['user']['id'] ?? str_replace('/users/', '', $user['uri']),
             ]);
         }
 
