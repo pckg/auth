@@ -18,6 +18,7 @@ class User extends Record
     protected $protect = [
         'password',
         'autologin',
+        'oauth2',
     ];
 
     protected $encapsulate = [

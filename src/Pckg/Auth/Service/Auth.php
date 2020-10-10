@@ -65,7 +65,7 @@ class Auth
     public function getProvider()
     {
         if (!$this->provider) {
-            $this->useProvider('frontend');
+            $this->useProvider($this->getProviderKey() ?? 'frontend');
         }
 
         return $this->provider;
@@ -349,6 +349,9 @@ class Auth
             "flags" => [],
         ];
 
+        /**
+         * Cookie should be set for non-api requests.
+         */
         $this->setCookie("pckg_auth_provider_" . $providerKey, base64_encode(json_encode([
                                                                         "user" => $user->id,
                                                                         "hash" => $sessionHash,

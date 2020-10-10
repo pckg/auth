@@ -108,6 +108,7 @@ class OAuth2 extends AbstractProvider
             'headers' => [
                 'Authorization' => 'Bearer ' . $oauth2token,
             ],
+                'timeout' => 15,
         ]);
         $data = json_decode($response->getBody()->getContents(), true);
 
@@ -182,11 +183,11 @@ class OAuth2 extends AbstractProvider
         /**
          * Update OAuth2 info.
          */
-        $userRecord->oauth2->{$this->identifier} = array_merge($userRecord->oauth2->{$this->identifier} ?? [], [
+        $userRecord->oauth2->{$this->identifier} = [
             'id' => $remoteUserId,
             'token' => $token,
             'me' => $user,
-        ]);
+        ];
         $userRecord->save();
 
         /**
