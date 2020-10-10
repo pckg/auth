@@ -1,12 +1,14 @@
 <?php namespace Pckg\Auth\Record;
 
 use Pckg\Auth\Entity\Users;
+use Pckg\Database\Field\JsonObject;
 use Pckg\Database\Record;
 
 /**
  * Class User
  *
  * @package Pckg\Auth\Record
+ * @property JsonObject $oauth2
  */
 class User extends Record
 {
@@ -16,6 +18,10 @@ class User extends Record
     protected $protect = [
         'password',
         'autologin',
+    ];
+
+    protected $encapsulate = [
+        'oauth2' => JsonObject::class,
     ];
 
     public function isSuperadmin()
@@ -74,6 +80,14 @@ class User extends Record
     public function getHasValidEmailAttribute($dns = false)
     {
         return isValidEmail($this->email);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getOAuth2Token(string $provider)
+    {
+        return $this->oauth2->{$provider}->token ?? null;
     }
 
 }

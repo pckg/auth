@@ -139,6 +139,9 @@ class OAuth2 extends AbstractProvider
             exit('Invalid state');
         }
 
+        /**
+         * We want to save the token?
+         */
         $token = $this->fetchTokenFromCode($code);
 
         /**
@@ -151,6 +154,8 @@ class OAuth2 extends AbstractProvider
          * And add a OAuth2 provider user ID.
          */
         $email = $user['user']['email'];
+        $remoteUserId = $user['user']['id'] ?? str_replace('/users/', '', $user['uri']);
+
         $userRecord = null;
         if ($email) {
             $userRecord = $this->getUserByEmail($email);
@@ -170,9 +175,18 @@ class OAuth2 extends AbstractProvider
          */
         if ($this->identifier && !($user->{$this->identifier . '_user_id'} ?? null)) {
             $userRecord->setAndSave([
-                $this->identifier . '_user_id' => $user['user']['id'] ?? str_replace('/users/', '', $user['uri']),
+                $this->identifier . '_user_id' => $remoteUserId,
             ]);
         }
+
+        /**
+         * Update OAuth2 info.
+         */
+        $userRecord->oauth2->{$this->identifier} = array_merge($userRecord->oauth2->{$this->identifier} ?? [], [
+            'id' => $remoteUserId,
+            'token' => $token,
+            'me' => $user,
+        ]);
 
         /**
          * Now login user.

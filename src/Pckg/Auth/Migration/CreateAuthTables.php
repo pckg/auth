@@ -27,6 +27,7 @@ class CreateAuthTables extends Migration
         $users->email()->unique();
         $users->password();
         $users->text('autologin');
+        $users->json('oauth2');
         $users->deletable();
     }
 

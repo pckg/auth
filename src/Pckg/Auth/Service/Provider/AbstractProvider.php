@@ -34,6 +34,11 @@ abstract class AbstractProvider implements ProviderInterface
         $this->identifier = $identifier;
     }
 
+    public function getIdentifier()
+    {
+        return $this->identifier;
+    }
+
     public function getUserByEmailAndPassword($email, $password)
     {
         return $this->getEntity()->where('email', $email)->where('password', $password)->one();
