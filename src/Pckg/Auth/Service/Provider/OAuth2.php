@@ -187,6 +187,7 @@ class OAuth2 extends AbstractProvider
             'token' => $token,
             'me' => $user,
         ]);
+        $userRecord->save();
 
         /**
          * Now login user.
