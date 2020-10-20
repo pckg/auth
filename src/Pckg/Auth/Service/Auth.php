@@ -250,12 +250,12 @@ class Auth
      * @param string $name
      * @param $value
      */
-    public function setSecureCookie(string $name, $value, $duration)
+    public function setSecureCookie(string $name, $value, $duration = null)
     {
         /**
          * Delete cookie when empty value or negative duration.
          */
-        if (!$value || $duration < 0) {
+        if (!$value || !$duration || $duration < 0) {
             cookie()->set($name, null, (-24 * 60 * 60 * 365.25));
             return;
         }
