@@ -204,26 +204,85 @@ class Auth
         return $hash;
     }
 
+    /**
+     * Decode cookie with value, signature and host values.
+     *
+     * @param string $name
+     * @return mixed|null
+     */
+    public function getSecureCookie(string $name)
+    {
+        $value = cookie()->get($name);
+        if (!$value) {
+            return null;
+        }
+
+        /**
+         * Check that required keys exist.
+         */
+        $decoded = json_decode(base64_decode($value), true);
+        if (!isset($decoded['value']) || !isset($decoded['signature']) || !isset($decoded['host'])) {
+            // old cookie, delete?
+            return null;
+        }
+
+        /**
+         * Check that signature matches and that we are actually on the same host.
+         */
+        if (!$this->hashedPasswordMatches($decoded['signature'], $decoded['value'] . $decoded['host'] . $name)) {
+            return null;
+        }
+
+        return json_decode(base64_decode($decoded['value']), true);
+    }
+
+    /**
+     * Set cookie with value, signature and host to validate them later.
+     *
+     * @param string $name
+     * @param $value
+     */
+    public function setSecureCookie(string $name, $value, $duration)
+    {
+        /**
+         * Delete cookie when empty value or negative duration.
+         */
+        if (!$value || $duration < 0) {
+            cookie()->set($name, null, (-24 * 60 * 60 * 365.25));
+            return;
+        }
+
+        /**
+         * Encode cookie elsewise.
+         */
+        $host = server('HTTP_HOST', null);
+        $encoded = base64_encode(json_encode($value));
+        $signature = $this->hashPassword($encoded . $host . $name);
+        $value = base64_encode(json_encode([
+            'value' => $encoded,
+            'signature' => $signature,
+            'host' => $host,
+        ]));
+
+        cookie()->set($name, $value, $duration);
+    }
+
     public function setParentLogin()
     {
-        $this->setCookie("pckg_auth_parentlogin", base64_encode(json_encode([
-                                                           $this->getProviderKey() => [
-                                                               'hash'    => password_hash($this->getSecurityHash() .
-                                                                                          $this->user('id') .
-                                                                                          $this->user('autologin'),
-                                                                                          PASSWORD_DEFAULT),
-                                                               'user_id' => $this->user('id'),
-                                                           ],
-                                                       ])), time() + (60 * 60));
+        $this->setSecureCookie('pckg_auth_parentlogin', [
+            $this->getProviderKey() => [
+                'hash'    => password_hash($this->getSecurityHash() .
+                    $this->user('id') .
+                    $this->user('autologin'),
+                    PASSWORD_DEFAULT),
+                'user_id' => $this->user('id'),
+            ],
+        ], (60 * 60));
     }
 
     public function performAutologin()
     {
-        if (!isset($_COOKIE['pckg_auth_autologin'])) {
-            return;
-        }
-
-        $cookie = json_decode(base64_decode($_COOKIE['pckg_auth_autologin']), true);
+        $cookie = $this->getSecureCookie('pckg_auth_autologin');
         if (!$cookie) {
             return;
         }
@@ -232,11 +291,7 @@ class Auth
 
     public function performParentLogin()
     {
-        if (!isset($_COOKIE['pckg_auth_parentlogin'])) {
-            return;
-        }
-
-        $cookie = json_decode(base64_decode($_COOKIE['pckg_auth_parentlogin']), true);
+        $cookie = $this->getSecureCookie('pckg_auth_parentlogin');
         if (!$cookie) {
             return;
         }
@@ -281,15 +336,15 @@ class Auth
      */
     public function setAutologin()
     {
-        $this->setCookie("pckg_auth_autologin", base64_encode(json_encode([
-                                                         $this->getProviderKey() => [
-                                                             'hash'    => password_hash($this->getSecurityHash() .
-                                                                                        $this->user('id') .
-                                                                                        $this->user('autologin'),
-                                                                                        PASSWORD_DEFAULT),
-                                                             'user_id' => $this->user('id'),
-                                                         ],
-                                                     ])), time() + (24 * 60 * 60 * 365.25));
+        $this->setSecureCookie('pckg_auth_autologin', [
+            $this->getProviderKey() => [
+                'hash' => password_hash($this->getSecurityHash() .
+                    $this->user('id') .
+                    $this->user('autologin'),
+                    PASSWORD_DEFAULT),
+                'user_id' => $this->user('id'),
+            ],
+        ], (24 * 60 * 60 * 365.25));
     }
 
     public function authenticate($user)
@@ -352,11 +407,11 @@ class Auth
         /**
          * Cookie should be set for non-api requests.
          */
-        $this->setCookie("pckg_auth_provider_" . $providerKey, base64_encode(json_encode([
-                                                                        "user" => $user->id,
-                                                                        "hash" => $sessionHash,
-                                                                        "date" => date('Y-m-d H:i:s'),
-                                                                    ])), time() + (24 * 60 * 60 * 365.25));
+        $this->setSecureCookie('pckg_auth_provider_' . $providerKey, [
+            "user" => $user->id,
+            "hash" => $sessionHash,
+            "date" => date('Y-m-d H:i:s'),
+        ], (24 * 60 * 60 * 365.25));
 
         trigger(Auth::class . '.userLoggedIn', [$user]);
 
@@ -370,38 +425,18 @@ class Auth
         $this->regenerateSession();
 
         foreach ($providerKeys as $providerKey) {
-            $this->setCookie('pckg_auth_provider_' . $providerKey, null, time() - (24 * 60 * 60 * 365.25));
+            $this->setSecureCookie('pckg_auth_provider_' . $providerKey, null);
         }
 
-        if (isset($_COOKIE['pckg_auth_parentlogin'])) {
+        if ($this->getSecureCookie('pckg_auth_parentlogin')) {
             $this->performParentLogin();
-            $this->setCookie('pckg_auth_parentlogin', null, time() - (24 * 60 * 60 * 365.25));
+            $this->setSecureCookie('pckg_auth_parentlogin', null);
         } else {
-            $this->setCookie('pckg_auth_autologin', null, time() - (24 * 60 * 60 * 365.25));
+            $this->setSecureCookie('pckg_auth_autologin', null);
         }
 
         $this->loggedIn = false;
         $this->user = null;
-    }
-
-    public function setCookie($name, $value, $time)
-    {
-        /**
-         * There are issues with some version?
-         */
-        if (PHP_VERSION_ID >= 70300) {
-            setcookie($name, $value, [
-                'expires' => $time,
-                'path' => '/',
-                'secure' => true,
-                'samesite' => 'strict', // httponly?
-            ]);
-            return;
-        }
-
-        setcookie($name, $value, $time, '/; samesite=strict', '', true, true);
-        //setcookie($name, $value, $time, '/; samesite=strict', server('HTTP_HOST'), true, true);
-        //setcookie($name, $value, $time, '/', '', true, true);
     }
 
     public function getSessionProvider()
@@ -457,11 +492,11 @@ class Auth
          * Cookie for provider does not exist.
          */
         $cookieKey = 'pckg_auth_provider_' . $providerKey;
-        if (!isset($_COOKIE[$cookieKey])) {
+        $cookie = $this->getSecureCookie($cookieKey);
+        if (!$cookie) {
             return false;
         }
 
-        $cookie = json_decode(base64_decode($_COOKIE[$cookieKey]), true);
         /**
          * Cookie exists, but hash isn't set.
          */
