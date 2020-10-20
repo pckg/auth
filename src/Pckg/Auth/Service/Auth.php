@@ -20,6 +20,14 @@ class Auth
 
     protected $loggedIn = false;
 
+    const COOKIE_AUTOLOGIN = 'pckgauthauto';
+
+    const COOKIE_LOGIN = 'pckgauthlogin';
+
+    const COOKIE_PARENT = 'pckgauthparent';
+
+    const COOKIE_PROVIDER = 'pckgauthpro';
+
     /**
      * @var User
      */
@@ -269,7 +277,7 @@ class Auth
 
     public function setParentLogin()
     {
-        $this->setSecureCookie('pckg_auth_parentlogin', [
+        $this->setSecureCookie(static::COOKIE_PARENT, [
             $this->getProviderKey() => [
                 'hash'    => password_hash($this->getSecurityHash() .
                     $this->user('id') .
@@ -282,7 +290,7 @@ class Auth
 
     public function performAutologin()
     {
-        $cookie = $this->getSecureCookie('pckg_auth_autologin');
+        $cookie = $this->getSecureCookie(static::COOKIE_AUTOLOGIN);
         if (!$cookie) {
             return;
         }
@@ -291,7 +299,7 @@ class Auth
 
     public function performParentLogin()
     {
-        $cookie = $this->getSecureCookie('pckg_auth_parentlogin');
+        $cookie = $this->getSecureCookie(static::COOKIE_PARENT);
         if (!$cookie) {
             return;
         }
@@ -336,7 +344,7 @@ class Auth
      */
     public function setAutologin()
     {
-        $this->setSecureCookie('pckg_auth_autologin', [
+        $this->setSecureCookie(static::COOKIE_AUTOLOGIN, [
             $this->getProviderKey() => [
                 'hash' => password_hash($this->getSecurityHash() .
                     $this->user('id') .
@@ -407,7 +415,7 @@ class Auth
         /**
          * Cookie should be set for non-api requests.
          */
-        $this->setSecureCookie('pckg_auth_provider_' . $providerKey, [
+        $this->setSecureCookie(static::COOKIE_PROVIDER . '_' . $providerKey, [
             "user" => $user->id,
             "hash" => $sessionHash,
             "date" => date('Y-m-d H:i:s'),
@@ -425,14 +433,14 @@ class Auth
         $this->regenerateSession();
 
         foreach ($providerKeys as $providerKey) {
-            $this->setSecureCookie('pckg_auth_provider_' . $providerKey, null);
+            $this->setSecureCookie(static::COOKIE_PROVIDER . '_' . $providerKey, null);
         }
 
-        if ($this->getSecureCookie('pckg_auth_parentlogin')) {
+        if ($this->getSecureCookie(static::COOKIE_PARENT)) {
             $this->performParentLogin();
-            $this->setSecureCookie('pckg_auth_parentlogin', null);
+            $this->setSecureCookie(static::COOKIE_PARENT, null);
         } else {
-            $this->setSecureCookie('pckg_auth_autologin', null);
+            $this->setSecureCookie(static::COOKIE_AUTOLOGIN, null);
         }
 
         $this->loggedIn = false;
@@ -491,7 +499,7 @@ class Auth
         /**
          * Cookie for provider does not exist.
          */
-        $cookieKey = 'pckg_auth_provider_' . $providerKey;
+        $cookieKey = static::COOKIE_PROVIDER . '_' . $providerKey;
         $cookie = $this->getSecureCookie($cookieKey);
         if (!$cookie) {
             return false;
