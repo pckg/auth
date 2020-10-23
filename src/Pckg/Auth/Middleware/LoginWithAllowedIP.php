@@ -24,7 +24,7 @@ class LoginWithAllowedIP
          * Login when remote IP matches.
          * This is a userless login?
          */
-        $ip = first(server('HTTP_X_FORWARDED_FOR'), server('REMOTE_ADDR'));
+        $ip = request()->clientIp();
         if (in_array($ip, $allowIps)) {
             auth()->setLoggedIn();
         }
