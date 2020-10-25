@@ -6,6 +6,7 @@ use http\Exception;
 use Pckg\Auth\Entity\Users;
 use Pckg\Auth\Record\User;
 use Pckg\Concept\Reflect;
+use Pckg\Framework\Request\Data\SessionDriver\FileDriver;
 
 class Auth
 {
@@ -379,8 +380,22 @@ class Auth
 
     public function regenerateSession()
     {
+        /**
+         * Deactivate current session.
+         */
         $_SESSION['deactivated'] = time();
-        session_regenerate_id();
+
+        /**
+         * Regenerate session and sign it.
+         */
+        $regenerated = session_regenerate_id();
+        if ($regenerated) {
+            $_SESSION[FileDriver::PHPSESSID . FileDriver::SIGNATURE] = session_id();
+        }
+
+        /**
+         * Set current session active.
+         */
         unset($_SESSION['deactivated']);
     }
 
