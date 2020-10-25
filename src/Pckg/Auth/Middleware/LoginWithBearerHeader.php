@@ -34,10 +34,15 @@ class LoginWithBearerHeader
             return $next();
         }
 
-        /**
-         * @var $server OAuth2Server
-         */
-        $server = resolve(OAuth2Server::class);
+        try {
+            /**
+             * @var $server OAuth2Server
+             */
+            $server = resolve(OAuth2Server::class);
+        } catch (\Throwable $e) {
+            return $next();
+        }
+
         $request = $server->getResourceServer()->validateAuthenticatedRequest(request());
         
         $userId = $request->getAttribute('oauth_user_id');
