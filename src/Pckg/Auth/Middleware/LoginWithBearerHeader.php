@@ -29,6 +29,9 @@ class LoginWithBearerHeader
             return $next();
         }
 
+        /**
+         * Check that header is set.
+         */
         $apiKey = $headers[$headerName];
         if (!$apiKey) {
             return $next();
@@ -43,18 +46,32 @@ class LoginWithBearerHeader
             return $next();
         }
 
+        /**
+         * Validate OAuth2 request.
+         */
         $request = $server->getResourceServer()->validateAuthenticatedRequest(request());
-        
-        $userId = $request->getAttribute('oauth_user_id');
-        if (!$userId) {
-            throw new Exception('Invalid Bearer User');
-        }
-        $user = auth()->getProvider()->getUserById($userId);
-        auth()->performLogin($user);
 
         /**
-         * Authenticating user with api key.
+         * Check that parameter is set.
          */
+        $userId = $request->getAttribute('oauth_user_id');
+        if (!$userId) {
+            return $next();
+        }
+
+        /**
+         * Check that user exists.
+         */
+        $user = auth()->getProvider()->getUserById($userId);
+        if (!$user) {
+            return $next();
+        }
+
+        /**
+         * Authenticating user with Bearer header.
+         */
+        auth()->performLogin($user);
+
         return $next();
     }
 
