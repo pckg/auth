@@ -21,13 +21,11 @@ class Auth
 
     protected $loggedIn = false;
 
-    const COOKIE_AUTOLOGIN = 'pckgauthauto';
+    const COOKIE_AUTOLOGIN = 'pckgauthv2auto';
 
-    const COOKIE_LOGIN = 'pckgauthlogin';
+    const COOKIE_PARENT = 'pckgauthv2parent';
 
-    const COOKIE_PARENT = 'pckgauthparent';
-
-    const COOKIE_PROVIDER = 'pckgauthpro';
+    const COOKIE_PROVIDER = 'pckgauthv2pro';
 
     /**
      * @var User
