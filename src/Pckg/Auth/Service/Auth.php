@@ -390,7 +390,7 @@ class Auth
          */
         $regenerated = session_regenerate_id();
         if ($regenerated) {
-            $_SESSION[FileDriver::PHPSESSID . FileDriver::SIGNATURE] = session_id();
+            $_SESSION[FileDriver::PHPSESSID . FileDriver::SIGNATURE] = auth()->hashPassword(session_id());
         }
 
         /**
