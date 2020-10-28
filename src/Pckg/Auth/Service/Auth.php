@@ -249,7 +249,7 @@ class Auth
      * @param string $name
      * @param $value
      */
-    public function setSecureCookie(string $name, $value, $duration = null)
+    public function setSecureCookie(string $name, $value = null, $duration = null)
     {
         /**
          * Delete cookie when empty value or negative duration.
@@ -388,13 +388,15 @@ class Auth
          */
         $regenerated = session_regenerate_id();
         if ($regenerated) {
-            $_SESSION[FileDriver::PHPSESSID . FileDriver::SIGNATURE] = auth()->hashPassword(session_id());
+            /**
+             * Sign session and set it active.
+             */
+            $sid = session_id();
+            $_SESSION[FileDriver::PHPSESSID . FileDriver::SIGNATURE] = auth()->hashPassword($sid);
+            unset($_SESSION['deactivated']);
+        } else {
+            error_log('Cannot regenerate session? ' . session_id());
         }
-
-        /**
-         * Set current session active.
-         */
-        unset($_SESSION['deactivated']);
     }
 
     public function performLogin($user)
