@@ -11,8 +11,7 @@ class LoginWithCookie extends AbstractChainOfReponsibility
 
     public function execute(callable $next)
     {
-        if (!isHttp() || auth()->isLoggedIn() || !auth()->getSecureCookie(Auth::COOKIE_AUTOLOGIN) /*!request()->isGet() || */
-        ) {
+        if (!isHttp() || !request()->isGet() || !auth()->getSecureCookie(Auth::COOKIE_AUTOLOGIN) || auth()->isLoggedIn()) {
             return $next();
         }
 

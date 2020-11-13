@@ -16,8 +16,8 @@ class LoginWithBearerHeader
          * Skip console requests.
          * Skip already logged in users.
          */
-        $headerName = 'Authorization';
-        if (!$headerName || !isHttp() || auth()->isLoggedIn() || isConsole()) {
+        $headerName = config('pckg.auth.bearerHeader');
+        if (!$headerName || !isHttp() || isConsole() || auth()->isLoggedIn()) {
             return $next();
         }
 
