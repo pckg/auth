@@ -16,8 +16,8 @@ class LoginWithBearerHeader
          * Skip console requests.
          * Skip already logged in users.
          */
-        $headerName = 'Authorization';
-        if (!$headerName || !isHttp() || auth()->isLoggedIn() || isConsole()) {
+        $headerName = config('pckg.auth.bearerHeader');
+        if (!$headerName || !isHttp() || isConsole() || auth()->isLoggedIn()) {
             return $next();
         }
 
@@ -29,27 +29,49 @@ class LoginWithBearerHeader
             return $next();
         }
 
+        /**
+         * Check that header is set.
+         */
         $apiKey = $headers[$headerName];
         if (!$apiKey) {
             return $next();
         }
 
-        /**
-         * @var $server OAuth2Server
-         */
-        $server = resolve(OAuth2Server::class);
-        $request = $server->getResourceServer()->validateAuthenticatedRequest(request());
-        
-        $userId = $request->getAttribute('oauth_user_id');
-        if (!$userId) {
-            throw new Exception('Invalid Bearer User');
+        try {
+            /**
+             * @var $server OAuth2Server
+             */
+            $server = resolve(OAuth2Server::class);
+        } catch (\Throwable $e) {
+            return $next();
         }
-        $user = auth()->getProvider()->getUserById($userId);
-        auth()->performLogin($user);
 
         /**
-         * Authenticating user with api key.
+         * Validate OAuth2 request.
          */
+        $request = $server->getResourceServer()->validateAuthenticatedRequest(request());
+
+        /**
+         * Check that parameter is set.
+         */
+        $userId = $request->getAttribute('oauth_user_id');
+        if (!$userId) {
+            return $next();
+        }
+
+        /**
+         * Check that user exists.
+         */
+        $user = auth()->getProvider()->getUserById($userId);
+        if (!$user) {
+            return $next();
+        }
+
+        /**
+         * Authenticating user with Bearer header.
+         */
+        auth()->performLogin($user);
+
         return $next();
     }
 

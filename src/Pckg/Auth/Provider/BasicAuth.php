@@ -10,6 +10,7 @@ use Pckg\Auth\Middleware\LoginWithApiKeyHeader;
 use Pckg\Auth\Middleware\LoginWithAutologinGetParameter;
 use Pckg\Auth\Middleware\LoginWithBearerHeader;
 use Pckg\Auth\Middleware\LoginWithCookie;
+use Pckg\Auth\Middleware\LoginWithSession;
 use Pckg\Auth\Middleware\RestrictAccess;
 use Pckg\Framework\Provider;
 
@@ -25,6 +26,7 @@ class BasicAuth extends Provider {
     public function middlewares()
     {
         return [
+            LoginWithSession::class,
             LoginWithCookie::class,
             LoginWithAutologinGetParameter::class,
             LoginWithBearerHeader::class,

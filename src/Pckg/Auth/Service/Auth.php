@@ -6,6 +6,7 @@ use http\Exception;
 use Pckg\Auth\Entity\Users;
 use Pckg\Auth\Record\User;
 use Pckg\Concept\Reflect;
+use Pckg\Framework\Request\Data\SessionDriver\FileDriver;
 
 class Auth
 {
@@ -20,13 +21,11 @@ class Auth
 
     protected $loggedIn = false;
 
-    const COOKIE_AUTOLOGIN = 'pckgauthauto';
+    const COOKIE_AUTOLOGIN = 'pckgauthv2auto';
 
-    const COOKIE_LOGIN = 'pckgauthlogin';
+    const COOKIE_PARENT = 'pckgauthv2parent';
 
-    const COOKIE_PARENT = 'pckgauthparent';
-
-    const COOKIE_PROVIDER = 'pckgauthpro';
+    const COOKIE_PROVIDER = 'pckgauthv2pro';
 
     /**
      * @var User
@@ -250,7 +249,7 @@ class Auth
      * @param string $name
      * @param $value
      */
-    public function setSecureCookie(string $name, $value, $duration = null)
+    public function setSecureCookie(string $name, $value = null, $duration = null)
     {
         /**
          * Delete cookie when empty value or negative duration.
@@ -379,9 +378,25 @@ class Auth
 
     public function regenerateSession()
     {
+        /**
+         * Deactivate current session.
+         */
         $_SESSION['deactivated'] = time();
-        session_regenerate_id();
-        unset($_SESSION['deactivated']);
+
+        /**
+         * Regenerate session and sign it.
+         */
+        $regenerated = session_regenerate_id();
+        if ($regenerated) {
+            /**
+             * Sign session and set it active.
+             */
+            $sid = session_id();
+            $_SESSION[FileDriver::PHPSESSID . FileDriver::SIGNATURE] = auth()->hashPassword($sid);
+            unset($_SESSION['deactivated']);
+        } else {
+            error_log('Cannot regenerate session? ' . session_id());
+        }
     }
 
     public function performLogin($user)
@@ -472,69 +487,20 @@ class Auth
         return $this;
     }
 
+    /**
+     * @param null $user
+     * @return $this
+     */
+    public function setUser($user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
     public function isLoggedIn()
     {
-        $this->requestProvider();
-        $providerKey = $this->getProviderKey();
-        $sessionProvider = $this->getSessionProvider();
-
-        if ($this->loggedIn) {
-            return true;
-        }
-
-        /**
-         * Session for provider does not exist.
-         */
-        if (!$sessionProvider) {
-            return false;
-        }
-
-        /**
-         * Session exists, but user doesn't.
-         */
-        if (!isset($sessionProvider['user']['id'])) {
-            return false;
-        }
-
-        /**
-         * Cookie for provider does not exist.
-         */
-        $cookieKey = static::COOKIE_PROVIDER . '_' . $providerKey;
-        $cookie = $this->getSecureCookie($cookieKey);
-        if (!$cookie) {
-            return false;
-        }
-
-        /**
-         * Cookie exists, but hash isn't set.
-         */
-        if (!isset($cookie['hash'])) {
-            return false;
-        }
-
-        /**
-         * Hash and user matches.
-         */
-        if ($cookie['hash'] != $sessionProvider['hash'] || $cookie['user'] != $sessionProvider['user']['id']) {
-            return false;
-        }
-
-        /**
-         * User exists in database.
-         */
-        if (!$this->user) {
-            $this->user = $this->getProvider()->getUserById($sessionProvider['user']['id']);
-        }
-
-        if (!$this->user) {
-            return false;
-        }
-
-        if (!password_verify($this->getUserSecuritySessionPass($this->user), $sessionProvider['hash'])) {
-            return false;
-        }
-
-        return true;
+        return $this->loggedIn;
     }
 
     public function isGuest()
