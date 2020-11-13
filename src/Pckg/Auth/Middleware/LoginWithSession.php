@@ -11,7 +11,7 @@ class LoginWithSession extends AbstractChainOfReponsibility
 
     public function execute(callable $next)
     {
-        if (!isHttp() || !request()->isGet() || auth()->isLoggedIn()) {
+        if (!isHttp() || auth()->isLoggedIn()) {
             return $next();
         }
 
