@@ -21,8 +21,6 @@ class Auth
 
     protected $loggedIn = false;
 
-    protected $set = false;
-
     const COOKIE_AUTOLOGIN = 'pckgauthv2auto';
 
     const COOKIE_PARENT = 'pckgauthv2parent';
@@ -485,85 +483,24 @@ class Auth
     public function setLoggedIn(bool $loggedIn = true)
     {
         $this->loggedIn = $loggedIn;
-        $this->set = true;
+
+        return $this;
+    }
+
+    /**
+     * @param null $user
+     * @return $this
+     */
+    public function setUser($user = null)
+    {
+        $this->user = $user;
 
         return $this;
     }
 
     public function isLoggedIn()
     {
-        $this->requestProvider();
-        $providerKey = $this->getProviderKey();
-        $sessionProvider = $this->getSessionProvider();
-
-        if ($this->set) {
-            return $this->loggedIn;
-        }
-
-        if ($this->loggedIn) {
-            return true;
-        }
-
-        /**
-         * Session for provider does not exist.
-         */
-        if (!$sessionProvider) {
-            return false;
-        }
-
-        /**
-         * Session exists, but user doesn't.
-         */
-        if (!isset($sessionProvider['user']['id'])) {
-            return false;
-        }
-
-        /**
-         * Cookie for provider does not exist.
-         */
-        $cookieKey = static::COOKIE_PROVIDER . '_' . $providerKey;
-        $cookie = $this->getSecureCookie($cookieKey);
-        if (!$cookie) {
-            return false;
-        }
-
-        /**
-         * Cookie exists, but hash isn't set.
-         */
-        if (!isset($cookie['hash'])) {
-            return false;
-        }
-
-        /**
-         * Hash and user matches.
-         */
-        if ($cookie['hash'] != $sessionProvider['hash'] || $cookie['user'] != $sessionProvider['user']['id']) {
-            return false;
-        }
-
-        /**
-         * User exists in database.
-         */
-        if (!$this->user) {
-            $this->user = $this->getProvider()->getUserById($sessionProvider['user']['id']);
-        }
-
-        if (!$this->user) {
-            return false;
-        }
-
-        $userSecuritySessionPass = $this->getUserSecuritySessionPass($this->user);
-
-        if (!password_verify($userSecuritySessionPass, $sessionProvider['hash'])) {
-            $this->user = null;
-            $this->set = true;
-            $this->loggedIn = false;
-            return false;
-        }
-
-        $this->isLoggedIn = true;
-        $this->set = true;
-        return true;
+        return $this->loggedIn;
     }
 
     public function isGuest()
