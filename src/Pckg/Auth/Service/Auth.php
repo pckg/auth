@@ -21,6 +21,8 @@ class Auth
 
     protected $loggedIn = false;
 
+    protected $set = false;
+
     const COOKIE_AUTOLOGIN = 'pckgauthv2auto';
 
     const COOKIE_PARENT = 'pckgauthv2parent';
@@ -483,6 +485,7 @@ class Auth
     public function setLoggedIn(bool $loggedIn = true)
     {
         $this->loggedIn = $loggedIn;
+        $this->set = true;
 
         return $this;
     }
@@ -492,6 +495,10 @@ class Auth
         $this->requestProvider();
         $providerKey = $this->getProviderKey();
         $sessionProvider = $this->getSessionProvider();
+
+        if ($this->set) {
+            return $this->loggedIn;
+        }
 
         if ($this->loggedIn) {
             return true;
@@ -545,10 +552,17 @@ class Auth
             return false;
         }
 
-        if (!password_verify($this->getUserSecuritySessionPass($this->user), $sessionProvider['hash'])) {
+        $userSecuritySessionPass = $this->getUserSecuritySessionPass($this->user);
+
+        if (!password_verify($userSecuritySessionPass, $sessionProvider['hash'])) {
+            $this->user = null;
+            $this->set = true;
+            $this->loggedIn = false;
             return false;
         }
 
+        $this->isLoggedIn = true;
+        $this->set = true;
         return true;
     }
 
