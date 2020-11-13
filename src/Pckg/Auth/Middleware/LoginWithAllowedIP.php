@@ -21,11 +21,14 @@ class LoginWithAllowedIP
         }
 
         /**
-         * Login when remote IP matches.
-         * This is a userless login?
+         * Login when remote IP (+port) matches.
+         * This is a userless / anonymous login?
          */
         $ip = request()->clientIp();
+        $port = request()->clientPort();
         if (in_array($ip, $allowIps)) {
+            auth()->setLoggedIn();
+        } else if (in_array($ip . ':' . $port, $allowIps)) {
             auth()->setLoggedIn();
         }
 
