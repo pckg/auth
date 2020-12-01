@@ -24,7 +24,7 @@
                 <div class="--center margin-right-xs" style="flex-basis: 3rem;">
                     <img src="https://startmaestro.cdn.startcomms.com/storage/uploads/backend/commslogo_3_6_4.png"/>
                 </div>
-                <div class="--center">Login with <b>Comms</b> account</div>
+                <div class="--center">Login with <b>Comms ID</b></div>
             </a>
 
             <a href="/oauth/facebook" class="flex-row --start padding-xs-g btn-fb">

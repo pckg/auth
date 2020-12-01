@@ -26,6 +26,7 @@ class CreateAuthTables extends Migration
         $users->integer('user_group_id')->references('user_groups');
         $users->email()->unique();
         $users->password();
+        $users->varchar('hash')->unique();
         $users->text('autologin');
         $users->json('oauth2');
         $users->deletable();

@@ -59,7 +59,14 @@ class Auth extends Provider
                                      '/login'                      => [
                                          'view' => 'login',
                                          'name' => 'login',
-                                         'tags' => ['auth:out', 'layout:frontend', 'seo:title' => 'Login'],
+                                         'tags' => [
+                                             'auth:out',
+                                             'layout:frontend',
+                                             'seo:title' => 'Login',
+                                             'vue:route',
+                                             'vue:route:template' => config('pckg.auth.component.login', '<pckg-auth-full></pckg-auth-full>'),
+                                             'container' => '--lg',
+                                         ],
                                      ],
                                      '/logout'                     => [
                                          'view' => 'logout',

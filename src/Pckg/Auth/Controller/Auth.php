@@ -130,12 +130,16 @@ class Auth extends Controller
         /**
          * We would probably like to notify user about account creation and let him confirm it?
          */
-        email('user.registered', new \Pckg\Mail\Service\Mail\Adapter\User($user), [
-            'data' => [
-                'confirmAccountUrl' => url('pckg.auth.activate', ['activation' => sha1($user->hash . $user->autologin)],
-                    true),
-            ],
-        ]);
+        try {
+            email('user.registered', new \Pckg\Mail\Service\Mail\Adapter\User($user), [
+                'data' => [
+                    'confirmAccountUrl' => url('pckg.auth.activate', ['activation' => sha1($user->hash . $user->autologin)],
+                        true),
+                ],
+            ]);
+        } catch (\Throwable $e) {
+            error_log(exception($e));
+        }
 
         return [
             'success' => true,
@@ -147,6 +151,8 @@ class Auth extends Controller
         $user = (new Users())->where('password', null)
             ->whereRaw('SHA1(CONCAT(users.hash, users.autologin)) = ?', [$activation])
             ->one();
+
+        return $this->response()->redirect('/');
     }
 
     function getForgotPasswordAction(ForgotPassword $forgotPasswordForm)
