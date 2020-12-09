@@ -591,7 +591,7 @@ class Auth
              */
             $hash = $decoded['hash'];
             $identifier = config('identifier', null);
-            if ($auth->hashedPasswordMatches($hash, $identifier . $timestamp . $auth->getSecurityHash() . (isset($decoded['url']) ? request()->getUrl(true) : null))) {
+            if ($this->hashedPasswordMatches($hash, $identifier . $timestamp . $this->getSecurityHash() . (isset($decoded['url']) ? request()->getUrl(true) : null))) {
                 return true;
             }
         } catch (Throwable $e) {
