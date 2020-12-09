@@ -544,16 +544,61 @@ class Auth
         return in_array($this->user('email'), $email);
     }
 
-    public function getNewInternalGetParameter()
+    public function getNewInternalGetParameter($url = null)
     {
         $data = [
             'timestamp' => date('Y-m-d H:i:s'),
         ];
 
-        $data['hash'] = auth()->hashPassword(config('identifier', null) . $data['timestamp'] . $this->getSecurityHash());
+        $data['hash'] = auth()->hashPassword(config('identifier', null) . $data['timestamp'] . $this->getSecurityHash() . $url);
+
+        if ($url) {
+            $data['url'] = true;
+        }
+
         $data['signature'] = sha1(json_encode($data));
 
         return base64_encode(json_encode($data));
+    }
+    
+    public function isValidInternalGetParameter(string $internal)
+    {
+        try {
+            /**
+             * We will generate password on request
+             */
+            $decoded = json_decode(base64_decode($internal), true);
+
+            /**
+             * Validate request first.
+             */
+            $signature = $decoded['signature'];
+            unset($decoded['signature']);
+            if ($signature !== sha1(json_encode($decoded))) {
+                return false;
+            }
+
+            /**
+             * Validate timestamp.
+             */
+            $timestamp = $decoded['timestamp'];
+            if (strtotime($timestamp) < strtotime('-3hours')) {
+                return false;
+            }
+
+            /**
+             * Validate hash.
+             */
+            $hash = $decoded['hash'];
+            $identifier = config('identifier', null);
+            if ($auth->hashedPasswordMatches($hash, $identifier . $timestamp . $auth->getSecurityHash() . (isset($decoded['url']) ? request()->getUrl() : null))) {
+                return true;
+            }
+        } catch (Throwable $e) {
+            error_log(exception($e));
+        }
+
+        return false;
     }
 
 }
