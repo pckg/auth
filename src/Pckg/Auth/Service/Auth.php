@@ -560,7 +560,7 @@ class Auth
 
         return base64_encode(json_encode($data));
     }
-    
+
     public function isValidInternalGetParameter(string $internal)
     {
         try {
@@ -591,7 +591,7 @@ class Auth
              */
             $hash = $decoded['hash'];
             $identifier = config('identifier', null);
-            if ($auth->hashedPasswordMatches($hash, $identifier . $timestamp . $auth->getSecurityHash() . (isset($decoded['url']) ? request()->getUrl() : null))) {
+            if ($auth->hashedPasswordMatches($hash, $identifier . $timestamp . $auth->getSecurityHash() . (isset($decoded['url']) ? request()->getUrl(true) : null))) {
                 return true;
             }
         } catch (Throwable $e) {
