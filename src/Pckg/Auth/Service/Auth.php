@@ -21,18 +21,22 @@ class Auth
 
     protected $loggedIn = false;
 
+    /**
+     * @var User
+     */
+    protected $user;
+
     const COOKIE_AUTOLOGIN = 'pckgauthv2auto';
 
     const COOKIE_PARENT = 'pckgauthv2parent';
 
     const COOKIE_PROVIDER = 'pckgauthv2pro';
 
-    /**
-     * @var User
-     */
-    protected $user;
+    const GEN_ALPHA = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     const GEN_ALPHANUM = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    const GEN_NUM = '0123456789';
 
     /**
      * @param ProviderInterface|mixed $provider
