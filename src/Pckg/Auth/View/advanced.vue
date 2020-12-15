@@ -92,6 +92,10 @@
         margin: 0 .3rem;
     }
 }
+.__logo {
+    max-height: 6.4rem;
+    max-width: 6.4rem;
+}
 </style>
 
 <script>
