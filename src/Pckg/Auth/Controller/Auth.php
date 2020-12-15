@@ -74,12 +74,6 @@ class Auth extends Controller
         $loginUserCommand->onSuccess(function () {
             $user = $this->auth()->getUser();
 
-            if ($user->isAdmin()) {
-                trigger(Auth::class . '.adminLoggedIn', [$user]);
-            } else {
-                trigger(Auth::class . '.userLoggedIn', [$user]);
-            }
-
             $this->response()->respondWithSuccessRedirect($user->getDashboardUrl());
         })->onError(function ($data) {
             if ($this->request()->isAjax()) {
@@ -90,6 +84,16 @@ class Auth extends Controller
 
             $this->response()->respondWithErrorRedirect();
         })->execute();
+    }
+
+    /**
+     * User has logged in in the previous step, received the code.
+     * He enters the code, we validate signatuers?
+     *
+     */
+    public function postTwoFA()
+    {
+
     }
 
     function getLogoutAction(LogoutUser $logoutUserCommand, Response $response)

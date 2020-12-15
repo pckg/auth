@@ -21,18 +21,22 @@ class Auth
 
     protected $loggedIn = false;
 
+    /**
+     * @var User
+     */
+    protected $user;
+
     const COOKIE_AUTOLOGIN = 'pckgauthv2auto';
 
     const COOKIE_PARENT = 'pckgauthv2parent';
 
     const COOKIE_PROVIDER = 'pckgauthv2pro';
 
-    /**
-     * @var User
-     */
-    protected $user;
+    const GEN_ALPHA = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     const GEN_ALPHANUM = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    const GEN_NUM = '0123456789';
 
     /**
      * @param ProviderInterface|mixed $provider
@@ -544,16 +548,61 @@ class Auth
         return in_array($this->user('email'), $email);
     }
 
-    public function getNewInternalGetParameter()
+    public function getNewInternalGetParameter($url = null)
     {
         $data = [
             'timestamp' => date('Y-m-d H:i:s'),
         ];
 
-        $data['hash'] = auth()->hashPassword(config('identifier', null) . $data['timestamp'] . $this->getSecurityHash());
+        $data['hash'] = auth()->hashPassword(config('identifier', null) . $data['timestamp'] . $this->getSecurityHash() . $url);
+
+        if ($url) {
+            $data['url'] = true;
+        }
+
         $data['signature'] = sha1(json_encode($data));
 
         return base64_encode(json_encode($data));
+    }
+
+    public function isValidInternalGetParameter(string $internal)
+    {
+        try {
+            /**
+             * We will generate password on request
+             */
+            $decoded = json_decode(base64_decode($internal), true);
+
+            /**
+             * Validate request first.
+             */
+            $signature = $decoded['signature'];
+            unset($decoded['signature']);
+            if ($signature !== sha1(json_encode($decoded))) {
+                return false;
+            }
+
+            /**
+             * Validate timestamp.
+             */
+            $timestamp = $decoded['timestamp'];
+            if (strtotime($timestamp) < strtotime('-3hours')) {
+                return false;
+            }
+
+            /**
+             * Validate hash.
+             */
+            $hash = $decoded['hash'];
+            $identifier = config('identifier', null);
+            if ($this->hashedPasswordMatches($hash, $identifier . $timestamp . $this->getSecurityHash() . (isset($decoded['url']) ? request()->getUrl(true) : null))) {
+                return true;
+            }
+        } catch (Throwable $e) {
+            error_log(exception($e));
+        }
+
+        return false;
     }
 
 }

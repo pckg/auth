@@ -21,6 +21,11 @@ class RestrictAccess extends AbstractChainOfReponsibility
         }
 
         $gates = config('pckg.auth.gates', []);
+        if (!$gates) {
+            message('No auth gates defined.');
+            return $next();
+        }
+
         foreach ($route['tags'] ?? [] as $tag) {
             foreach ($gates as $gate) {
                 /**
@@ -30,7 +35,7 @@ class RestrictAccess extends AbstractChainOfReponsibility
                     continue;
                 }
 
-                $auth = auth($gate['provider']);
+                $auth = auth($gate['provider'] ?? null);
 
                 if (!array_key_exists($tag, $tags)) {
                     throw new Exception('Auth tag ' . $tag . ' not set.');

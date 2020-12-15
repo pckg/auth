@@ -86,7 +86,13 @@ const Basic = {
                     if (data.success) {
                         $dispatcher.$emit('auth:user:loggedIn');
 
-                        if (data.redirect && window.location.pathname.indexOf('/basket') === -1) {
+                        let url = new URL(window.location.href);
+                        let loginredirect = url.searchParams.get('loginredirect');
+
+                        if (loginredirect) {
+                            http.redirect(loginredirect);
+                            return;
+                        } else if (data.redirect && window.location.pathname.indexOf('/basket') === -1) {
                             http.redirect(data.redirect);
                             return;
                         }
