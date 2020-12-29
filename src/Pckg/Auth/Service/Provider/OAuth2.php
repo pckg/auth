@@ -33,6 +33,11 @@ class OAuth2 extends AbstractProvider
      */
     public function redirectToLogin()
     {
+        /**
+         * Can we check here if user has already authorized scopes?
+         * Do we know which user was logged in?
+         * We could add a cookie and display "not you" screen?
+         */
         $provider = $this->getOAuth2Provider();
         $authorizationUrl = $provider->getAuthorizationUrl();
         session()->set('oauth2state', $provider->getState());
@@ -192,8 +197,10 @@ class OAuth2 extends AbstractProvider
 
         /**
          * Now login user.
+         * We want to keep user logged in for concurrent sessions, so also set a cookie.
          */
         $this->auth->performLogin($userRecord);
+        $this->auth->setAutologin();
 
         /**
          * Redirect user to the refering URL.

@@ -100,9 +100,9 @@ class Auth
      */
     public function getUser()
     {
-        if ($this->user) {
+        //if ($this->user) {
             return $this->user;
-        }
+        //}
 
         return $this->user = $this->getProvider()->getUserById($this->user('id'));
     }
@@ -138,6 +138,7 @@ class Auth
 
     public function user($key = null)
     {
+        return $this->getUser()->{$key} ?? null;
         $sessionUser = $this->getSessionProvider()['user'] ?? [];
 
         if (!$sessionUser) {
@@ -332,6 +333,7 @@ class Auth
             }
 
             $entry = $this->getSecurityHash() . $user->id . $user->autologin;
+
             if (!password_verify($entry, $hash)) {
                 continue;
             }
@@ -347,12 +349,10 @@ class Auth
      */
     public function setAutologin()
     {
+        $original = $this->getSecurityHash() . $this->user('id') . $this->user('autologin');
         $this->setSecureCookie(static::COOKIE_AUTOLOGIN, [
             $this->getProviderKey() => [
-                'hash' => password_hash($this->getSecurityHash() .
-                    $this->user('id') .
-                    $this->user('autologin'),
-                    PASSWORD_DEFAULT),
+                'hash' => password_hash($original, PASSWORD_DEFAULT),
                 'user_id' => $this->user('id'),
             ],
         ], (24 * 60 * 60 * 365.25));
