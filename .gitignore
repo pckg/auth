@@ -5,3 +5,5 @@ codeception.yml
 
 # DEPENDENCIES
 vendor/
+
+.idea/
