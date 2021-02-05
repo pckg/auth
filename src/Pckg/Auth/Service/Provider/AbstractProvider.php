@@ -1,4 +1,6 @@
-<?php namespace Pckg\Auth\Service\Provider;
+<?php
+
+namespace Pckg\Auth\Service\Provider;
 
 use Pckg\Auth\Service\ProviderInterface;
 
@@ -40,7 +42,7 @@ abstract class AbstractProvider implements ProviderInterface
     {
         $class = $this->entity;
 
-        return (new $class)->nonDeleted();
+        return (new $class())->nonDeleted();
     }
 
     /**
@@ -92,5 +94,4 @@ abstract class AbstractProvider implements ProviderInterface
     {
         return $this->getEntity()->where('id', $id)->one();
     }
-
 }

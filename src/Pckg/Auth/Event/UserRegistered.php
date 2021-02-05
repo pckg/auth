@@ -34,5 +34,4 @@ class UserRegistered
         // $mail->setRecepient($this->event->user->getEmail());
         // $mail->send();
     }
-
 }

@@ -28,5 +28,4 @@ class PasswordCode extends Bootstrap implements ResolvesOnRequest
 
         return $this;
     }
-
 }

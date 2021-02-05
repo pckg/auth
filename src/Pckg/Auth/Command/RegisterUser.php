@@ -14,7 +14,6 @@ use Pckg\Framework\Request;
  */
 class RegisterUser
 {
-
     use Stated;
 
     /**
@@ -54,5 +53,4 @@ class RegisterUser
 
         return $this->error();
     }
-
 }

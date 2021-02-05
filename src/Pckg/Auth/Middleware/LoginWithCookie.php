@@ -28,5 +28,4 @@ class LoginWithCookie extends AbstractChainOfReponsibility
 
         return $next();
     }
-
 }

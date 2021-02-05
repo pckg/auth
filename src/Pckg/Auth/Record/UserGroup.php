@@ -44,5 +44,4 @@ class UserGroup extends Record
     {
         return $this->mode == static::MODE_GUEST;
     }
-
 }

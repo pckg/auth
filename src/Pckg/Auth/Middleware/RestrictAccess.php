@@ -1,4 +1,6 @@
-<?php namespace Pckg\Auth\Middleware;
+<?php
+
+namespace Pckg\Auth\Middleware;
 
 use Exception;
 use Pckg\Concept\AbstractChainOfReponsibility;
@@ -65,5 +67,4 @@ class RestrictAccess extends AbstractChainOfReponsibility
 
         return $next();
     }
-
 }

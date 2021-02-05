@@ -1,4 +1,6 @@
-<?php namespace Pckg\Auth\Record;
+<?php
+
+namespace Pckg\Auth\Record;
 
 use Pckg\Auth\Entity\Users;
 use Pckg\Database\Field\JsonObject;
@@ -129,5 +131,4 @@ class User extends Record
     {
         return $this->oauth2->{$provider}->token ?? null;
     }
-
 }

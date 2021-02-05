@@ -110,7 +110,6 @@ class Auth extends Controller
      */
     public function postTwoFA()
     {
-
     }
 
     /**
@@ -167,10 +166,13 @@ class Auth extends Controller
          */
         try {
             email(
-                'user.registered', new \Pckg\Mail\Service\Mail\Adapter\User($user), [
+                'user.registered',
+                new \Pckg\Mail\Service\Mail\Adapter\User($user),
+                [
                     'data' => [
                         'confirmAccountUrl' => url(
-                            'pckg.auth.activate', ['activation' => sha1($user->hash . $user->autologin)],
+                            'pckg.auth.activate',
+                            ['activation' => sha1($user->hash . $user->autologin)],
                             true
                         ),
                     ],
@@ -205,7 +207,8 @@ class Auth extends Controller
     function getForgotPasswordAction(ForgotPassword $forgotPasswordForm)
     {
         return view(
-            "vendor/lfw/auth/src/Pckg/Auth/View/forgotPassword", [
+            "vendor/lfw/auth/src/Pckg/Auth/View/forgotPassword",
+            [
                 'form' => $forgotPasswordForm->initFields(),
             ]
         );
@@ -327,5 +330,4 @@ class Auth extends Controller
     {
         $auth->useProvider($provider)->getProvider()->process();
     }
-
 }

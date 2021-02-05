@@ -1,4 +1,6 @@
-<?php namespace Pckg\Auth\Console;
+<?php
+
+namespace Pckg\Auth\Console;
 
 use Exception;
 use Pckg\Auth\Entity\Users;
@@ -68,5 +70,4 @@ class CreateUser extends Command
 
         $this->output('User #' . $user->id . ' created');
     }
-
 }

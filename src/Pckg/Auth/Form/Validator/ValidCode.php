@@ -1,4 +1,6 @@
-<?php namespace Pckg\Auth\Form\Validator;
+<?php
+
+namespace Pckg\Auth\Form\Validator;
 
 use Pckg\Auth\Entity\UserPasswordResets;
 use Pckg\Htmlbuilder\Validator\AbstractValidator;
@@ -40,5 +42,4 @@ class ValidCode extends AbstractValidator
 
         return true;
     }
-
 }

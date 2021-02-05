@@ -25,5 +25,4 @@ class ForgotPassword extends Bootstrap implements ResolvesOnRequest
 
         return $this;
     }
-
 }

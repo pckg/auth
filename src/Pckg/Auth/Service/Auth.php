@@ -169,7 +169,8 @@ class Auth
          * We want to enrich our user with some custom values.
          */
         trigger(
-            Auth::class . '.getUserDataArray', ['user' => $user, 'data' => $data, 'setter' => function ($newData) use (&$data) {
+            Auth::class . '.getUserDataArray',
+            ['user' => $user, 'data' => $data, 'setter' => function ($newData) use (&$data) {
                 foreach ($newData as $key => $val) {
                     $data[$key] = $val;
                 }
@@ -367,7 +368,8 @@ class Auth
     public function setParentLogin()
     {
         $this->setSecureCookie(
-            static::COOKIE_PARENT, [
+            static::COOKIE_PARENT,
+            [
             $this->getProviderKey() => [
                 'hash' => password_hash(
                     $this->getSecurityHash() .
@@ -377,7 +379,8 @@ class Auth
                 ),
                 'user_id' => $this->user('id'),
             ],
-            ], (60 * 60)
+            ],
+            (60 * 60)
         );
     }
 
@@ -445,12 +448,14 @@ class Auth
     {
         $original = $this->getSecurityHash() . $this->user('id') . $this->user('autologin');
         $this->setSecureCookie(
-            static::COOKIE_AUTOLOGIN, [
+            static::COOKIE_AUTOLOGIN,
+            [
             $this->getProviderKey() => [
                 'hash' => password_hash($original, PASSWORD_DEFAULT),
                 'user_id' => $this->user('id'),
             ],
-            ], (24 * 60 * 60 * 365.25)
+            ],
+            (24 * 60 * 60 * 365.25)
         );
     }
 
@@ -542,11 +547,13 @@ class Auth
          * Cookie should be set for non-api requests.
          */
         $this->setSecureCookie(
-            static::COOKIE_PROVIDER . '_' . $providerKey, [
+            static::COOKIE_PROVIDER . '_' . $providerKey,
+            [
             "user" => $user->id,
             "hash" => $sessionHash,
             "date" => date('Y-m-d H:i:s'),
-            ], (24 * 60 * 60 * 365.25)
+            ],
+            (24 * 60 * 60 * 365.25)
         );
 
         trigger(Auth::class . '.userLoggedIn', [$user]);
@@ -748,5 +755,4 @@ class Auth
 
         return false;
     }
-
 }

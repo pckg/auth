@@ -1,4 +1,6 @@
-<?php namespace Pckg\Auth\Console;
+<?php
+
+namespace Pckg\Auth\Console;
 
 use Exception;
 use Pckg\Auth\Entity\Users;
@@ -29,5 +31,4 @@ class CreateUserGroups extends Command
         }
         $this->outputDated('Updated');
     }
-
 }

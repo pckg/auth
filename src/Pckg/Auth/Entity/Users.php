@@ -41,5 +41,4 @@ class Users extends Entity
         return $this->hasMany(Logins::class)
             ->foreignKey('user_id');
     }
-
 }

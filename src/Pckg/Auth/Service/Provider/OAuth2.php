@@ -1,4 +1,6 @@
-<?php namespace Pckg\Auth\Service\Provider;
+<?php
+
+namespace Pckg\Auth\Service\Provider;
 
 use GuzzleHttp\Client;
 use http\Exception\BadConversionException;
@@ -79,7 +81,8 @@ class OAuth2 extends AbstractProvider
         }
 
         $newAccessToken = $this->getOAuth2Provider()->getAccessToken(
-            'refresh_token', [
+            'refresh_token',
+            [
                 'refresh_token' => $existingAccessToken->getRefreshToken()
             ]
         );
@@ -98,7 +101,8 @@ class OAuth2 extends AbstractProvider
     public function fetchTokenFromCode($code)
     {
         $accessToken = $this->getOAuth2Provider()->getAccessToken(
-            'authorization_code', [
+            'authorization_code',
+            [
                 'code' => $code,
             ]
         );
@@ -123,7 +127,8 @@ class OAuth2 extends AbstractProvider
         }
 
         $response = (new Client())->get(
-            $this->config['oauth2']['urlResourceOwnerDetails'], [
+            $this->config['oauth2']['urlResourceOwnerDetails'],
+            [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $oauth2token,
                 ],
@@ -233,5 +238,4 @@ class OAuth2 extends AbstractProvider
         response()->respond('<script>try { if (window.opener.location.href !== window.location.href) { window.close(); } } catch (e) { console.log(e); } window.location.href = ' . json_encode($referer) . ';</script>');
         response()->redirect($referer);
     }
-
 }

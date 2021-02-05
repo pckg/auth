@@ -37,5 +37,4 @@ class UserLoggedIn extends AbstractEvent
     {
         return [$this->user];
     }
-
 }

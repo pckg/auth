@@ -61,7 +61,9 @@ class SendPasswordCode
          * Send email.
          */
         email(
-            $this->template, new User($this->user), [
+            $this->template,
+            new User($this->user),
+            [
                 'data' => [
                     'niceCode' => $niceCode,
                     'code' => $code,
@@ -89,5 +91,4 @@ class SendPasswordCode
 
         return $this;
     }
-
 }

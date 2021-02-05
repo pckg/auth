@@ -60,5 +60,4 @@ class HandleLogoutRequest extends AbstractChainOfReponsibility
 
         return $next();
     }
-
 }

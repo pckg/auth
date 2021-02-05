@@ -36,7 +36,6 @@ class SignupUser extends Bootstrap implements ResolvesOnRequest
                     $validator->setMsg('Passwords does not match');
 
                     return $value === post('passwordRepeat');
-
                 }
             );
         $this->addPassword('passwordRepeat')->setLabel('Repeat password')->required();
@@ -45,5 +44,4 @@ class SignupUser extends Bootstrap implements ResolvesOnRequest
 
         return $this;
     }
-
 }

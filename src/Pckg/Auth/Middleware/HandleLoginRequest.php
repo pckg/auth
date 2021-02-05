@@ -20,7 +20,8 @@ class HandleLoginRequest
      */
     public function execute(callable $next)
     {
-        if (post()->has(['email', 'password', 'autologin', 'submit'])
+        if (
+            post()->has(['email', 'password', 'autologin', 'submit'])
             && server()->has(['HTTP_REFERER', 'HTTP_ORIGIN', 'REQUEST_URI'])
             && server('HTTP_REFERER') != server('HTTP_ORIGIN') . server('REQUEST_URI')
         ) {
@@ -36,5 +37,4 @@ class HandleLoginRequest
 
         return $next();
     }
-
 }

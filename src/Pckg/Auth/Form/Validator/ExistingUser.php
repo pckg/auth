@@ -1,4 +1,6 @@
-<?php namespace Pckg\Auth\Form\Validator;
+<?php
+
+namespace Pckg\Auth\Form\Validator;
 
 use Pckg\Auth\Entity\Users;
 use Pckg\Htmlbuilder\Validator\AbstractValidator;
@@ -29,5 +31,4 @@ class ExistingUser extends AbstractValidator
     {
         return (new Users())->where('email', $value)->one() ? true : false;
     }
-
 }

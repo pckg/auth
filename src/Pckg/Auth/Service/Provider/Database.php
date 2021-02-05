@@ -1,4 +1,6 @@
-<?php namespace Pckg\Auth\Service\Provider;
+<?php
+
+namespace Pckg\Auth\Service\Provider;
 
 use Pckg\Auth\Service\Auth;
 
@@ -28,5 +30,4 @@ class Database extends AbstractProvider
     public function logout()
     {
     }
-
 }

@@ -1,4 +1,6 @@
-<?php namespace Pckg\Auth\Event\Handler;
+<?php
+
+namespace Pckg\Auth\Event\Handler;
 
 use Pckg\Auth\Entity\Logins;
 use Pckg\Auth\Record\Login;
@@ -34,5 +36,4 @@ class LogUserLogin extends AbstractChainOfReponsibility
 
         return $next();
     }
-
 }

@@ -13,7 +13,6 @@ use Pckg\Mail\Service\Mail\Adapter\User;
  */
 class SendNewPassword
 {
-
     use Stated;
 
     /**
@@ -67,5 +66,4 @@ class SendNewPassword
 
         return $this->error();
     }
-
 }

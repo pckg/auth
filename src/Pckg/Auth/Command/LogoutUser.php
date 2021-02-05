@@ -13,7 +13,6 @@ use Pckg\Concept\CommandInterface;
  */
 class LogoutUser
 {
-
     use Stated;
 
     /**
@@ -25,5 +24,4 @@ class LogoutUser
 
         return $this->successful();
     }
-
 }

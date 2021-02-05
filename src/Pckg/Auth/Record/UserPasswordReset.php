@@ -1,4 +1,6 @@
-<?php namespace Pckg\Auth\Record;
+<?php
+
+namespace Pckg\Auth\Record;
 
 use Pckg\Auth\Entity\UserPasswordResets;
 use Pckg\Database\Record;
@@ -24,5 +26,4 @@ class UserPasswordReset extends Record
     {
         return time() - strtotime($this->created_at) < (60 * 5);
     }
-
 }

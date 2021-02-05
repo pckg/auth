@@ -1,4 +1,6 @@
-<?php namespace Pckg\Auth\Provider;
+<?php
+
+namespace Pckg\Auth\Provider;
 
 use Pckg\Auth\Console\CreateGodfather;
 use Pckg\Auth\Console\CreateUser;
@@ -51,5 +53,4 @@ class BasicAuth extends Provider
             CreateUser::class,
         ];
     }
-
 }

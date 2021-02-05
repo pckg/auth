@@ -1,4 +1,6 @@
-<?php namespace Pckg\Auth\Entity;
+<?php
+
+namespace Pckg\Auth\Entity;
 
 use Pckg\Auth\Record\UserPasswordReset;
 use Pckg\Database\Entity;
@@ -23,5 +25,4 @@ class UserPasswordResets extends Entity
     {
         return $this->belongsTo(Users::class)->foreignKey('user_id');
     }
-
 }

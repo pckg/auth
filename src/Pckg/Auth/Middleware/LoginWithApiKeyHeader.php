@@ -1,4 +1,6 @@
-<?php namespace Pckg\Auth\Middleware;
+<?php
+
+namespace Pckg\Auth\Middleware;
 
 use Exception;
 use Pckg\Api\Entity\AppKeys;
@@ -47,7 +49,7 @@ class LoginWithApiKeyHeader
          */
         $entity = config('pckg.auth.appEntity', AppKeys::class);
         $field = config('pckg.auth.apiEntityField', 'key');
-        $entity = new $entity;
+        $entity = new $entity();
         $token = $entity->where($field, $apiKey)->where('valid')->oneOrFail(
             function () {
                 response()->forbidden('Invalid API key');
@@ -62,5 +64,4 @@ class LoginWithApiKeyHeader
 
         return $next();
     }
-
 }

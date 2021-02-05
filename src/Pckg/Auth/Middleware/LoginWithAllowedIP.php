@@ -1,4 +1,6 @@
-<?php namespace Pckg\Auth\Middleware;
+<?php
+
+namespace Pckg\Auth\Middleware;
 
 use Exception;
 use Pckg\Api\Entity\AppKeys;
@@ -43,5 +45,4 @@ class LoginWithAllowedIP
 
         return $next();
     }
-
 }

@@ -1,4 +1,6 @@
-<?php namespace Pckg\Auth\Factory;
+<?php
+
+namespace Pckg\Auth\Factory;
 
 /**
  * Class User
@@ -15,7 +17,8 @@ class User
     public static function create(array $data = [])
     {
         $data = array_merge(
-            $data, [
+            $data,
+            [
                 'enabled' => 1,
                 'user_group_id' => 2,
                 'language_id' => localeManager()->getCurrent()->slug ?? null,
@@ -30,5 +33,4 @@ class User
 
         return $user;
     }
-
 }

@@ -24,5 +24,4 @@ class LogUserLogout extends AbstractChainOfReponsibility
 
         return $next();
     }
-
 }

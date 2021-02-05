@@ -1,4 +1,6 @@
-<?php namespace Pckg\Auth\Provider;
+<?php
+
+namespace Pckg\Auth\Provider;
 
 use Pckg\Auth\Console\CreateGodfather;
 use Pckg\Auth\Console\CreateUserGroups;
@@ -76,7 +78,8 @@ class Auth extends Provider
             'url' => array_merge_array(
                 [
                     'controller' => AuthController::class,
-                ], [
+                ],
+                [
                     '/login' => [
                         'view' => 'login',
                         'name' => 'login',
@@ -132,5 +135,4 @@ class Auth extends Provider
             )
         ];
     }
-
 }

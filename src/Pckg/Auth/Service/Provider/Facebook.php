@@ -1,4 +1,6 @@
-<?php namespace Pckg\Auth\Service\Provider;
+<?php
+
+namespace Pckg\Auth\Service\Provider;
 
 use Pckg\Auth\Entity\Users;
 use Pckg\Auth\Record\User;
@@ -172,5 +174,4 @@ class Facebook extends AbstractProvider
     public function logout()
     {
     }
-
 }

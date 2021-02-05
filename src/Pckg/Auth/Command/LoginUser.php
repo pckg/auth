@@ -12,7 +12,6 @@ use Pckg\Concept\Reflect;
  */
 class LoginUser
 {
-
     use Stated;
 
     /**
@@ -38,7 +37,8 @@ class LoginUser
             /**
              * If user doesnt exists, don't proceed with execution.
              */
-            if (!($user = $provider->getUserByEmail($email))
+            if (
+                !($user = $provider->getUserByEmail($email))
             ) {
                 continue;
             }
@@ -78,5 +78,4 @@ class LoginUser
 
         return $this->error();
     }
-
 }

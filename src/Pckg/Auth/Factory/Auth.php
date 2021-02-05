@@ -1,4 +1,6 @@
-<?php namespace Pckg\Auth\Factory;
+<?php
+
+namespace Pckg\Auth\Factory;
 
 use Facebook\Facebook as FacebookApi;
 use Facebook\InstantArticles\Client\Client;
@@ -62,5 +64,4 @@ class Auth
             config('pckg.auth.provider.facebook.config.app_secret')
         );
     }
-
 }

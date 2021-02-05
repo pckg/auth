@@ -96,5 +96,4 @@ class LoginWithSession extends AbstractChainOfReponsibility
 
         return $next();
     }
-
 }

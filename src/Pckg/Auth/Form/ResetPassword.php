@@ -1,4 +1,6 @@
-<?php namespace Pckg\Auth\Form;
+<?php
+
+namespace Pckg\Auth\Form;
 
 use Pckg\Auth\Form\Validator\ExistingUser;
 use Pckg\Auth\Form\Validator\ValidCode;
@@ -44,5 +46,4 @@ class ResetPassword extends Bootstrap implements ResolvesOnRequest
 
         return $this;
     }
-
 }

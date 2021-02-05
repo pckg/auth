@@ -40,5 +40,3 @@ class Facebook extends Auth
         );
     }
 }
-
-?>

@@ -1,4 +1,6 @@
-<?php namespace Pckg\Auth\Form\Validator;
+<?php
+
+namespace Pckg\Auth\Form\Validator;
 
 /**
  * Class NonExistingUser
@@ -21,5 +23,4 @@ class NonExistingUser extends ExistingUser
     {
         return !parent::validate($value);
     }
-
 }

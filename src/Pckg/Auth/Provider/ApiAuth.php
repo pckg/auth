@@ -1,4 +1,6 @@
-<?php namespace Pckg\Auth\Provider;
+<?php
+
+namespace Pckg\Auth\Provider;
 
 use Pckg\Auth\Middleware\LoginWithApiKeyHeader;
 use Pckg\Framework\Provider;
@@ -20,5 +22,4 @@ class ApiAuth extends Provider
             LoginWithApiKeyHeader::class,
         ];
     }
-
 }

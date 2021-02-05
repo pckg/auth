@@ -39,5 +39,4 @@ class LoginUserViaForm extends LoginUser
 
         $this->executeManual($data['email'], $data['password'], true);
     }
-
 }

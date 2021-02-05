@@ -1,4 +1,6 @@
-<?php namespace Pckg\Auth\Form\Validator;
+<?php
+
+namespace Pckg\Auth\Form\Validator;
 
 use Pckg\Htmlbuilder\Validator\AbstractValidator;
 
@@ -28,5 +30,4 @@ class ValidPassword extends AbstractValidator
     {
         return strlen($value) >= 8;
     }
-
 }

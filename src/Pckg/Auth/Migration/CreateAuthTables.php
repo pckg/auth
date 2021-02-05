@@ -1,4 +1,6 @@
-<?php namespace Pckg\Auth\Migration;
+<?php
+
+namespace Pckg\Auth\Migration;
 
 use Pckg\Migration\Migration;
 
@@ -48,5 +50,4 @@ class CreateAuthTables extends Migration
         $userPasswordResets->datetime('used_at');
         $userPasswordResets->varchar('code');
     }
-
 }

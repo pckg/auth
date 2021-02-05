@@ -32,5 +32,4 @@ class UserEmail extends AbstractValidator
 
         return $next();
     }
-
 }

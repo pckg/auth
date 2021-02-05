@@ -1,4 +1,6 @@
-<?php namespace Pckg\Auth\Middleware;
+<?php
+
+namespace Pckg\Auth\Middleware;
 
 use Pckg\Auth\Entity\Users;
 use Pckg\Auth\Record\User;
@@ -70,5 +72,4 @@ class LoginWithAutologinGetParameter
         $url = request()->getUrl();
         redirect($url . ($query ? '?' . $query : ''));
     }
-
 }
