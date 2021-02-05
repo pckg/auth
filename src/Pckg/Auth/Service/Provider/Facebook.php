@@ -117,9 +117,11 @@ class Facebook extends AbstractProvider
         /**
          * Link user to facebook user and save long live token.
          */
-        (new Users())->where('id', auth()->user('id'))->oneAndIf(function(User $user) use ($fbUserId, $accessToken) {
-            return $user->setAndSave(['fb_user_id' => $fbUserId, 'fb_long_live_token' => $accessToken]);
-        });
+        (new Users())->where('id', auth()->user('id'))->oneAndIf(
+            function (User $user) use ($fbUserId, $accessToken) {
+                return $user->setAndSave(['fb_user_id' => $fbUserId, 'fb_long_live_token' => $accessToken]);
+            }
+        );
 
         /**
          * Save to session for later use.

@@ -23,20 +23,22 @@ class SignupUser extends Bootstrap implements ResolvesOnRequest
     public function initFields()
     {
         $this->addEmail('email')
-             ->setLabel('Email')
-             ->addValidator(new NonExistingUser())
-             ->addValidator(new Email())
-             ->required();
+            ->setLabel('Email')
+            ->addValidator(new NonExistingUser())
+            ->addValidator(new Email())
+            ->required();
         $this->addPassword('password')
-             ->setLabel('Password')
-             ->required()
-             ->addValidator(new ValidPassword())
-             ->addCustomValidator(function($value, Custom $validator) {
-                 $validator->setMsg('Passwords does not match');
+            ->setLabel('Password')
+            ->required()
+            ->addValidator(new ValidPassword())
+            ->addCustomValidator(
+                function ($value, Custom $validator) {
+                    $validator->setMsg('Passwords does not match');
 
-                 return $value === post('passwordRepeat');
+                    return $value === post('passwordRepeat');
 
-             });
+                }
+            );
         $this->addPassword('passwordRepeat')->setLabel('Repeat password')->required();
 
         $this->addSubmit();

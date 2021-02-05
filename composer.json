@@ -37,6 +37,12 @@
       "vendor/bin/phpstan analyse src/ --level=1",
       "vendor/bin/phpcs -p src/ || true",
       "vendor/bin/codecept run"
+    ],
+    "autofix": [
+      "vendor/bin/phpcs --report-diff=phpcs.diff ./src"
+    ],
+    "autopatch": [
+      "patch -p0 -ui phpcs.diff"
     ]
   },
   "scripts-descriptions": {

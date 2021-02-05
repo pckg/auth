@@ -7,7 +7,8 @@ use Pckg\Database\Record;
 
 /**
  * Class UserGroup
- * @package Pckg\Auth\Record
+ *
+ * @package  Pckg\Auth\Record
  * @property string $mode
  */
 class UserGroup extends Record

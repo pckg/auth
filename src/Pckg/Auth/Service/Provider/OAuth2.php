@@ -73,9 +73,11 @@ class OAuth2 extends AbstractProvider
             return;
         }
 
-        $newAccessToken = $this->getOAuth2Provider()->getAccessToken('refresh_token', [
+        $newAccessToken = $this->getOAuth2Provider()->getAccessToken(
+            'refresh_token', [
             'refresh_token' => $existingAccessToken->getRefreshToken()
-        ]);
+            ]
+        );
 
         // Purge old access token and store new access token to your data store.
         session()->set('oauth2accesstoken', $newAccessToken);
@@ -85,14 +87,16 @@ class OAuth2 extends AbstractProvider
      * Try to get an access token using the authorization code grant.
      * Save token to the session.
      *
-     * @param $code
+     * @param  $code
      * @throws \League\OAuth2\Client\Provider\Exception\IdentityProviderException
      */
     public function fetchTokenFromCode($code)
     {
-        $accessToken = $this->getOAuth2Provider()->getAccessToken('authorization_code', [
+        $accessToken = $this->getOAuth2Provider()->getAccessToken(
+            'authorization_code', [
             'code' => $code,
-        ]);
+            ]
+        );
 
         $token = $accessToken->getToken();
         session()->set('oauth2accesstoken', $token)
@@ -114,7 +118,8 @@ class OAuth2 extends AbstractProvider
                 'Authorization' => 'Bearer ' . $oauth2token,
             ],
                 'timeout' => 15,
-        ]);
+            ]
+        );
         $data = json_decode($response->getBody()->getContents(), true);
 
         return $data;
@@ -180,9 +185,11 @@ class OAuth2 extends AbstractProvider
          * Connect it to the user.
          */
         if ($this->identifier && !($user->{$this->identifier . '_user_id'} ?? null)) {
-            $userRecord->setAndSave([
+            $userRecord->setAndSave(
+                [
                 $this->identifier . '_user_id' => $remoteUserId,
-            ]);
+                ]
+            );
         }
 
         /**

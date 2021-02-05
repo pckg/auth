@@ -36,9 +36,11 @@ class LoginWithAutologinGetParameter
         /**
          * Authenticating user with autologin.
          */
-        (new Users())->where('autologin', $autologin)->oneAndIf(function(User $user) {
+        (new Users())->where('autologin', $autologin)->oneAndIf(
+            function (User $user) {
                 auth()->autologin($user->id);
-            });
+            }
+        );
 
         /**
          * Remove autologin parameter and redirect to same url.

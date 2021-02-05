@@ -12,12 +12,16 @@ class CreateGodfather extends Command
 
     protected function configure()
     {
-        $this->setName('auth:create-godfather')->setDescription('Create godfather user')->addArguments([
+        $this->setName('auth:create-godfather')->setDescription('Create godfather user')->addArguments(
+            [
                                                                                                            'email'    => 'Godfather email',
                                                                                                        ],
-                                                                                                       InputArgument::REQUIRED)->addArguments([
-            'password' => 'Hashed godfather password',
-        ], InputArgument::OPTIONAL);
+            InputArgument::REQUIRED
+        )->addArguments(
+            [
+                                                                                                        'password' => 'Hashed godfather password',
+                                                                                                           ], InputArgument::OPTIONAL
+        );
     }
 
     public function handle()
@@ -54,11 +58,13 @@ class CreateGodfather extends Command
             $password = auth()->hashPassword($password);
         }
 
-        $user = (new User([
+        $user = (new User(
+            [
                               'email'     => $this->argument('email'),
                               'password'  => $password,
                               'autologin' => sha1(sha1($this->argument('email')) . sha1(config('identifier', null))),
-                          ]))->setDefaults()->setAndSave(['user_group_id' => 1]);
+            ]
+        ))->setDefaults()->setAndSave(['user_group_id' => 1]);
 
         $this->output('Godfather #' . $user->id . ' created');
     }

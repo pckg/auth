@@ -9,9 +9,9 @@ use Pckg\Database\Entity;
  * Class Users
  *
  * @package Pckg\Auth\Entity
- * @method $this withStaticGroup()
- * @method $this joinStaticGroup()
- * @method $this withRequiredStaticGroup()
+ * @method  $this withStaticGroup()
+ * @method  $this joinStaticGroup()
+ * @method  $this withRequiredStaticGroup()
  */
 class Users extends Entity
 {

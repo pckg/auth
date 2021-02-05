@@ -16,7 +16,7 @@ class HandleLoginRequest
         ) {
             $loginUser = new LoginUser();
             $loginUser->onSuccess(
-                function() {
+                function () {
                     response()->respondWithSuccessRedirect(auth('frontend')->getUser()->getDashboardUrl());
                     redirect(-1);
                 }

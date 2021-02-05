@@ -7,7 +7,7 @@ use Pckg\Database\Record;
 /**
  * Class User
  *
- * @package Pckg\Auth\Record
+ * @package  Pckg\Auth\Record
  * @property JsonObject $oauth2
  * @property string $email
  * @property string $autologin
@@ -73,9 +73,11 @@ class User extends Record
         );
 
         if (!$this->autologin) {
-            $this->set([
+            $this->set(
+                [
                 'autologin' => sha1(microtime()),
-            ]);
+                ]
+            );
         }
 
         return $this;

@@ -40,9 +40,11 @@ class LoginUser
              * If password is not set.
              */
             if (!$user->password) {
-                $this->error([
+                $this->error(
+                    [
                     'type' => 'activateAccount',
-                             ]);
+                    ]
+                );
                 continue;
             }
 

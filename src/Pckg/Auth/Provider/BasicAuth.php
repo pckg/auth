@@ -16,9 +16,11 @@ use Pckg\Framework\Provider;
 
 /**
  * Class BasicAuth
+ *
  * @package Pckg\Auth\Provider
  */
-class BasicAuth extends Provider {
+class BasicAuth extends Provider
+{
 
     /**
      * @return string[]

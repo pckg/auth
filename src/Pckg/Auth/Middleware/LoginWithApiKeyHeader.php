@@ -39,9 +39,11 @@ class LoginWithApiKeyHeader
         $entity = config('pckg.auth.appEntity', AppKeys::class);
         $field = config('pckg.auth.apiEntityField', 'key');
         $entity = new $entity;
-        $token = $entity->where($field, $apiKey)->where('valid')->oneOrFail(function() {
-            response()->forbidden('Invalid API key');
-        });
+        $token = $entity->where($field, $apiKey)->where('valid')->oneOrFail(
+            function () {
+                response()->forbidden('Invalid API key');
+            }
+        );
 
         /**
          * Authenticate user

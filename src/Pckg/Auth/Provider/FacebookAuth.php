@@ -7,9 +7,10 @@ class FacebookAuth extends Provider
 {
     public function routes()
     {
-        return ['url' => array_merge_array([
+        return ['url' => array_merge_array(
+            [
             'controller' => Facebook::class,
-        ], [
+            ], [
             '/login/facebook' => [
                 'view' => 'login',
                 'name' => 'login_facebook',
@@ -18,7 +19,8 @@ class FacebookAuth extends Provider
                 'view' => 'takelogin',
                 'name' => 'takelogin_facebook',
             ],
-        ])];
+            ]
+        )];
     }
 
 }

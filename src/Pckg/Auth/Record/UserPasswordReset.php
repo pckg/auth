@@ -5,7 +5,8 @@ use Pckg\Database\Record;
 
 /**
  * Class UserPasswordReset
- * @package Pckg\Auth\Record
+ *
+ * @package  Pckg\Auth\Record
  * @property string $created_at
  */
 class UserPasswordReset extends Record

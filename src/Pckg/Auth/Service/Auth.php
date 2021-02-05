@@ -111,22 +111,26 @@ class Auth
     {
         $user = $this->getUser();
         $data = $user ? $user->jsonSerialize() : [];
-        $data['tags'] = collect(config('pckg.auth.tags', []))->map(function($callable, $tag) {
-            if (!Reflect::call($callable)) {
-                return;
-            }
+        $data['tags'] = collect(config('pckg.auth.tags', []))->map(
+            function ($callable, $tag) {
+                if (!Reflect::call($callable)) {
+                    return;
+                }
 
-            return $tag;
-        })->removeEmpty()->values();
+                return $tag;
+            }
+        )->removeEmpty()->values();
 
         /**
          * We want to enrich our user with some custom values.
          */
-        trigger(Auth::class .'.getUserDataArray', ['user' => $user, 'data' => $data, 'setter' => function($newData) use (&$data){
-            foreach ($newData as $key => $val) {
-                $data[$key] = $val;
-            }
-        }]);
+        trigger(
+            Auth::class .'.getUserDataArray', ['user' => $user, 'data' => $data, 'setter' => function ($newData) use (&$data) {
+                foreach ($newData as $key => $val) {
+                    $data[$key] = $val;
+                }
+            }]
+        );
 
         return $data;
     }
@@ -219,7 +223,7 @@ class Auth
     /**
      * Decode cookie with value, signature and host values.
      *
-     * @param string $name
+     * @param  string $name
      * @return mixed|null
      */
     public function getSecureCookie(string $name)
@@ -270,26 +274,34 @@ class Auth
         $host = server('HTTP_HOST', null);
         $encoded = base64_encode(json_encode($value));
         $signature = $this->hashPassword($encoded . $host . $name);
-        $value = base64_encode(json_encode([
-            'value' => $encoded,
-            'signature' => $signature,
-            'host' => $host,
-        ]));
+        $value = base64_encode(
+            json_encode(
+                [
+                'value' => $encoded,
+                'signature' => $signature,
+                'host' => $host,
+                ]
+            )
+        );
 
         cookie()->set($name, $value, $duration);
     }
 
     public function setParentLogin()
     {
-        $this->setSecureCookie(static::COOKIE_PARENT, [
+        $this->setSecureCookie(
+            static::COOKIE_PARENT, [
             $this->getProviderKey() => [
-                'hash'    => password_hash($this->getSecurityHash() .
+                'hash'    => password_hash(
+                    $this->getSecurityHash() .
                     $this->user('id') .
                     $this->user('autologin'),
-                    PASSWORD_DEFAULT),
+                    PASSWORD_DEFAULT
+                ),
                 'user_id' => $this->user('id'),
             ],
-        ], (60 * 60));
+            ], (60 * 60)
+        );
     }
 
     public function performAutologin()
@@ -350,12 +362,14 @@ class Auth
     public function setAutologin()
     {
         $original = $this->getSecurityHash() . $this->user('id') . $this->user('autologin');
-        $this->setSecureCookie(static::COOKIE_AUTOLOGIN, [
+        $this->setSecureCookie(
+            static::COOKIE_AUTOLOGIN, [
             $this->getProviderKey() => [
                 'hash' => password_hash($original, PASSWORD_DEFAULT),
                 'user_id' => $this->user('id'),
             ],
-        ], (24 * 60 * 60 * 365.25));
+            ], (24 * 60 * 60 * 365.25)
+        );
     }
 
     public function authenticate($user)
@@ -434,11 +448,13 @@ class Auth
         /**
          * Cookie should be set for non-api requests.
          */
-        $this->setSecureCookie(static::COOKIE_PROVIDER . '_' . $providerKey, [
+        $this->setSecureCookie(
+            static::COOKIE_PROVIDER . '_' . $providerKey, [
             "user" => $user->id,
             "hash" => $sessionHash,
             "date" => date('Y-m-d H:i:s'),
-        ], (24 * 60 * 60 * 365.25));
+            ], (24 * 60 * 60 * 365.25)
+        );
 
         trigger(Auth::class . '.userLoggedIn', [$user]);
 
@@ -481,7 +497,7 @@ class Auth
     }
 
     /**
-     * @param bool $loggedIn
+     * @param  bool $loggedIn
      * @return $this
      */
     public function setLoggedIn(bool $loggedIn = true)
@@ -492,7 +508,7 @@ class Auth
     }
 
     /**
-     * @param null $user
+     * @param  null $user
      * @return $this
      */
     public function setUser($user = null)
@@ -533,8 +549,10 @@ class Auth
 
     public function getGroupId()
     {
-        $group = $this->getSessionProvider()['user'][config('pckg.auth.providers.' . $this->getProviderKey() .
-                                                            '.userGroup')] ?? null;
+        $group = $this->getSessionProvider()['user'][config(
+            'pckg.auth.providers.' . $this->getProviderKey() .
+            '.userGroup'
+        )] ?? null;
 
         return $group;
     }

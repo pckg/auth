@@ -14,11 +14,13 @@ class LogUserLogin extends AbstractChainOfReponsibility
             return $next();
         }
 
-        Login::create([
+        Login::create(
+            [
             'hash'     => $_SESSION['Auth']['hash'] ?? null,
             'user_id'  => $user->id,
             'datetime' => date('Y-m-d H:i:s'),
-        ]);
+            ]
+        );
 
         return $next();
     }

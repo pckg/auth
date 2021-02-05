@@ -13,15 +13,15 @@ class Facebook extends Auth
     function getLoginAction()
     {
         auth()->useProvider(AuthFactory::getFacebookProvider())
-              ->getProvider()
-              ->redirectToLogin();
+            ->getProvider()
+            ->redirectToLogin();
     }
 
     function getTakeloginAction(Response $response, Router $router)
     {
         $success = auth()->useProvider(AuthFactory::getFacebookProvider())
-                         ->getProvider()
-                         ->handleTakelogin();
+            ->getProvider()
+            ->handleTakelogin();
 
         $response->redirect(
             $success

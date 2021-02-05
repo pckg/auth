@@ -30,12 +30,12 @@ class Auth
     public static function getFacebookInstantArticlesClient()
     {
         $userId = static::getFacebookApi()
-                        ->get('me', $_SESSION['Auth']['Facebook']['fb_access_token'])
-                        ->getDecodedBody()['id'];
+            ->get('me', $_SESSION['Auth']['Facebook']['fb_access_token'])
+            ->getDecodedBody()['id'];
 
         $pages = static::getFacebookApi()
-                       ->get($userId . '/accounts', $_SESSION['Auth']['Facebook']['fb_access_token'])
-                       ->getDecodedBody()['data'];
+            ->get($userId . '/accounts', $_SESSION['Auth']['Facebook']['fb_access_token'])
+            ->getDecodedBody()['data'];
         $pageAccessToken = $pages[2]['access_token'];
 
         return Client::create(

@@ -27,13 +27,17 @@ class ResetPassword extends Bootstrap implements ResolvesOnRequest
         $this->addPassword('password')->setLabel('Password')->addValidator(new ValidPassword())->required();
 
         $this->addPassword('passwordRepeat')
-             ->setLabel('Password')
-             ->addValidator(new ValidPassword())
-             ->addValidator(new Custom(function($value, Custom $validator) {
-                 $validator->setMsg('Passwords don\'t match');
+            ->setLabel('Password')
+            ->addValidator(new ValidPassword())
+            ->addValidator(
+                new Custom(
+                    function ($value, Custom $validator) {
+                        $validator->setMsg('Passwords don\'t match');
 
-                 return post('password') === post('passwordRepeat');
-             }))
+                        return post('password') === post('passwordRepeat');
+                    }
+                )
+            )
              ->required();
 
         $this->addSubmit();

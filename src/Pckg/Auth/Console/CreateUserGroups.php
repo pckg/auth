@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputArgument;
 
 /**
  * Class CreateUserGroups
+ *
  * @package Pckg\Auth\Console
  */
 class CreateUserGroups extends Command
