@@ -29,7 +29,7 @@ class RegisterUser
 
     /**
      * @param Request $request
-     * @param User    $rUser
+     * @param User $rUser
      */
     public function __construct(Request $request, User $rUser)
     {
@@ -42,12 +42,12 @@ class RegisterUser
      */
     public function execute()
     {
-        $rUser->setArray($this->request->post());
+        $this->rUser->setArray($this->request->post());
 
-        $rUser->hashPassword();
+        $this->rUser->hashPassword();
 
-        if ($rUser->save()) {
-            trigger('user.registered', [$rUser]);
+        if ($this->rUser->save()) {
+            trigger('user.registered', [$this->rUser]);
 
             return $this->successful();
         }

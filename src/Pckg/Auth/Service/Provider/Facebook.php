@@ -1,6 +1,6 @@
 <?php namespace Pckg\Auth\Service\Provider;
 
-use Derive\Orders\Entity\Users;
+use Pckg\Auth\Entity\Users;
 use Pckg\Auth\Record\User;
 
 class Facebook extends AbstractProvider

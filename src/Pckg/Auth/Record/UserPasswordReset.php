@@ -3,6 +3,11 @@
 use Pckg\Auth\Entity\UserPasswordResets;
 use Pckg\Database\Record;
 
+/**
+ * Class UserPasswordReset
+ * @package Pckg\Auth\Record
+ * @property string $created_at
+ */
 class UserPasswordReset extends Record
 {
 

@@ -9,6 +9,9 @@ use Pckg\Database\Record;
  *
  * @package Pckg\Auth\Record
  * @property JsonObject $oauth2
+ * @property string $email
+ * @property string $autologin
+ * @property int|null $user_group_id
  */
 class User extends Record
 {
@@ -63,16 +66,16 @@ class User extends Record
     {
         $this->set(
             [
-                'hash'          => sha1(microtime()),
+                'hash' => sha1(microtime()),
                 'user_group_id' => 2,
-                'language_id'   => substr(localeManager()->getCurrent(), 0, 2),
+                'language_id' => substr(localeManager()->getCurrent(), 0, 2),
             ]
         );
 
         if (!$this->autologin) {
             $this->set([
-                'autologin'     => sha1(microtime()),
-                       ]);
+                'autologin' => sha1(microtime()),
+            ]);
         }
 
         return $this;

@@ -5,6 +5,11 @@ namespace Pckg\Auth\Record;
 use Pckg\Auth\Entity\UserGroups;
 use Pckg\Database\Record;
 
+/**
+ * Class UserGroup
+ * @package Pckg\Auth\Record
+ * @property string $mode
+ */
 class UserGroup extends Record
 {
 

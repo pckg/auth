@@ -29,7 +29,7 @@ class BasicAuth extends Provider {
             LoginWithSession::class,
             LoginWithCookie::class,
             LoginWithAutologinGetParameter::class,
-            LoginWithBearerHeader::class,
+            // LoginWithBearerHeader::class,
             LoginWithApiKeyHeader::class,
             LoginWithAllowedIP::class,
             HandleLogoutRequest::class,

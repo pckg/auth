@@ -10,6 +10,8 @@ use Pckg\Framework\Response;
 class HandleLogoutRequest extends AbstractChainOfReponsibility
 {
 
+    protected $response;
+
     protected $request;
 
     protected $auth;

@@ -2,7 +2,6 @@
 
 namespace Pckg\Auth\Event;
 
-use Pckg\Concept\Event\EventHandler;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -10,7 +9,7 @@ use Symfony\Component\EventDispatcher\Event;
  *
  * @package Pckg\User\Event
  */
-class UserRegistered implements EventHandler
+class UserRegistered
 {
 
     /**

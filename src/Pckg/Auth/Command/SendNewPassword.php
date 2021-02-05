@@ -2,10 +2,9 @@
 
 namespace Pckg\Auth\Command;
 
-use Derive\User\Service\Mail\User;
 use Pckg\Concept\Command\Stated;
-use Pckg\Concept\CommandInterface;
 use Pckg\Concept\Reflect;
+use Pckg\Mail\Service\Mail\Adapter\User;
 
 /**
  * Class SendNewPassword

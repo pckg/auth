@@ -36,7 +36,7 @@ class LoginWithAutologinGetParameter
         /**
          * Authenticating user with autologin.
          */
-        (new Users())->where('autologin', $autologin)->oneAndIf(function(User $user) use ($headerName) {
+        (new Users())->where('autologin', $autologin)->oneAndIf(function(User $user) {
                 auth()->autologin($user->id);
             });
 

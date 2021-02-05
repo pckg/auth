@@ -80,7 +80,7 @@ class SendPasswordCode
             'code'       => $code,
         ]);
 
-        return $thi;
+        return $this;
     }
 
 }

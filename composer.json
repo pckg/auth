@@ -11,10 +11,19 @@
   ],
   "require": {
     "pckg/framework": "dev-master",
-    "facebook/graph-sdk": "5.*"
+    "facebook/graph-sdk": "5.*",
+    "ext-json": "*"
   },
   "require-dev": {
-    "pckg-app/frontend-dev": "dev-master"
+    "pckg-app/frontend-dev": "dev-master",
+    "pckg-app/api": "dev-master",
+    "pckg/mail": "dev-master",
+    "pckg/htmlbuilder": "dev-master",
+    "pckg/manager": "dev-master",
+    "pckg/concept": "dev-master",
+    "pckg/migrator": "dev-master",
+    "league/oauth2-client": "^2.6",
+    "facebook/facebook-instant-articles-sdk-php": "dev-master"
   },
   "autoload": {
     "psr-0": {
@@ -25,7 +34,7 @@
     "test": [
       "vendor/bin/phpunit --help --stop-on-defect",
       "vendor/bin/phpcloc cloc src/",
-      "vendor/bin/phpstan analyse src/ --level=1 || true",
+      "vendor/bin/phpstan analyse src/ --level=1",
       "vendor/bin/phpcs -p src/ || true",
       "vendor/bin/codecept run"
     ]
