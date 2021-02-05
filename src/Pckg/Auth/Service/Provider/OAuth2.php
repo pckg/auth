@@ -38,7 +38,7 @@ class OAuth2 extends AbstractProvider
      * Get the state generated for you and store it to the session.
      * Redirect the user to the authorization URL.
      */
-    public function redirectToLogin()
+    public function redirectToLogin($options = [])
     {
         /**
          * Can we check here if user has already authorized scopes?
@@ -46,7 +46,7 @@ class OAuth2 extends AbstractProvider
          * We could add a cookie and display "not you" screen?
          */
         $provider = $this->getOAuth2Provider();
-        $authorizationUrl = $provider->getAuthorizationUrl();
+        $authorizationUrl = $provider->getAuthorizationUrl($options);
         session()->set('oauth2state', $provider->getState());
 
         response()->redirect($authorizationUrl);
@@ -153,7 +153,13 @@ class OAuth2 extends AbstractProvider
          * If we don't have an authorization code then get one
          */
         if (!$code) {
-            $this->redirectToLogin();
+            /**
+             * What if we are already authenticated and have valid token?
+             */
+            $options = [
+                'scope' => ['basic'], // scopes will be joined with a separator
+            ];
+            $this->redirectToLogin($options);
         }
 
         /**

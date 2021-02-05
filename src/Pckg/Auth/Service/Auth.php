@@ -467,10 +467,12 @@ class Auth
         $providerKey = $this->getProviderKey();
         $sessionHash = password_hash($this->getSecurityHash() . session_id(), PASSWORD_DEFAULT);
 
-        $_SESSION['Pckg']['Auth']['Provider'][$providerKey] = [
-            "user" => $user->toArray(),
-            "hash" => $sessionHash,
-            "flags" => [],
+        $_SESSION['Pckg']['Auth']['Provider'] = [
+            $providerKey => [
+                "user" => $user->toArray(),
+                "hash" => $sessionHash,
+                "flags" => [],
+            ]
         ];
 
         $this->loggedIn = true;
@@ -498,17 +500,21 @@ class Auth
         /**
          * Regenerate session and sign it.
          */
-        $regenerated = session_regenerate_id();
-        if ($regenerated) {
-            /**
-             * Sign session and set it active.
-             */
-            $sid = session_id();
-            $_SESSION[FileDriver::PHPSESSID . FileDriver::SIGNATURE] = auth()->hashPassword($sid);
-            unset($_SESSION['deactivated']);
-        } else {
-            error_log('Cannot regenerate session? ' . session_id());
+        try {
+            $regenerated = session_regenerate_id();
+        } catch (\Throwable $e) {
+            error_log('Cannot regenerate session, destroying session ' . session_id());
+            session_start();
+            $_SESSION = [];
+            //throw $e;
         }
+
+        /**
+         * Sign session and set it active.
+         */
+        $sid = session_id();
+        $_SESSION[FileDriver::PHPSESSID . FileDriver::SIGNATURE] = auth()->hashPassword($sid);
+        unset($_SESSION['deactivated']);
     }
 
     /**
@@ -536,11 +542,13 @@ class Auth
          */
         $sessionHash = password_hash($this->getUserSecuritySessionPass($user), PASSWORD_DEFAULT);
 
-        $_SESSION['Pckg']['Auth']['Provider'][$providerKey] = [
-            "user" => $user->toArray(),
-            "hash" => $sessionHash,
-            "date" => date('Y-m-d H:i:s'),
-            "flags" => [],
+        $_SESSION['Pckg']['Auth']['Provider'] = [
+            $providerKey => [
+                "user" => $user->toArray(),
+                "hash" => $sessionHash,
+                "date" => date('Y-m-d H:i:s'),
+                "flags" => [],
+            ]
         ];
 
         /**
@@ -596,6 +604,9 @@ class Auth
             return;
         }
 
+        /**
+         * Authenticate with last authenticated method from session?
+         */
         $this->useProvider(array_keys($_SESSION['Pckg']['Auth']['Provider'] ?? [])[0] ?? 'frontend');
     }
 

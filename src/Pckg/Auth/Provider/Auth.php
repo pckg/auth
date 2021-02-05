@@ -75,11 +75,9 @@ class Auth extends Provider
     public function routes()
     {
         return [
-            'url' => array_merge_array(
-                [
-                    'controller' => AuthController::class,
-                ],
-                [
+            'url' => array_merge_array([
+                'controller' => AuthController::class,
+            ], [
                     '/login' => [
                         'view' => 'login',
                         'name' => 'login',
@@ -88,7 +86,7 @@ class Auth extends Provider
                             'layout:frontend',
                             'seo:title' => 'Login',
                             'vue:route',
-                            'vue:route:template' => config('pckg.auth.component.login', '<pckg-auth-full></pckg-auth-full>'),
+                            'vue:route:template' => config('pckg.auth.component.login', '<pckg-auth-full class="--default"></pckg-auth-full>'),
                             'container' => '--lg',
                         ],
                     ],
