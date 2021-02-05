@@ -10,6 +10,7 @@ use Pckg\Framework\Request\Data\SessionDriver\FileDriver;
 
 /**
  * Class Auth
+ *
  * @package Pckg\Auth\Service
  */
 class Auth
@@ -187,7 +188,7 @@ class Auth
     }
 
     /**
-     * @param null $key
+     * @param  null $key
      * @return array|mixed|null
      */
     public function user($key = null)
@@ -205,8 +206,8 @@ class Auth
     }
 
     /**
-     * @param $hashedPassword
-     * @param $password
+     * @param  $hashedPassword
+     * @param  $password
      * @return bool
      */
     public function hashedPasswordMatches($hashedPassword, $password)
@@ -217,7 +218,7 @@ class Auth
     }
 
     /**
-     * @param $password
+     * @param  $password
      * @return false|string|null
      */
     public function hashPassword($password)
@@ -232,8 +233,8 @@ class Auth
     }
 
     /**
-     * @param int $length
-     * @param string $chars
+     * @param  int    $length
+     * @param  string $chars
      * @return string
      */
     public function createPassword($length = 10, $chars = self::GEN_ALPHANUM)
@@ -248,8 +249,8 @@ class Auth
     }
 
     /**
-     * @param $email
-     * @param $password
+     * @param  $email
+     * @param  $password
      * @return bool
      */
     public function login($email, $password)
@@ -268,7 +269,7 @@ class Auth
     }
 
     /**
-     * @param $id
+     * @param  $id
      * @return bool
      */
     public function autologin($id)
@@ -299,7 +300,7 @@ class Auth
     /**
      * Decode cookie with value, signature and host values.
      *
-     * @param string $name
+     * @param  string $name
      * @return mixed|null
      */
     public function getSecureCookie(string $name)
@@ -376,7 +377,7 @@ class Auth
                 ),
                 'user_id' => $this->user('id'),
             ],
-        ], (60 * 60)
+            ], (60 * 60)
         );
     }
 
@@ -399,7 +400,7 @@ class Auth
     }
 
     /**
-     * @param array $storage
+     * @param  array $storage
      * @return bool
      * @throws \Exception
      */
@@ -449,7 +450,7 @@ class Auth
                 'hash' => password_hash($original, PASSWORD_DEFAULT),
                 'user_id' => $this->user('id'),
             ],
-        ], (24 * 60 * 60 * 365.25)
+            ], (24 * 60 * 60 * 365.25)
         );
     }
 
@@ -474,7 +475,7 @@ class Auth
     }
 
     /**
-     * @param $user
+     * @param  $user
      * @return string
      */
     public function getUserSecuritySessionPass($user)
@@ -506,7 +507,7 @@ class Auth
     }
 
     /**
-     * @param $user
+     * @param  $user
      * @return bool
      */
     public function performLogin($user)
@@ -545,7 +546,7 @@ class Auth
             "user" => $user->id,
             "hash" => $sessionHash,
             "date" => date('Y-m-d H:i:s'),
-        ], (24 * 60 * 60 * 365.25)
+            ], (24 * 60 * 60 * 365.25)
         );
 
         trigger(Auth::class . '.userLoggedIn', [$user]);
@@ -592,7 +593,7 @@ class Auth
     }
 
     /**
-     * @param bool $loggedIn
+     * @param  bool $loggedIn
      * @return $this
      */
     public function setLoggedIn(bool $loggedIn = true)
@@ -603,7 +604,7 @@ class Auth
     }
 
     /**
-     * @param null $user
+     * @param  null $user
      * @return $this
      */
     public function setUser($user = null)
@@ -663,15 +664,15 @@ class Auth
     public function getGroupId()
     {
         $group = $this->getSessionProvider()['user'][config(
-                'pckg.auth.providers.' . $this->getProviderKey() .
+            'pckg.auth.providers.' . $this->getProviderKey() .
                 '.userGroup'
-            )] ?? null;
+        )] ?? null;
 
         return $group;
     }
 
     /**
-     * @param $email
+     * @param  $email
      * @return bool
      */
     public function isEmail($email)
@@ -684,7 +685,7 @@ class Auth
     }
 
     /**
-     * @param null $url
+     * @param  null $url
      * @return string
      */
     public function getNewInternalGetParameter($url = null)
@@ -705,7 +706,7 @@ class Auth
     }
 
     /**
-     * @param string $internal
+     * @param  string $internal
      * @return bool
      */
     public function isValidInternalGetParameter(string $internal)

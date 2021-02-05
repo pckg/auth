@@ -2,6 +2,7 @@
 
 /**
  * Class NonExistingUser
+ *
  * @package Pckg\Auth\Form\Validator
  */
 class NonExistingUser extends ExistingUser
@@ -13,7 +14,7 @@ class NonExistingUser extends ExistingUser
     protected $msg = 'User with email already exists, please login';
 
     /**
-     * @param $value
+     * @param  $value
      * @return bool
      */
     public function validate($value)

@@ -4,6 +4,7 @@ use Pckg\Htmlbuilder\Validator\AbstractValidator;
 
 /**
  * Class ValidPassword
+ *
  * @package Pckg\Auth\Form\Validator
  */
 class ValidPassword extends AbstractValidator
@@ -20,7 +21,7 @@ class ValidPassword extends AbstractValidator
     protected $msg = 'Password should be at least 8 characters long';
 
     /**
-     * @param $value
+     * @param  $value
      * @return bool
      */
     public function validate($value)

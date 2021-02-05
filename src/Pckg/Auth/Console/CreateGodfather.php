@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputArgument;
 
 /**
  * Class CreateGodfather
+ *
  * @package Pckg\Auth\Console
  */
 class CreateGodfather extends Command

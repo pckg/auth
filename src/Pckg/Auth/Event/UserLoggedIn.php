@@ -8,6 +8,7 @@ use Pckg\Concept\Event\AbstractEvent;
 
 /**
  * Class UserLoggedIn
+ *
  * @package Pckg\Auth\Event
  */
 class UserLoggedIn extends AbstractEvent

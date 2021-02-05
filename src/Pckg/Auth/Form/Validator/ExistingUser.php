@@ -5,6 +5,7 @@ use Pckg\Htmlbuilder\Validator\AbstractValidator;
 
 /**
  * Class ExistingUser
+ *
  * @package Pckg\Auth\Form\Validator
  */
 class ExistingUser extends AbstractValidator
@@ -21,7 +22,7 @@ class ExistingUser extends AbstractValidator
     protected $msg = 'User with email doesn\'t exist';
 
     /**
-     * @param $value
+     * @param  $value
      * @return bool
      */
     public function validate($value)

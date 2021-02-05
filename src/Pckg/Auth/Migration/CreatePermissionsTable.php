@@ -4,6 +4,7 @@ use Pckg\Migration\Migration;
 
 /**
  * Class CreatePermissionsTable
+ *
  * @package Pckg\Auth\Migration
  */
 class CreatePermissionsTable extends Migration

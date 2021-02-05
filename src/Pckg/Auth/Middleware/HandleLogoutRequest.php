@@ -9,6 +9,7 @@ use Pckg\Framework\Response;
 
 /**
  * Class HandleLogoutRequest
+ *
  * @package Pckg\Auth\Middleware
  */
 class HandleLogoutRequest extends AbstractChainOfReponsibility
@@ -47,7 +48,7 @@ class HandleLogoutRequest extends AbstractChainOfReponsibility
     }
 
     /**
-     * @param callable $next
+     * @param  callable $next
      * @return mixed
      */
     public function execute(callable $next)

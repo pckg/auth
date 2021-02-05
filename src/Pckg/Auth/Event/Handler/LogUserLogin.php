@@ -7,14 +7,15 @@ use Pckg\Concept\AbstractChainOfReponsibility;
 
 /**
  * Class LogUserLogin
+ *
  * @package Pckg\Auth\Event\Handler
  */
 class LogUserLogin extends AbstractChainOfReponsibility
 {
 
     /**
-     * @param User $user
-     * @param callable $next
+     * @param  User     $user
+     * @param  callable $next
      * @return mixed
      */
     public function handle(User $user, callable $next)

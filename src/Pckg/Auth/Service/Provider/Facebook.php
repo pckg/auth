@@ -5,6 +5,7 @@ use Pckg\Auth\Record\User;
 
 /**
  * Class Facebook
+ *
  * @package Pckg\Auth\Service\Provider
  */
 class Facebook extends AbstractProvider
@@ -84,7 +85,7 @@ class Facebook extends AbstractProvider
     }
 
     /**
-     * @param $accessToken
+     * @param  $accessToken
      * @throws \Exception
      */
     private function checkAccessToken($accessToken)
@@ -103,7 +104,7 @@ class Facebook extends AbstractProvider
     }
 
     /**
-     * @param $accessToken
+     * @param  $accessToken
      * @return \Facebook\Authentication\AccessToken
      * @throws \Facebook\Exceptions\FacebookSDKException
      */

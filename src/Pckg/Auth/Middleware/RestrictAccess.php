@@ -6,13 +6,14 @@ use Pckg\Concept\Reflect;
 
 /**
  * Class RestrictAccess
+ *
  * @package Pckg\Auth\Middleware
  */
 class RestrictAccess extends AbstractChainOfReponsibility
 {
 
     /**
-     * @param callable $next
+     * @param  callable $next
      * @return mixed
      * @throws Exception
      */

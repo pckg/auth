@@ -5,6 +5,7 @@ use Pckg\Framework\Provider;
 
 /**
  * Class FacebookAuth
+ *
  * @package Pckg\Auth\Provider
  */
 class FacebookAuth extends Provider

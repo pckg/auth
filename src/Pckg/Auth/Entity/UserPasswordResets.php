@@ -5,6 +5,7 @@ use Pckg\Database\Entity;
 
 /**
  * Class UserPasswordResets
+ *
  * @package Pckg\Auth\Entity
  */
 class UserPasswordResets extends Entity

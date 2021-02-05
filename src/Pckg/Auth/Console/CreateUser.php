@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputArgument;
 
 /**
  * Class CreateUser
+ *
  * @package Pckg\Auth\Console
  */
 class CreateUser extends Command

@@ -5,13 +5,14 @@ use Pckg\Auth\Record\User;
 
 /**
  * Class LoginWithAutologinGetParameter
+ *
  * @package Pckg\Auth\Middleware
  */
 class LoginWithAutologinGetParameter
 {
 
     /**
-     * @param callable $next
+     * @param  callable $next
      * @return mixed
      */
     public function execute(callable $next)

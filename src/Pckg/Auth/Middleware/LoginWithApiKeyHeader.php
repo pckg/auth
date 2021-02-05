@@ -7,13 +7,14 @@ use Pckg\Mailo\Record\App;
 
 /**
  * Class LoginWithApiKeyHeader
+ *
  * @package Pckg\Auth\Middleware
  */
 class LoginWithApiKeyHeader
 {
 
     /**
-     * @param callable $next
+     * @param  callable $next
      * @return mixed
      */
     public function execute(callable $next)

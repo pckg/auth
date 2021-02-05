@@ -22,8 +22,8 @@ class Users extends Entity
     protected $record = User::class;
 
     /**
-     * @param $email
-     * @param $password
+     * @param  $email
+     * @param  $password
      * @return mixed|\Pckg\Database\Record|null
      */
     public function getUserByEmailAndPassword($email, $password)

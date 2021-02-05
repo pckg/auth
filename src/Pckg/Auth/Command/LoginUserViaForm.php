@@ -23,7 +23,7 @@ class LoginUserViaForm extends LoginUser
 
     /**
      * @param Request $request
-     * @param Auth $auth
+     * @param Auth    $auth
      */
     public function __construct(Login $loginForm)
     {

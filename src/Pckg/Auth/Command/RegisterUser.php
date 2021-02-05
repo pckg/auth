@@ -29,7 +29,7 @@ class RegisterUser
 
     /**
      * @param Request $request
-     * @param User $rUser
+     * @param User    $rUser
      */
     public function __construct(Request $request, User $rUser)
     {

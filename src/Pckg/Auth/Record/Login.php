@@ -5,6 +5,7 @@ use Pckg\Database\Record;
 
 /**
  * Class Login
+ *
  * @package Pckg\Auth\Record
  */
 class Login extends Record

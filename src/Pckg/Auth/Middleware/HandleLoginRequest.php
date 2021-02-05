@@ -7,13 +7,14 @@ use Pckg\Framework\Response;
 
 /**
  * Class HandleLoginRequest
+ *
  * @package Pckg\Auth\Middleware
  */
 class HandleLoginRequest
 {
 
     /**
-     * @param callable $next
+     * @param  callable $next
      * @return mixed
      * @throws \Exception
      */

@@ -5,6 +5,7 @@ use Pckg\Database\Entity;
 
 /**
  * Class Logins
+ *
  * @package Pckg\Auth\Entity
  */
 class Logins extends Entity

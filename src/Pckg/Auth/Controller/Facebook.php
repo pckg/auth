@@ -9,6 +9,7 @@ use Pckg\Framework\Router;
 
 /**
  * Class Facebook
+ *
  * @package Pckg\Auth\Controller
  */
 class Facebook extends Auth
@@ -22,8 +23,8 @@ class Facebook extends Auth
     }
 
     /**
-     * @param Response $response
-     * @param Router $router
+     * @param  Response $response
+     * @param  Router   $router
      * @throws \Exception
      */
     function getTakeloginAction(Response $response, Router $router)

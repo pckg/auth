@@ -6,6 +6,7 @@ use Pckg\Database\Entity;
 
 /**
  * Class StaticGroups
+ *
  * @package Pckg\Auth\Entity
  */
 class StaticGroups extends Entity

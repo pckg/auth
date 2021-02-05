@@ -4,6 +4,7 @@ use Pckg\Auth\Service\ProviderInterface;
 
 /**
  * Class AbstractProvider
+ *
  * @package Pckg\Auth\Service\Provider
  */
 abstract class AbstractProvider implements ProviderInterface
@@ -65,8 +66,8 @@ abstract class AbstractProvider implements ProviderInterface
     }
 
     /**
-     * @param $email
-     * @param $password
+     * @param  $email
+     * @param  $password
      * @return mixed
      */
     public function getUserByEmailAndPassword($email, $password)
@@ -75,7 +76,7 @@ abstract class AbstractProvider implements ProviderInterface
     }
 
     /**
-     * @param $email
+     * @param  $email
      * @return mixed
      */
     public function getUserByEmail($email)
@@ -84,7 +85,7 @@ abstract class AbstractProvider implements ProviderInterface
     }
 
     /**
-     * @param $id
+     * @param  $id
      * @return mixed
      */
     public function getUserById($id)

@@ -2,13 +2,14 @@
 
 /**
  * Class User
+ *
  * @package Pckg\Auth\Factory
  */
 class User
 {
 
     /**
-     * @param array $data
+     * @param  array $data
      * @return \Pckg\Auth\Record\User|\Pckg\Database\Record
      */
     public static function create(array $data = [])

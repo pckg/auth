@@ -18,6 +18,7 @@ use Pckg\Framework\Request\Session\SessionUser;
 
 /**
  * Class Auth
+ *
  * @package Pckg\Auth\Provider
  */
 class Auth extends Provider

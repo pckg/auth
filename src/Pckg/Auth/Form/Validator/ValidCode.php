@@ -5,6 +5,7 @@ use Pckg\Htmlbuilder\Validator\AbstractValidator;
 
 /**
  * Class ValidCode
+ *
  * @package Pckg\Auth\Form\Validator
  */
 class ValidCode extends AbstractValidator
@@ -21,7 +22,7 @@ class ValidCode extends AbstractValidator
     protected $msg = 'Code is not valid or is expired';
 
     /**
-     * @param $value
+     * @param  $value
      * @return bool
      */
     public function validate($value)

@@ -23,9 +23,9 @@ class LoginUser
     }
 
     /**
-     * @param $email
-     * @param $password
-     * @param false $autologin
+     * @param  $email
+     * @param  $password
+     * @param  false $autologin
      * @return mixed|null
      * @throws \Exception
      */

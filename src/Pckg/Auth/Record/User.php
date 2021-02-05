@@ -114,7 +114,7 @@ class User extends Record
     }
 
     /**
-     * @param false $dns
+     * @param  false $dns
      * @return bool
      */
     public function getHasValidEmailAttribute($dns = false)

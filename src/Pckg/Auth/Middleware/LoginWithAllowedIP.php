@@ -7,13 +7,14 @@ use Pckg\Mailo\Record\App;
 
 /**
  * Class LoginWithAllowedIP
+ *
  * @package Pckg\Auth\Middleware
  */
 class LoginWithAllowedIP
 {
 
     /**
-     * @param callable $next
+     * @param  callable $next
      * @return mixed
      */
     public function execute(callable $next)

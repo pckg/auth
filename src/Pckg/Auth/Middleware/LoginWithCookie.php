@@ -8,13 +8,14 @@ use Pckg\Framework\Response;
 
 /**
  * Class LoginWithCookie
+ *
  * @package Pckg\Auth\Middleware
  */
 class LoginWithCookie extends AbstractChainOfReponsibility
 {
 
     /**
-     * @param callable $next
+     * @param  callable $next
      * @return mixed
      */
     public function execute(callable $next)

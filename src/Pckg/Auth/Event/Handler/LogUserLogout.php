@@ -7,14 +7,15 @@ use Pckg\Concept\AbstractObject;
 
 /**
  * Class LogUserLogout
+ *
  * @package Pckg\Auth\Event\Handler
  */
 class LogUserLogout extends AbstractChainOfReponsibility
 {
 
     /**
-     * @param callable $next
-     * @param AbstractObject $handler
+     * @param  callable       $next
+     * @param  AbstractObject $handler
      * @return mixed
      */
     public function handle(callable $next, AbstractObject $handler)

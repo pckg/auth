@@ -7,6 +7,7 @@ use Pckg\Auth\Service\Provider\Facebook as FacebookProvider;
 
 /**
  * Class Auth
+ *
  * @package Pckg\Auth\Factory
  */
 class Auth

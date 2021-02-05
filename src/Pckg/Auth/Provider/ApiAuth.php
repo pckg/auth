@@ -5,6 +5,7 @@ use Pckg\Framework\Provider;
 
 /**
  * Class ApiAuth
+ *
  * @package Pckg\Auth\Provider
  */
 class ApiAuth extends Provider

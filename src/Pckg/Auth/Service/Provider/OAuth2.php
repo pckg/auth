@@ -8,6 +8,7 @@ use Pckg\Auth\Service\Auth;
 
 /**
  * Class OAuth2
+ *
  * @package Pckg\Auth\Service\Provider
  */
 class OAuth2 extends AbstractProvider
@@ -111,7 +112,7 @@ class OAuth2 extends AbstractProvider
     }
 
     /**
-     * @param $oauth2token
+     * @param  $oauth2token
      * @return mixed
      * @throws \GuzzleHttp\Exception\GuzzleException
      */

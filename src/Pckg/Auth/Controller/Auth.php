@@ -34,7 +34,7 @@ class Auth extends Controller
 {
 
     /**
-     * @param Meta $meta
+     * @param  Meta $meta
      * @return array
      */
     public function getUserAction(Meta $meta)
@@ -77,7 +77,7 @@ class Auth extends Controller
     }
 
     /**
-     * @param Login $loginForm
+     * @param Login            $loginForm
      * @param LoginUserViaForm $loginUserCommand
      */
     function postLoginAction(Login $loginForm, LoginUserViaForm $loginUserCommand)
@@ -115,7 +115,7 @@ class Auth extends Controller
 
     /**
      * @param LogoutUser $logoutUserCommand
-     * @param Response $response
+     * @param Response   $response
      */
     function getLogoutAction(LogoutUser $logoutUserCommand, Response $response)
     {
@@ -186,7 +186,7 @@ class Auth extends Controller
     }
 
     /**
-     * @param $activation
+     * @param  $activation
      * @return Response
      */
     function getActivateAction($activation)
@@ -199,7 +199,7 @@ class Auth extends Controller
     }
 
     /**
-     * @param ForgotPassword $forgotPasswordForm
+     * @param  ForgotPassword $forgotPasswordForm
      * @return \Pckg\Framework\View\Twig
      */
     function getForgotPasswordAction(ForgotPassword $forgotPasswordForm)
@@ -256,7 +256,7 @@ class Auth extends Controller
     }
 
     /**
-     * @param PasswordCode $passwordCodeForm
+     * @param  PasswordCode $passwordCodeForm
      * @return bool[]
      */
     public function postPasswordCodeAction(PasswordCode $passwordCodeForm)
@@ -267,7 +267,7 @@ class Auth extends Controller
     }
 
     /**
-     * @param ResetPassword $resetPasswordForm
+     * @param  ResetPassword $resetPasswordForm
      * @return bool[]
      * @throws \Exception
      */
@@ -319,8 +319,8 @@ class Auth extends Controller
     }
 
     /**
-     * @param string $provider
-     * @param AuthService $auth
+     * @param  string      $provider
+     * @param  AuthService $auth
      * @throws \Exception
      */
     public function getOauthAction(string $provider, \Pckg\Auth\Service\Auth $auth)

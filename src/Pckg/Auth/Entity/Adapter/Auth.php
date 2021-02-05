@@ -7,6 +7,7 @@ use Pckg\Database\Entity\Extension\Adapter\AuthInterface;
 
 /**
  * Class Auth
+ *
  * @package Pckg\Auth\Entity\Adapter
  */
 class Auth implements AuthInterface

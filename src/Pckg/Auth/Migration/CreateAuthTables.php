@@ -4,6 +4,7 @@ use Pckg\Migration\Migration;
 
 /**
  * Class CreateAuthTables
+ *
  * @package Pckg\Auth\Migration
  */
 class CreateAuthTables extends Migration
