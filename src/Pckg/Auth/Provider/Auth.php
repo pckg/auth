@@ -129,8 +129,7 @@ class Auth extends Provider
                         'view' => 'oauth',
                         'name' => 'oauth.provider',
                     ],
-                ]
-            )
+                ])
         ];
     }
 }
