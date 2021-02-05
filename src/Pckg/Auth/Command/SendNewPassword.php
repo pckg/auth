@@ -51,7 +51,7 @@ class SendNewPassword
                 'password-update',
                 new User($user),
                 [
-                    'data'  => [
+                    'data' => [
                         'password' => $password,
                     ],
                     'fetch' => [

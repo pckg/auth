@@ -38,7 +38,7 @@ class ResetPassword extends Bootstrap implements ResolvesOnRequest
                     }
                 )
             )
-             ->required();
+            ->required();
 
         $this->addSubmit();
 

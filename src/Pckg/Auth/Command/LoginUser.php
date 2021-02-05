@@ -22,6 +22,13 @@ class LoginUser
     {
     }
 
+    /**
+     * @param $email
+     * @param $password
+     * @param false $autologin
+     * @return mixed|null
+     * @throws \Exception
+     */
     public function executeManual($email, $password, $autologin = false)
     {
         foreach (config('pckg.auth.providers') as $providerKey => $providerConfig) {
@@ -42,7 +49,7 @@ class LoginUser
             if (!$user->password) {
                 $this->error(
                     [
-                    'type' => 'activateAccount',
+                        'type' => 'activateAccount',
                     ]
                 );
                 continue;

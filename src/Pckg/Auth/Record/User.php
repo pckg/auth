@@ -16,38 +16,62 @@ use Pckg\Database\Record;
 class User extends Record
 {
 
+    /**
+     * @var string
+     */
     protected $entity = Users::class;
 
+    /**
+     * @var string[]
+     */
     protected $protect = [
         'password',
         'autologin',
         'oauth2',
     ];
 
+    /**
+     * @var string[]
+     */
     protected $encapsulate = [
         'oauth2' => JsonObject::class,
     ];
 
+    /**
+     * @return bool
+     */
     public function isSuperadmin()
     {
         return in_array($this->user_group_id, [1]);
     }
 
+    /**
+     * @return bool
+     */
     public function isAdmin()
     {
         return in_array($this->user_group_id, [1, 3]);
     }
 
+    /**
+     * @return bool
+     */
     public function isCheckin()
     {
         return in_array($this->user_group_id, [5]);
     }
 
+    /**
+     * @return string
+     */
     public function getAutologinUrlAttribute()
     {
         return config('url') . '/?' . $this->getAutologinParameterAttribute();
     }
 
+    /**
+     * @return string
+     */
     public function getAutologinParameterAttribute()
     {
         if (!$this->autologin) {
@@ -57,11 +81,17 @@ class User extends Record
         return config('pckg.auth.getParameter', 'autologin') . '=' . $this->autologin;
     }
 
+    /**
+     * @return string
+     */
     public function getDashboardUrl()
     {
         return '/';
     }
 
+    /**
+     * @return $this
+     */
     public function setDefaults()
     {
         $this->set(
@@ -75,7 +105,7 @@ class User extends Record
         if (!$this->autologin) {
             $this->set(
                 [
-                'autologin' => sha1(microtime()),
+                    'autologin' => sha1(microtime()),
                 ]
             );
         }
@@ -83,6 +113,10 @@ class User extends Record
         return $this;
     }
 
+    /**
+     * @param false $dns
+     * @return bool
+     */
     public function getHasValidEmailAttribute($dns = false)
     {
         return isValidEmail($this->email);

@@ -3,13 +3,27 @@
 use Pckg\Auth\Entity\UserPasswordResets;
 use Pckg\Htmlbuilder\Validator\AbstractValidator;
 
+/**
+ * Class ValidCode
+ * @package Pckg\Auth\Form\Validator
+ */
 class ValidCode extends AbstractValidator
 {
 
+    /**
+     * @var bool
+     */
     protected $recursive = false;
 
+    /**
+     * @var string
+     */
     protected $msg = 'Code is not valid or is expired';
 
+    /**
+     * @param $value
+     * @return bool
+     */
     public function validate($value)
     {
         $code = (new UserPasswordResets())->joinUser()

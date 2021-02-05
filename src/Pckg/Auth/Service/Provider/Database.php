@@ -2,6 +2,10 @@
 
 use Pckg\Auth\Service\Auth;
 
+/**
+ * Class Database
+ * @package Pckg\Auth\Service\Provider
+ */
 class Database extends AbstractProvider
 {
 

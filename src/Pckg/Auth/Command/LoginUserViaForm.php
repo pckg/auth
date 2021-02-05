@@ -16,11 +16,14 @@ use Pckg\Framework\Request;
 class LoginUserViaForm extends LoginUser
 {
 
+    /**
+     * @var Login
+     */
     protected $loginForm;
 
     /**
      * @param Request $request
-     * @param Auth    $auth
+     * @param Auth $auth
      */
     public function __construct(Login $loginForm)
     {

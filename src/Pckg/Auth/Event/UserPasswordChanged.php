@@ -4,6 +4,10 @@ namespace Pckg\Auth\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 
+/**
+ * Class UserPasswordChanged
+ * @package Pckg\Auth\Event
+ */
 class UserPasswordChanged
 {
 

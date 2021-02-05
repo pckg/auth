@@ -21,6 +21,11 @@ class Users extends Entity
      */
     protected $record = User::class;
 
+    /**
+     * @param $email
+     * @param $password
+     * @return mixed|\Pckg\Database\Record|null
+     */
     public function getUserByEmailAndPassword($email, $password)
     {
         return $this->where('email', $email)
@@ -28,6 +33,9 @@ class Users extends Entity
             ->one();
     }
 
+    /**
+     * @return \Pckg\Database\Relation\HasMany
+     */
     public function logins()
     {
         return $this->hasMany(Logins::class)

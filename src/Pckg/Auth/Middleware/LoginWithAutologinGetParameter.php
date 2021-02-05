@@ -3,9 +3,17 @@
 use Pckg\Auth\Entity\Users;
 use Pckg\Auth\Record\User;
 
+/**
+ * Class LoginWithAutologinGetParameter
+ * @package Pckg\Auth\Middleware
+ */
 class LoginWithAutologinGetParameter
 {
 
+    /**
+     * @param callable $next
+     * @return mixed
+     */
     public function execute(callable $next)
     {
         /**
@@ -50,6 +58,9 @@ class LoginWithAutologinGetParameter
         return $next();
     }
 
+    /**
+     * @param $headerName
+     */
     protected function redirectWithoutParam($headerName)
     {
         $get = get()->all();

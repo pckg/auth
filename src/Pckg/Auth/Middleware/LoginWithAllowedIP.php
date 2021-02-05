@@ -5,9 +5,17 @@ use Pckg\Api\Entity\AppKeys;
 use Pckg\Auth\Service\Auth;
 use Pckg\Mailo\Record\App;
 
+/**
+ * Class LoginWithAllowedIP
+ * @package Pckg\Auth\Middleware
+ */
 class LoginWithAllowedIP
 {
 
+    /**
+     * @param callable $next
+     * @return mixed
+     */
     public function execute(callable $next)
     {
         /**

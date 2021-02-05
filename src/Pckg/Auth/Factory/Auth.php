@@ -5,6 +5,10 @@ use Facebook\InstantArticles\Client\Client;
 use Facebook\InstantArticles\Client\Helper;
 use Pckg\Auth\Service\Provider\Facebook as FacebookProvider;
 
+/**
+ * Class Auth
+ * @package Pckg\Auth\Factory
+ */
 class Auth
 {
 
@@ -46,6 +50,10 @@ class Auth
         );
     }
 
+    /**
+     * @return Helper
+     * @throws \Facebook\Exceptions\FacebookSDKException
+     */
     public static function getFacebookInstantArticlesHelper()
     {
         return Helper::create(

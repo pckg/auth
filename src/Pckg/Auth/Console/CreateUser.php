@@ -7,6 +7,10 @@ use Pckg\Auth\Record\UserGroup;
 use Pckg\Framework\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 
+/**
+ * Class CreateUser
+ * @package Pckg\Auth\Console
+ */
 class CreateUser extends Command
 {
 
@@ -55,9 +59,9 @@ class CreateUser extends Command
 
         $user = (new User(
             [
-            'email' => $email,
-            'password' => $password,
-            'autologin' => sha1(sha1($email) . sha1(config('identifier', null))),
+                'email' => $email,
+                'password' => $password,
+                'autologin' => sha1(sha1($email) . sha1(config('identifier', null))),
             ]
         ))->setDefaults()->setAndSave(['user_group_id' => 2]);
 

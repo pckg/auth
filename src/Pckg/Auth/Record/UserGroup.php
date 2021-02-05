@@ -14,17 +14,32 @@ use Pckg\Database\Record;
 class UserGroup extends Record
 {
 
+    /**
+     * @var string
+     */
     protected $entity = UserGroups::class;
 
+    /**
+     *
+     */
     const MODE_SUPER = 'SUPER';
 
+    /**
+     *
+     */
     const MODE_GUEST = 'GUEST';
 
+    /**
+     * @return bool
+     */
     public function isSuper()
     {
         return $this->mode == static::MODE_SUPER;
     }
 
+    /**
+     * @return bool
+     */
     public function isGuest()
     {
         return $this->mode == static::MODE_GUEST;

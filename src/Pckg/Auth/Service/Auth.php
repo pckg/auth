@@ -8,17 +8,36 @@ use Pckg\Auth\Record\User;
 use Pckg\Concept\Reflect;
 use Pckg\Framework\Request\Data\SessionDriver\FileDriver;
 
+/**
+ * Class Auth
+ * @package Pckg\Auth\Service
+ */
 class Auth
 {
 
+    /**
+     * @var
+     */
     public $users;
 
+    /**
+     * @var
+     */
     public $statuses;
 
+    /**
+     * @var
+     */
     protected $provider;
 
+    /**
+     * @var array
+     */
     protected $providers = [];
 
+    /**
+     * @var bool
+     */
     protected $loggedIn = false;
 
     /**
@@ -26,16 +45,34 @@ class Auth
      */
     protected $user;
 
+    /**
+     *
+     */
     const COOKIE_AUTOLOGIN = 'pckgauthv2auto';
 
+    /**
+     *
+     */
     const COOKIE_PARENT = 'pckgauthv2parent';
 
+    /**
+     *
+     */
     const COOKIE_PROVIDER = 'pckgauthv2pro';
 
+    /**
+     *
+     */
     const GEN_ALPHA = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
+    /**
+     *
+     */
     const GEN_ALPHANUM = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
+    /**
+     *
+     */
     const GEN_NUM = '0123456789';
 
     /**
@@ -63,7 +100,7 @@ class Auth
         if (!$config) {
             throw new \Exception('Empty provider config (' . $provider . ')');
         }
-        
+
         $this->providers[$provider] = Reflect::create($config['type'], [$this]);
         $this->providers[$provider]->setIdentifier($provider);
         $this->providers[$provider]->applyConfig($config);
@@ -82,6 +119,9 @@ class Auth
         return $this->provider;
     }
 
+    /**
+     * @return int|string|null
+     */
     public function getProviderKey()
     {
         foreach ($this->providers as $key => $provider) {
@@ -101,12 +141,15 @@ class Auth
     public function getUser()
     {
         //if ($this->user) {
-            return $this->user;
+        return $this->user;
         //}
 
         return $this->user = $this->getProvider()->getUserById($this->user('id'));
     }
 
+    /**
+     * @return array
+     */
     public function getUserDataArray()
     {
         $user = $this->getUser();
@@ -125,7 +168,7 @@ class Auth
          * We want to enrich our user with some custom values.
          */
         trigger(
-            Auth::class .'.getUserDataArray', ['user' => $user, 'data' => $data, 'setter' => function ($newData) use (&$data) {
+            Auth::class . '.getUserDataArray', ['user' => $user, 'data' => $data, 'setter' => function ($newData) use (&$data) {
                 foreach ($newData as $key => $val) {
                     $data[$key] = $val;
                 }
@@ -135,11 +178,18 @@ class Auth
         return $data;
     }
 
+    /**
+     * @return bool
+     */
     public function is()
     {
         return !!$this->getUser();
     }
 
+    /**
+     * @param null $key
+     * @return array|mixed|null
+     */
     public function user($key = null)
     {
         return $this->getUser()->{$key} ?? null;
@@ -154,6 +204,11 @@ class Auth
         return array_key_exists($key, $sessionUser) ? $sessionUser[$key] : null;
     }
 
+    /**
+     * @param $hashedPassword
+     * @param $password
+     * @return bool
+     */
     public function hashedPasswordMatches($hashedPassword, $password)
     {
         $hash = config('pckg.auth.providers.' . $this->getProviderKey() . '.hash');
@@ -161,6 +216,10 @@ class Auth
         return password_verify($password, $hashedPassword) || sha1($password . $hash) === $hashedPassword;
     }
 
+    /**
+     * @param $password
+     * @return false|string|null
+     */
     public function hashPassword($password)
     {
         $version = config('pckg.auth.providers.' . $this->getProviderKey() . '.version');
@@ -172,6 +231,11 @@ class Auth
         return password_hash($password, PASSWORD_DEFAULT);
     }
 
+    /**
+     * @param int $length
+     * @param string $chars
+     * @return string
+     */
     public function createPassword($length = 10, $chars = self::GEN_ALPHANUM)
     {
         $characters = str_split($chars, 1);
@@ -183,6 +247,11 @@ class Auth
         return $password;
     }
 
+    /**
+     * @param $email
+     * @param $password
+     * @return bool
+     */
     public function login($email, $password)
     {
         $rUser = $this->getProvider()->getUserByEmail($email);
@@ -198,6 +267,10 @@ class Auth
         return false;
     }
 
+    /**
+     * @param $id
+     * @return bool
+     */
     public function autologin($id)
     {
         $rUser = $this->getProvider()->getUserById($id);
@@ -209,6 +282,9 @@ class Auth
         return false;
     }
 
+    /**
+     * @return array|callable|mixed|\Pckg\Framework\Config|null
+     */
     public function getSecurityHash()
     {
         $hash = config('security.hash', null);
@@ -223,7 +299,7 @@ class Auth
     /**
      * Decode cookie with value, signature and host values.
      *
-     * @param  string $name
+     * @param string $name
      * @return mixed|null
      */
     public function getSecureCookie(string $name)
@@ -277,9 +353,9 @@ class Auth
         $value = base64_encode(
             json_encode(
                 [
-                'value' => $encoded,
-                'signature' => $signature,
-                'host' => $host,
+                    'value' => $encoded,
+                    'signature' => $signature,
+                    'host' => $host,
                 ]
             )
         );
@@ -292,7 +368,7 @@ class Auth
         $this->setSecureCookie(
             static::COOKIE_PARENT, [
             $this->getProviderKey() => [
-                'hash'    => password_hash(
+                'hash' => password_hash(
                     $this->getSecurityHash() .
                     $this->user('id') .
                     $this->user('autologin'),
@@ -300,7 +376,7 @@ class Auth
                 ),
                 'user_id' => $this->user('id'),
             ],
-            ], (60 * 60)
+        ], (60 * 60)
         );
     }
 
@@ -322,6 +398,11 @@ class Auth
         $this->performLoginFromStorage($cookie);
     }
 
+    /**
+     * @param array $storage
+     * @return bool
+     * @throws \Exception
+     */
     protected function performLoginFromStorage(array $storage)
     {
         foreach ($storage as $provider => $data) {
@@ -368,18 +449,21 @@ class Auth
                 'hash' => password_hash($original, PASSWORD_DEFAULT),
                 'user_id' => $this->user('id'),
             ],
-            ], (24 * 60 * 60 * 365.25)
+        ], (24 * 60 * 60 * 365.25)
         );
     }
 
+    /**
+     * @param $user
+     */
     public function authenticate($user)
     {
         $providerKey = $this->getProviderKey();
         $sessionHash = password_hash($this->getSecurityHash() . session_id(), PASSWORD_DEFAULT);
 
         $_SESSION['Pckg']['Auth']['Provider'][$providerKey] = [
-            "user"  => $user->toArray(),
-            "hash"  => $sessionHash,
+            "user" => $user->toArray(),
+            "hash" => $sessionHash,
             "flags" => [],
         ];
 
@@ -389,6 +473,10 @@ class Auth
         trigger(Auth::class . '.userLoggedIn', [$user]);
     }
 
+    /**
+     * @param $user
+     * @return string
+     */
     public function getUserSecuritySessionPass($user)
     {
         return $this->getSecurityHash() . '_' . $user->id . '_' . session_id();
@@ -417,6 +505,10 @@ class Auth
         }
     }
 
+    /**
+     * @param $user
+     * @return bool
+     */
     public function performLogin($user)
     {
         $providerKey = $this->getProviderKey();
@@ -439,8 +531,8 @@ class Auth
         $sessionHash = password_hash($this->getUserSecuritySessionPass($user), PASSWORD_DEFAULT);
 
         $_SESSION['Pckg']['Auth']['Provider'][$providerKey] = [
-            "user"  => $user->toArray(),
-            "hash"  => $sessionHash,
+            "user" => $user->toArray(),
+            "hash" => $sessionHash,
             "date" => date('Y-m-d H:i:s'),
             "flags" => [],
         ];
@@ -453,7 +545,7 @@ class Auth
             "user" => $user->id,
             "hash" => $sessionHash,
             "date" => date('Y-m-d H:i:s'),
-            ], (24 * 60 * 60 * 365.25)
+        ], (24 * 60 * 60 * 365.25)
         );
 
         trigger(Auth::class . '.userLoggedIn', [$user]);
@@ -482,6 +574,9 @@ class Auth
         $this->user = null;
     }
 
+    /**
+     * @return array|mixed
+     */
     public function getSessionProvider()
     {
         return $_SESSION['Pckg']['Auth']['Provider'][$this->getProviderKey()] ?? [];
@@ -492,12 +587,12 @@ class Auth
         if ($this->provider) {
             return;
         }
-        
+
         $this->useProvider(array_keys($_SESSION['Pckg']['Auth']['Provider'] ?? [])[0] ?? 'frontend');
     }
 
     /**
-     * @param  bool $loggedIn
+     * @param bool $loggedIn
      * @return $this
      */
     public function setLoggedIn(bool $loggedIn = true)
@@ -508,7 +603,7 @@ class Auth
     }
 
     /**
-     * @param  null $user
+     * @param null $user
      * @return $this
      */
     public function setUser($user = null)
@@ -518,16 +613,25 @@ class Auth
         return $this;
     }
 
+    /**
+     * @return bool
+     */
     public function isLoggedIn()
     {
         return $this->loggedIn;
     }
 
+    /**
+     * @return bool
+     */
     public function isGuest()
     {
         return !$this->isLoggedIn();
     }
 
+    /**
+     * @return bool
+     */
     public function isSuperadmin()
     {
         $is = $this->isLoggedIn() && method_exists($this->getUser(), 'isSuperadmin') && $this->getUser()->isSuperadmin();
@@ -535,6 +639,9 @@ class Auth
         return $is;
     }
 
+    /**
+     * @return bool
+     */
     public function isAdmin()
     {
         $is = $this->isLoggedIn() && method_exists($this->getUser(), 'isAdmin') && $this->getUser()->isAdmin();
@@ -542,21 +649,31 @@ class Auth
         return $is;
     }
 
+    /**
+     * @return bool
+     */
     public function isCheckin()
     {
         return $this->isLoggedIn() && method_exists($this->getUser(), 'isCheckin') && $this->getUser()->isCheckin();
     }
 
+    /**
+     * @return mixed|null
+     */
     public function getGroupId()
     {
         $group = $this->getSessionProvider()['user'][config(
-            'pckg.auth.providers.' . $this->getProviderKey() .
-            '.userGroup'
-        )] ?? null;
+                'pckg.auth.providers.' . $this->getProviderKey() .
+                '.userGroup'
+            )] ?? null;
 
         return $group;
     }
 
+    /**
+     * @param $email
+     * @return bool
+     */
     public function isEmail($email)
     {
         if (!is_array($email)) {
@@ -566,6 +683,10 @@ class Auth
         return in_array($this->user('email'), $email);
     }
 
+    /**
+     * @param null $url
+     * @return string
+     */
     public function getNewInternalGetParameter($url = null)
     {
         $data = [
@@ -583,6 +704,10 @@ class Auth
         return base64_encode(json_encode($data));
     }
 
+    /**
+     * @param string $internal
+     * @return bool
+     */
     public function isValidInternalGetParameter(string $internal)
     {
         try {

@@ -7,6 +7,10 @@ use Pckg\Auth\Record\UserGroup;
 use Pckg\Framework\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 
+/**
+ * Class CreateGodfather
+ * @package Pckg\Auth\Console
+ */
 class CreateGodfather extends Command
 {
 
@@ -14,13 +18,13 @@ class CreateGodfather extends Command
     {
         $this->setName('auth:create-godfather')->setDescription('Create godfather user')->addArguments(
             [
-                                                                                                           'email'    => 'Godfather email',
-                                                                                                       ],
+                'email' => 'Godfather email',
+            ],
             InputArgument::REQUIRED
         )->addArguments(
             [
-                                                                                                        'password' => 'Hashed godfather password',
-                                                                                                           ], InputArgument::OPTIONAL
+                'password' => 'Hashed godfather password',
+            ], InputArgument::OPTIONAL
         );
     }
 
@@ -60,9 +64,9 @@ class CreateGodfather extends Command
 
         $user = (new User(
             [
-                              'email'     => $this->argument('email'),
-                              'password'  => $password,
-                              'autologin' => sha1(sha1($this->argument('email')) . sha1(config('identifier', null))),
+                'email' => $this->argument('email'),
+                'password' => $password,
+                'autologin' => sha1(sha1($this->argument('email')) . sha1(config('identifier', null))),
             ]
         ))->setDefaults()->setAndSave(['user_group_id' => 1]);
 

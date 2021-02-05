@@ -33,6 +33,10 @@ use Pckg\Manager\Meta;
 class Auth extends Controller
 {
 
+    /**
+     * @param Meta $meta
+     * @return array
+     */
     public function getUserAction(Meta $meta)
     {
         $user = $this->auth()->getUser();
@@ -44,6 +48,9 @@ class Auth extends Controller
         ];
     }
 
+    /**
+     * @return array[]
+     */
     public function getUserAddressesAction()
     {
         $user = $this->auth()->getUser();
@@ -55,6 +62,9 @@ class Auth extends Controller
         ];
     }
 
+    /**
+     * @return Response|\Pckg\Framework\View\Twig
+     */
     public function getLoginAction()
     {
         if (auth()->isLoggedIn()) {
@@ -66,6 +76,10 @@ class Auth extends Controller
         return view('Pckg/Auth:login');
     }
 
+    /**
+     * @param Login $loginForm
+     * @param LoginUserViaForm $loginUserCommand
+     */
     function postLoginAction(Login $loginForm, LoginUserViaForm $loginUserCommand)
     {
         /**
@@ -99,6 +113,10 @@ class Auth extends Controller
 
     }
 
+    /**
+     * @param LogoutUser $logoutUserCommand
+     * @param Response $response
+     */
     function getLogoutAction(LogoutUser $logoutUserCommand, Response $response)
     {
         $logoutUserCommand->onSuccess(
@@ -106,7 +124,7 @@ class Auth extends Controller
                 if ($this->request()->isJson()) {
                     $response->respond(
                         [
-                        'success' => true,
+                            'success' => true,
                         ]
                     );
                 } else {
@@ -118,7 +136,7 @@ class Auth extends Controller
                 if ($this->request()->isJson()) {
                     $response->respond(
                         [
-                        'success' => false,
+                            'success' => false,
                         ]
                     );
                 } else {
@@ -139,8 +157,8 @@ class Auth extends Controller
 
         $user = User::create(
             [
-            'email' => $data['email'],
-            'password' => auth()->hashPassword($data['password']),
+                'email' => $data['email'],
+                'password' => auth()->hashPassword($data['password']),
             ]
         );
 
@@ -150,12 +168,12 @@ class Auth extends Controller
         try {
             email(
                 'user.registered', new \Pckg\Mail\Service\Mail\Adapter\User($user), [
-                'data' => [
-                    'confirmAccountUrl' => url(
-                        'pckg.auth.activate', ['activation' => sha1($user->hash . $user->autologin)],
-                        true
-                    ),
-                ],
+                    'data' => [
+                        'confirmAccountUrl' => url(
+                            'pckg.auth.activate', ['activation' => sha1($user->hash . $user->autologin)],
+                            true
+                        ),
+                    ],
                 ]
             );
         } catch (\Throwable $e) {
@@ -167,6 +185,10 @@ class Auth extends Controller
         ];
     }
 
+    /**
+     * @param $activation
+     * @return Response
+     */
     function getActivateAction($activation)
     {
         $user = (new Users())->where('password', null)
@@ -176,11 +198,15 @@ class Auth extends Controller
         return $this->response()->redirect('/');
     }
 
+    /**
+     * @param ForgotPassword $forgotPasswordForm
+     * @return \Pckg\Framework\View\Twig
+     */
     function getForgotPasswordAction(ForgotPassword $forgotPasswordForm)
     {
         return view(
             "vendor/lfw/auth/src/Pckg/Auth/View/forgotPassword", [
-            'form' => $forgotPasswordForm->initFields(),
+                'form' => $forgotPasswordForm->initFields(),
             ]
         );
     }
@@ -229,6 +255,10 @@ class Auth extends Controller
         ];
     }
 
+    /**
+     * @param PasswordCode $passwordCodeForm
+     * @return bool[]
+     */
     public function postPasswordCodeAction(PasswordCode $passwordCodeForm)
     {
         return [
@@ -236,6 +266,11 @@ class Auth extends Controller
         ];
     }
 
+    /**
+     * @param ResetPassword $resetPasswordForm
+     * @return bool[]
+     * @throws \Exception
+     */
     public function postResetPasswordAction(ResetPassword $resetPasswordForm)
     {
         /**
@@ -270,6 +305,9 @@ class Auth extends Controller
         ];
     }
 
+    /**
+     * @return array
+     */
     public function getMeAction()
     {
         $user = $this->auth()->getUser();
@@ -279,10 +317,10 @@ class Auth extends Controller
             'user' => $data,
         ];
     }
-    
+
     /**
-     * @param  string      $provider
-     * @param  AuthService $auth
+     * @param string $provider
+     * @param AuthService $auth
      * @throws \Exception
      */
     public function getOauthAction(string $provider, \Pckg\Auth\Service\Auth $auth)

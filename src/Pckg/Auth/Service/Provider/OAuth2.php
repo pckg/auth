@@ -6,6 +6,10 @@ use League\OAuth2\Client\Provider\GenericProvider;
 use Pckg\Auth\Factory\User;
 use Pckg\Auth\Service\Auth;
 
+/**
+ * Class OAuth2
+ * @package Pckg\Auth\Service\Provider
+ */
 class OAuth2 extends AbstractProvider
 {
 
@@ -75,7 +79,7 @@ class OAuth2 extends AbstractProvider
 
         $newAccessToken = $this->getOAuth2Provider()->getAccessToken(
             'refresh_token', [
-            'refresh_token' => $existingAccessToken->getRefreshToken()
+                'refresh_token' => $existingAccessToken->getRefreshToken()
             ]
         );
 
@@ -94,7 +98,7 @@ class OAuth2 extends AbstractProvider
     {
         $accessToken = $this->getOAuth2Provider()->getAccessToken(
             'authorization_code', [
-            'code' => $code,
+                'code' => $code,
             ]
         );
 
@@ -106,6 +110,11 @@ class OAuth2 extends AbstractProvider
         return $token;
     }
 
+    /**
+     * @param $oauth2token
+     * @return mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public function getUserFromRemote($oauth2token)
     {
         if (!$oauth2token) {
@@ -114,9 +123,9 @@ class OAuth2 extends AbstractProvider
 
         $response = (new Client())->get(
             $this->config['oauth2']['urlResourceOwnerDetails'], [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $oauth2token,
-            ],
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $oauth2token,
+                ],
                 'timeout' => 15,
             ]
         );
@@ -187,7 +196,7 @@ class OAuth2 extends AbstractProvider
         if ($this->identifier && !($user->{$this->identifier . '_user_id'} ?? null)) {
             $userRecord->setAndSave(
                 [
-                $this->identifier . '_user_id' => $remoteUserId,
+                    $this->identifier . '_user_id' => $remoteUserId,
                 ]
             );
         }

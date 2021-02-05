@@ -3,11 +3,21 @@
 use Pckg\Auth\Entity\Users;
 use Pckg\Auth\Record\User;
 
+/**
+ * Class Facebook
+ * @package Pckg\Auth\Service\Provider
+ */
 class Facebook extends AbstractProvider
 {
 
+    /**
+     * @var \Facebook\Facebook
+     */
     protected $facebook;
 
+    /**
+     * @var array
+     */
     protected $permissions = [];
 
     /**
@@ -15,6 +25,9 @@ class Facebook extends AbstractProvider
      */
     protected $redirectLoginHelper;
 
+    /**
+     * @var string
+     */
     protected $entity = Users::class;
 
     public function __construct(\Facebook\Facebook $facebook)
@@ -52,6 +65,11 @@ class Facebook extends AbstractProvider
         response()->redirect($loginUrl);
     }
 
+    /**
+     * @return \Facebook\Authentication\AccessToken|null
+     * @throws \Facebook\Exceptions\FacebookResponseException
+     * @throws \Facebook\Exceptions\FacebookSDKException
+     */
     private function getAccessToken()
     {
         try {
@@ -65,6 +83,10 @@ class Facebook extends AbstractProvider
         }
     }
 
+    /**
+     * @param $accessToken
+     * @throws \Exception
+     */
     private function checkAccessToken($accessToken)
     {
         if (!$accessToken) {
@@ -80,6 +102,11 @@ class Facebook extends AbstractProvider
         }
     }
 
+    /**
+     * @param $accessToken
+     * @return \Facebook\Authentication\AccessToken
+     * @throws \Facebook\Exceptions\FacebookSDKException
+     */
     private function setLongLived($accessToken)
     {
         $oAuth2Client = $this->facebook->getOAuth2Client();
@@ -97,6 +124,11 @@ class Facebook extends AbstractProvider
         return $accessToken;
     }
 
+    /**
+     * @return bool
+     * @throws \Facebook\Exceptions\FacebookResponseException
+     * @throws \Facebook\Exceptions\FacebookSDKException
+     */
     public function handleTakelogin()
     {
         //$helper = $this->facebook->getRedirectLoginHelper();

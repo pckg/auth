@@ -12,8 +12,14 @@ use Pckg\Database\Record;
 class UserPasswordReset extends Record
 {
 
+    /**
+     * @var string
+     */
     protected $entity = UserPasswordResets::class;
 
+    /**
+     * @return bool
+     */
     public function hasRequestedTooSoon()
     {
         return time() - strtotime($this->created_at) < (60 * 5);

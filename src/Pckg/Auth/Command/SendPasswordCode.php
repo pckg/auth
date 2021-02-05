@@ -20,6 +20,9 @@ class SendPasswordCode
      */
     protected $user;
 
+    /**
+     * @var string
+     */
     protected $template = 'user-password-reset';
 
     public function __construct(\Pckg\Auth\Record\User $user)
@@ -59,16 +62,16 @@ class SendPasswordCode
          */
         email(
             $this->template, new User($this->user), [
-                                 'data'  => [
-                                     'niceCode' => $niceCode,
-                                     'code'     => $code,
-                                     'link'     => config('url') . '#passwordSent-' . $this->user->email . '-' . $code,
-                                 ],
-                                 'fetch' => [
-                                     'user' => [
-                                         Users::class => $this->user->id,
-                                     ],
-                                 ],
+                'data' => [
+                    'niceCode' => $niceCode,
+                    'code' => $code,
+                    'link' => config('url') . '#passwordSent-' . $this->user->email . '-' . $code,
+                ],
+                'fetch' => [
+                    'user' => [
+                        Users::class => $this->user->id,
+                    ],
+                ],
             ]
         );
 
@@ -78,9 +81,9 @@ class SendPasswordCode
          */
         UserPasswordReset::create(
             [
-            'user_id'    => $this->user->id,
-            'created_at' => date('Y-m-d H:i:s'),
-            'code'       => $code,
+                'user_id' => $this->user->id,
+                'created_at' => date('Y-m-d H:i:s'),
+                'code' => $code,
             ]
         );
 

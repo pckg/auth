@@ -51,5 +51,5 @@ class BasicAuth extends Provider
             CreateUser::class,
         ];
     }
-    
+
 }

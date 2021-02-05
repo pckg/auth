@@ -35,11 +35,11 @@
       "vendor/bin/phpunit --help --stop-on-defect",
       "vendor/bin/phpcloc cloc src/",
       "vendor/bin/phpstan analyse src/ --level=1",
-      "vendor/bin/phpcs -p src/ || true",
+      "vendor/bin/phpcs --extensions=php -p src/ || true",
       "vendor/bin/codecept run"
     ],
     "autofix": [
-      "vendor/bin/phpcs --report-diff=phpcs.diff ./src --extensions=php"
+      "vendor/bin/phpcs --extensions=php --report-diff=phpcs.diff ./src"
     ],
     "autopatch": [
       "patch -p0 -ui phpcs.diff"

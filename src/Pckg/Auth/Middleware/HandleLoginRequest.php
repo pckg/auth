@@ -5,9 +5,18 @@ namespace Pckg\Auth\Middleware;
 use Pckg\Auth\Command\LoginUser;
 use Pckg\Framework\Response;
 
+/**
+ * Class HandleLoginRequest
+ * @package Pckg\Auth\Middleware
+ */
 class HandleLoginRequest
 {
 
+    /**
+     * @param callable $next
+     * @return mixed
+     * @throws \Exception
+     */
     public function execute(callable $next)
     {
         if (post()->has(['email', 'password', 'autologin', 'submit'])

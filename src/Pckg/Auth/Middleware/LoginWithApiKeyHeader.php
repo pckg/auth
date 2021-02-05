@@ -5,9 +5,17 @@ use Pckg\Api\Entity\AppKeys;
 use Pckg\Auth\Service\Auth;
 use Pckg\Mailo\Record\App;
 
+/**
+ * Class LoginWithApiKeyHeader
+ * @package Pckg\Auth\Middleware
+ */
 class LoginWithApiKeyHeader
 {
 
+    /**
+     * @param callable $next
+     * @return mixed
+     */
     public function execute(callable $next)
     {
         /**

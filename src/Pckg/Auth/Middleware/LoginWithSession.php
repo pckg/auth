@@ -6,9 +6,17 @@ use Pckg\Auth\Service\Auth;
 use Pckg\Concept\AbstractChainOfReponsibility;
 use Pckg\Framework\Response;
 
+/**
+ * Class LoginWithSession
+ * @package Pckg\Auth\Middleware
+ */
 class LoginWithSession extends AbstractChainOfReponsibility
 {
 
+    /**
+     * @param callable $next
+     * @return mixed
+     */
     public function execute(callable $next)
     {
         if (!isHttp() || auth()->isLoggedIn()) {

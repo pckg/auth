@@ -4,9 +4,18 @@ use Exception;
 use Pckg\Concept\AbstractChainOfReponsibility;
 use Pckg\Concept\Reflect;
 
+/**
+ * Class RestrictAccess
+ * @package Pckg\Auth\Middleware
+ */
 class RestrictAccess extends AbstractChainOfReponsibility
 {
 
+    /**
+     * @param callable $next
+     * @return mixed
+     * @throws Exception
+     */
     public function execute(callable $next)
     {
         if (isConsole()) {
