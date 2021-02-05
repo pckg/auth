@@ -35,7 +35,7 @@
       "vendor/bin/phpunit --help --stop-on-defect",
       "vendor/bin/phpcloc cloc src/",
       "vendor/bin/phpstan analyse src/ --level=1",
-      "vendor/bin/phpcs --extensions=php -p src/ || true",
+      "true || vendor/bin/phpcs --extensions=php -p src/",
       "vendor/bin/codecept run"
     ],
     "autofix": [
