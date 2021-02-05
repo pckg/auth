@@ -15,7 +15,7 @@ use Pckg\Framework\Router;
 class Facebook extends Auth
 {
 
-    function getLoginAction()
+    public function getLoginAction()
     {
         auth()->useProvider(AuthFactory::getFacebookProvider())
             ->getProvider()
@@ -27,7 +27,7 @@ class Facebook extends Auth
      * @param  Router   $router
      * @throws \Exception
      */
-    function getTakeloginAction(Response $response, Router $router)
+    public function getTakeloginAction(Response $response, Router $router)
     {
         $success = auth()->useProvider(AuthFactory::getFacebookProvider())
             ->getProvider()

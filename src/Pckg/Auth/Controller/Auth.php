@@ -80,7 +80,7 @@ class Auth extends Controller
      * @param Login            $loginForm
      * @param LoginUserViaForm $loginUserCommand
      */
-    function postLoginAction(Login $loginForm, LoginUserViaForm $loginUserCommand)
+    public function postLoginAction(Login $loginForm, LoginUserViaForm $loginUserCommand)
     {
         /**
          * Form is valid, we need to check for password.
@@ -116,7 +116,7 @@ class Auth extends Controller
      * @param LogoutUser $logoutUserCommand
      * @param Response   $response
      */
-    function getLogoutAction(LogoutUser $logoutUserCommand, Response $response)
+    public function getLogoutAction(LogoutUser $logoutUserCommand, Response $response)
     {
         $logoutUserCommand->onSuccess(
             function () use ($response) {
@@ -150,7 +150,7 @@ class Auth extends Controller
      *
      * @return array
      */
-    function postSignupAction(SignupUser $signupUser)
+    public function postSignupAction(SignupUser $signupUser)
     {
         $data = $signupUser->getData();
 
@@ -191,7 +191,7 @@ class Auth extends Controller
      * @param  $activation
      * @return Response
      */
-    function getActivateAction($activation)
+    public function getActivateAction($activation)
     {
         $user = (new Users())->where('password', null)
             ->whereRaw('SHA1(CONCAT(users.hash, users.autologin)) = ?', [$activation])
@@ -204,7 +204,7 @@ class Auth extends Controller
      * @param  ForgotPassword $forgotPasswordForm
      * @return \Pckg\Framework\View\Twig
      */
-    function getForgotPasswordAction(ForgotPassword $forgotPasswordForm)
+    public function getForgotPasswordAction(ForgotPassword $forgotPasswordForm)
     {
         return view(
             "vendor/lfw/auth/src/Pckg/Auth/View/forgotPassword",
