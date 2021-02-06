@@ -709,19 +709,20 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/pckg/cache.git",
-                "reference": "cbb0d3a3ba4994a4fa50b1fe0b1b43164455412e"
+                "reference": "4974920700ffabd428723b7bd0810e5b9418697a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pckg/cache/zipball/cbb0d3a3ba4994a4fa50b1fe0b1b43164455412e",
-                "reference": "cbb0d3a3ba4994a4fa50b1fe0b1b43164455412e",
+                "url": "https://api.github.com/repos/pckg/cache/zipball/4974920700ffabd428723b7bd0810e5b9418697a",
+                "reference": "4974920700ffabd428723b7bd0810e5b9418697a",
                 "shasum": ""
             },
             "require": {
                 "doctrine/cache": "^1.6"
             },
             "require-dev": {
-                "pckg-app/frontend-dev": "dev-master"
+                "pckg-app/frontend-dev": "dev-master",
+                "pckg/framework": "dev-master"
             },
             "default-branch": true,
             "type": "library",
@@ -746,7 +747,7 @@
                 "issues": "https://github.com/pckg/cache/issues",
                 "source": "https://github.com/pckg/cache/tree/master"
             },
-            "time": "2021-01-27T11:41:49+00:00"
+            "time": "2021-02-05T20:19:06+00:00"
         },
         {
             "name": "pckg/collection",
@@ -754,19 +755,21 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/pckg/collection.git",
-                "reference": "fe816ff1ad2077b1770d4a478442efa1aa4ded88"
+                "reference": "f363854132cfd29b62490e0f794d18e4cbf43a0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pckg/collection/zipball/fe816ff1ad2077b1770d4a478442efa1aa4ded88",
-                "reference": "fe816ff1ad2077b1770d4a478442efa1aa4ded88",
+                "url": "https://api.github.com/repos/pckg/collection/zipball/f363854132cfd29b62490e0f794d18e4cbf43a0c",
+                "reference": "f363854132cfd29b62490e0f794d18e4cbf43a0c",
                 "shasum": ""
             },
             "require": {
                 "pckg/concept": "dev-master"
             },
             "require-dev": {
-                "pckg-app/frontend-dev": "dev-master"
+                "pckg-app/frontend-dev": "dev-master",
+                "pckg/database": "dev-master",
+                "pckg/framework": "dev-master"
             },
             "default-branch": true,
             "type": "library",
@@ -794,7 +797,7 @@
                 "issues": "https://github.com/pckg/collection/issues",
                 "source": "https://github.com/pckg/collection/tree/master"
             },
-            "time": "2021-01-27T10:36:32+00:00"
+            "time": "2021-02-05T21:19:20+00:00"
         },
         {
             "name": "pckg/concept",
@@ -802,16 +805,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/pckg/concept.git",
-                "reference": "c368fad3473ff4023d4875790fdf968573c9e199"
+                "reference": "893fc26339bf78a32e5c8c46a1e37bf28d874392"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pckg/concept/zipball/c368fad3473ff4023d4875790fdf968573c9e199",
-                "reference": "c368fad3473ff4023d4875790fdf968573c9e199",
+                "url": "https://api.github.com/repos/pckg/concept/zipball/893fc26339bf78a32e5c8c46a1e37bf28d874392",
+                "reference": "893fc26339bf78a32e5c8c46a1e37bf28d874392",
                 "shasum": ""
             },
             "require-dev": {
-                "pckg-app/frontend-dev": "dev-master"
+                "pckg-app/frontend-dev": "dev-master",
+                "pckg/framework": "dev-master"
             },
             "default-branch": true,
             "type": "library",
@@ -839,7 +843,7 @@
                 "issues": "https://github.com/pckg/concept/issues",
                 "source": "https://github.com/pckg/concept/tree/master"
             },
-            "time": "2021-01-27T09:36:42+00:00"
+            "time": "2021-02-05T19:04:20+00:00"
         },
         {
             "name": "pckg/database",
@@ -847,22 +851,28 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/pckg/database.git",
-                "reference": "f11a4ee035bfb3b6cc12802e6e6cb12da9c16b58"
+                "reference": "1983e2ed894a132df8c46f97dc103e67e32f68f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pckg/database/zipball/f11a4ee035bfb3b6cc12802e6e6cb12da9c16b58",
-                "reference": "f11a4ee035bfb3b6cc12802e6e6cb12da9c16b58",
+                "url": "https://api.github.com/repos/pckg/database/zipball/1983e2ed894a132df8c46f97dc103e67e32f68f1",
+                "reference": "1983e2ed894a132df8c46f97dc103e67e32f68f1",
                 "shasum": ""
             },
             "require": {
+                "ext-json": "*",
+                "ext-pdo": "*",
                 "pckg/cache": "dev-master",
                 "pckg/collection": "dev-master",
                 "pckg/concept": "dev-master",
                 "pckg/locale": "dev-master"
             },
             "require-dev": {
-                "pckg-app/frontend-dev": "dev-master"
+                "fzaninotto/faker": "dev-master",
+                "pckg-app/frontend-dev": "dev-master",
+                "pckg/framework": "dev-master",
+                "pckg/htmlbuilder": "dev-master",
+                "pckg/manager": "dev-master"
             },
             "suggest": {
                 "fzaninotto/faker": "Use faker to mock data*",
@@ -892,7 +902,7 @@
                 "issues": "https://github.com/pckg/database/issues",
                 "source": "https://github.com/pckg/database/tree/master"
             },
-            "time": "2021-01-27T10:54:19+00:00"
+            "time": "2021-02-05T19:39:07+00:00"
         },
         {
             "name": "pckg/framework",
@@ -900,12 +910,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/pckg/framework.git",
-                "reference": "f04c09c850670706025aba1e876262c84ae69d99"
+                "reference": "34745edbeb0dcac39c0a516da859c365750a9e4b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pckg/framework/zipball/f04c09c850670706025aba1e876262c84ae69d99",
-                "reference": "f04c09c850670706025aba1e876262c84ae69d99",
+                "url": "https://api.github.com/repos/pckg/framework/zipball/34745edbeb0dcac39c0a516da859c365750a9e4b",
+                "reference": "34745edbeb0dcac39c0a516da859c365750a9e4b",
                 "shasum": ""
             },
             "require": {
@@ -922,8 +932,18 @@
                 "twig/twig": "1.*"
             },
             "require-dev": {
+                "defuse/php-encryption": "2.*",
                 "maximebf/debugbar": "1.*",
-                "pckg-app/frontend-dev": "dev-master"
+                "nesbot/carbon": "2.*",
+                "pckg-app/frontend-dev": "dev-master",
+                "pckg/auth": "dev-master",
+                "pckg/htmlbuilder": "dev-master",
+                "pckg/mail": "dev-master",
+                "pckg/manager": "dev-master",
+                "pckg/migrator": "dev-master",
+                "pckg/queue": "dev-master",
+                "pckg/translator": "dev-master",
+                "ramsey/uuid": ">=4.1"
             },
             "default-branch": true,
             "type": "library",
@@ -951,7 +971,7 @@
                 "issues": "https://github.com/pckg/framework/issues",
                 "source": "https://github.com/pckg/framework/tree/master"
             },
-            "time": "2021-01-27T01:11:46+00:00"
+            "time": "2021-02-06T15:41:43+00:00"
         },
         {
             "name": "pckg/locale",
@@ -959,16 +979,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/pckg/locale.git",
-                "reference": "93da7511899e07bc82c4b0c411012f81e9cd83bb"
+                "reference": "6e13abf62f6d4dc1557427154859c76e4c5c73e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pckg/locale/zipball/93da7511899e07bc82c4b0c411012f81e9cd83bb",
-                "reference": "93da7511899e07bc82c4b0c411012f81e9cd83bb",
+                "url": "https://api.github.com/repos/pckg/locale/zipball/6e13abf62f6d4dc1557427154859c76e4c5c73e6",
+                "reference": "6e13abf62f6d4dc1557427154859c76e4c5c73e6",
                 "shasum": ""
             },
             "require-dev": {
-                "pckg-app/frontend-dev": "dev-master"
+                "pckg-app/frontend-dev": "dev-master",
+                "pckg/database": "dev-master",
+                "pckg/framework": "dev-master",
+                "pckg/manager": "dev-master"
             },
             "default-branch": true,
             "type": "library",
@@ -993,7 +1016,7 @@
                 "issues": "https://github.com/pckg/locale/issues",
                 "source": "https://github.com/pckg/locale/tree/master"
             },
-            "time": "2021-01-27T11:47:33+00:00"
+            "time": "2021-02-06T11:47:33+00:00"
         },
         {
             "name": "psr/log",
@@ -2952,19 +2975,22 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/pckg/manager.git",
-                "reference": "f0d90575cca64a48ee22d6c7aeadd60f08ef3821"
+                "reference": "82949dcb2702081e30db6f68e7f57ab94b9c63cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pckg/manager/zipball/f0d90575cca64a48ee22d6c7aeadd60f08ef3821",
-                "reference": "f0d90575cca64a48ee22d6c7aeadd60f08ef3821",
+                "url": "https://api.github.com/repos/pckg/manager/zipball/82949dcb2702081e30db6f68e7f57ab94b9c63cb",
+                "reference": "82949dcb2702081e30db6f68e7f57ab94b9c63cb",
                 "shasum": ""
             },
             "require": {
                 "kriswallsmith/assetic": "1.4.*"
             },
             "require-dev": {
-                "pckg-app/frontend-dev": "dev-master"
+                "pckg-app/frontend-dev": "dev-master",
+                "pckg/database": "dev-master",
+                "pckg/framework": "dev-master",
+                "pckg/queue": "dev-master"
             },
             "default-branch": true,
             "type": "library",
@@ -2989,7 +3015,7 @@
                 "issues": "https://github.com/pckg/manager/issues",
                 "source": "https://github.com/pckg/manager/tree/master"
             },
-            "time": "2021-01-27T09:39:46+00:00"
+            "time": "2021-02-06T11:41:49+00:00"
         },
         {
             "name": "pckg/migrator",

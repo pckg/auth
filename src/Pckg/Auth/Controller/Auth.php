@@ -68,7 +68,9 @@ class Auth extends Controller
     public function getLoginAction()
     {
         if (auth()->isLoggedIn()) {
-            return $this->response()->redirect($this->auth()->getUser()->getDashboardUrl());
+            $user = $this->auth()->getUser();
+
+            return $this->response()->redirect($user ? $user->getDashboardUrl() : '/');
         } else if (config('pckg.auth.providers.frontend.inactive')) {
             return $this->response()->redirect('/');
         }
