@@ -29,6 +29,7 @@ use Pckg\Manager\Meta;
  * Class Auth
  *
  * @package Pckg\Auth\Controller
+ * @
  */
 class Auth extends Controller
 {

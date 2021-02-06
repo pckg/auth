@@ -101,4 +101,59 @@ class AuthControllerTest extends \Codeception\Test\Unit
         $this->assertEquals(301, $this->context->get(\Pckg\Framework\Response::class)->getCode(), 'Should be redirected');
     }
 
+    public function testGetLogoutAction()
+    {
+        $authController = $this->getAuthController();
+        $authService = $this->getAuthService();
+        $logoutUserCommand = new \Pckg\Auth\Command\LogoutUser();
+        $response = $this->context->get(\Pckg\Framework\Response::class);
+
+        $authService->setLoggedIn(false);
+        $authController->getLogoutAction($logoutUserCommand, $response);
+        $this->assertEquals('/', $response->getRedirected(), 'Should be redirected');
+
+        $authService->setLoggedIn(true);
+        $this->assertEquals('/', $response->getRedirected(), 'Should be redirected');
+    }
+
+    public function testPostSignupAction()
+    {
+
+    }
+
+    public function testGetActivateAction()
+    {
+
+    }
+
+    public function testGetForgotPasswordAction()
+    {
+
+    }
+
+    public function testPostForgotPasswordAction()
+    {
+
+    }
+
+    public function testPostPasswordCodeAction()
+    {
+
+    }
+
+    public function testPostResetPasswordAction()
+    {
+
+    }
+
+    public function testGetMeAction()
+    {
+
+    }
+
+    public function testGetOauthAction()
+    {
+        
+    }
+
 }
