@@ -30,6 +30,7 @@ class User extends Record
         'password',
         'autologin',
         'oauth2',
+        'deleted_at',
     ];
 
     /**
