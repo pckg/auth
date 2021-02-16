@@ -37,18 +37,10 @@ const Basic = {
         if (hash.indexOf('passwordSent') === 0) {
             let parts = hash.split('-');
 
-            this.$emit('opened');
-            this.setStep('passwordSent');
             this.emailModel = parts[1];
             this.code = parts[2];
             this.executeAction();
         }
-        $dispatcher.$on('auth:login', this.openLoginModal);
-        $dispatcher.$on('auth:forgotenPassword', this.openForgottenPasswordModal);
-    },
-    beforeDestroy: function () {
-        $dispatcher.$off('auth:login', this.openLoginModal);
-        $dispatcher.$off('auth:forgotenPassword', this.openForgottenPasswordModal);
     },
     watch: {
         emailModel: function () {
@@ -200,17 +192,6 @@ const Basic = {
                     }.bind(this)
                 );
             }
-        },
-        openLoginModal: function (data) {
-            if (data && data.email) {
-                this.emailModel = data.email;
-            }
-            this.setStep('login');
-            this.$emit('opened');
-        },
-        openForgottenPasswordModal: function () {
-            this.setStep('forgottenPassword');
-            this.$emit('opened');
         },
         setStep: function (step) {
             this.myStep = step;
