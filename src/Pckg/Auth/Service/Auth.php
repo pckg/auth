@@ -194,6 +194,10 @@ class Auth
      */
     public function user($key = null)
     {
+        if (!$key) {
+            return $this->getUser();
+        }
+
         return $this->getUser()->{$key} ?? null;
         $sessionUser = $this->getSessionProvider()['user'] ?? [];
 
