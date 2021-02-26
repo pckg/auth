@@ -33,9 +33,11 @@ class BasicAuth extends Provider
             LoginWithSession::class,
             LoginWithCookie::class,
             LoginWithAutologinGetParameter::class,
-            // LoginWithBearerHeader::class,
             LoginWithApiKeyHeader::class,
             LoginWithAllowedIP::class,
+            function () {
+                dispatcher()->trigger(\Pckg\Auth\Service\Auth::class . '.middlewares');
+            },
             HandleLogoutRequest::class,
             HandleLoginRequest::class,
             RestrictAccess::class,
