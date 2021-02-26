@@ -132,10 +132,12 @@ class OAuth2 extends AbstractProvider
                 'headers' => [
                     'Authorization' => 'Bearer ' . $oauth2token,
                 ],
-                'timeout' => 15,
+                'timeout' => $this->config['httpOptions']['timeout'] ?? 10,
+                'verify' => $this->config['httpOptions']['verify'] ?? true,
             ]
         );
-        $data = json_decode($response->getBody()->getContents(), true);
+        $body = $response->getBody()->getContents();
+        $data = json_decode($body, true);
 
         return $data;
     }
@@ -174,12 +176,22 @@ class OAuth2 extends AbstractProvider
         /**
          * We want to save the token?
          */
+        try {
         $token = $this->fetchTokenFromCode($code);
+        } catch (\Throwable $e) {
+            error_log(exception($e));
+            throw new \Exception('Error fetching token from code');
+        }
 
         /**
          * Fetch user and mark it as authenticated.
          */
-        $user = $this->getUserFromRemote($token);
+        try {
+            $user = $this->getUserFromRemote($token);
+        } catch (\Throwable $e) {
+            error_log(exception($e));
+            throw new \Exception('Error fetching remote identity');
+        }
 
         /**
          * We have to create user in our database.
