@@ -505,7 +505,13 @@ class Auth
          * Regenerate session and sign it.
          */
         try {
-            $regenerated = session_regenerate_id();
+            error_log('regenerating session ' . session_id());
+            $regenerated = session_regenerate_id(true);
+            if (!$regenerated) {
+                error_log('Error regenerating session ' . session_id());
+            } else {
+                error_log('Session regenerated to ' . session_id());
+            }
         } catch (\Throwable $e) {
             error_log('Cannot regenerate session, destroying session ' . session_id());
             session_start();
