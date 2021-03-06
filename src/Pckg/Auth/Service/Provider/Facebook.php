@@ -58,7 +58,7 @@ class Facebook extends AbstractProvider
         ];
     }
 
-    public function redirectToLogin()
+    public function redirectToLogin($options = [])
     {
         $loginUrl = $this->redirectLoginHelper->getLoginUrl(
             url('takelogin_facebook', [], true),

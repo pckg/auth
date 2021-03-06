@@ -10,7 +10,7 @@ namespace Pckg\Auth\Service;
 interface ProviderInterface
 {
 
-    public function redirectToLogin();
+    public function redirectToLogin($options = []);
 
     public function logout();
 }

@@ -22,7 +22,7 @@ class Database extends AbstractProvider
         $this->auth = $auth;
     }
 
-    public function redirectToLogin()
+    public function redirectToLogin($options = [])
     {
         redirect(url('login'));
     }
