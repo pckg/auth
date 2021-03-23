@@ -200,13 +200,27 @@ class OAuth2 extends AbstractProvider
         $email = $user['user']['email'];
         $remoteUserId = $user['user']['id'] ?? str_replace('/users/', '', $user['uri']);
 
-        $userRecord = null;
-        if ($email) {
-            $userRecord = $this->getUserByEmail($email);
+        if (!$email) {
+            throw new \Exception('Email not present in auth identity!');
         }
+
+        /**
+         * Trigger pre-validation event.
+         */
+        trigger(OAuth2::class . '.loggingIn', ['email' => $email]);
+
+        $userRecord = $this->getUserByEmail($email);
+
+        /**
+         * What is this condition for?
+         */
         if (!$userRecord && auth()->isLoggedIn()) {
             $userRecord = auth()->getUser();
         }
+
+        /**
+         * Auto register user.
+         */
         if (!$userRecord) {
             $userData = [
                 'email' => $user['user']['email'],
