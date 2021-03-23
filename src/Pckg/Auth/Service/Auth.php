@@ -691,12 +691,9 @@ class Auth
      */
     public function getGroupId()
     {
-        $group = $this->getSessionProvider()['user'][config(
-            'pckg.auth.providers.' . $this->getProviderKey() .
-                '.userGroup'
-        )] ?? null;
+        $groupKey = config('pckg.auth.providers.' . $this->getProviderKey() . '.userGroup', 'user_group_id');
 
-        return $group;
+        return $this->user($groupKey) ?? null;
     }
 
     /**
