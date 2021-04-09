@@ -48,7 +48,7 @@ class OAuth2 extends AbstractProvider
         $provider = $this->getOAuth2Provider();
 
         if (!isset($options['scope'])) {
-            $scopes = $this->config['oauth2']['scopes'] ?? ['basic'];
+            $options['scope'] = $this->config['oauth2']['scopes'] ?? ['basic'];
         }
 
         $authorizationUrl = $provider->getAuthorizationUrl($options);
