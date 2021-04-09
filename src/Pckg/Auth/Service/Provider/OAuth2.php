@@ -46,6 +46,11 @@ class OAuth2 extends AbstractProvider
          * We could add a cookie and display "not you" screen?
          */
         $provider = $this->getOAuth2Provider();
+
+        if (!isset($options['scope'])) {
+            $scopes = $this->config['oauth2']['scopes'] ?? ['basic'];
+        }
+
         $authorizationUrl = $provider->getAuthorizationUrl($options);
         session()->set('oauth2state', $provider->getState());
 
@@ -158,9 +163,6 @@ class OAuth2 extends AbstractProvider
             /**
              * What if we are already authenticated and have valid token?
              */
-            $options = [
-                'scope' => ['basic'], // scopes will be joined with a separator
-            ];
             $this->redirectToLogin($options);
         }
 
