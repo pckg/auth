@@ -163,7 +163,7 @@ class OAuth2 extends AbstractProvider
             /**
              * What if we are already authenticated and have valid token?
              */
-            $this->redirectToLogin($options);
+            $this->redirectToLogin();
         }
 
         /**
