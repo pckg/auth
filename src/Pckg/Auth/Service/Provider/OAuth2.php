@@ -199,10 +199,11 @@ class OAuth2 extends AbstractProvider
          * We have to create user in our database.
          * And add a OAuth2 provider user ID.
          */
-        $email = $user['user']['email'];
-        $remoteUserId = $user['user']['id'] ?? str_replace('/users/', '', $user['uri']);
+        $email = $user['user']['email'] ?? ($user['email'] ?? null);
+        $remoteUserId = $user['user']['id'] ?? ($user['id'] ?? str_replace('/users/', '', $user['uri'] ?? null));
 
         if (!$email) {
+            error_log(json_encode($user));
             throw new \Exception('Email not present in auth identity!');
         }
 
