@@ -46,7 +46,7 @@ class RegisterUser
         $this->rUser->hashPassword();
 
         if ($this->rUser->save()) {
-            trigger('user.registered', [$this->rUser]);
+            // trigger('user.registered', [$this->rUser]);
 
             return $this->successful();
         }

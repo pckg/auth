@@ -44,7 +44,7 @@ class Auth extends Provider
     {
         return [
             \Pckg\Auth\Service\Auth::class . '.userLoggedIn' => UserLoggedIn::class,
-            'user.registered' => UserRegistered::class,
+            // 'user.registered' => UserRegistered::class,
         ];
     }
 
