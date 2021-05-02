@@ -331,6 +331,8 @@ class Auth extends Controller
      */
     public function getOauthAction(string $provider, \Pckg\Auth\Service\Auth $auth)
     {
-        $auth->useProvider($provider)->getProvider()->process();
+        $provider = $auth->useProvider($provider)->getProvider();
+        trigger(Auth::class . '.oauth', [$provider]);
+        $provider->process();
     }
 }

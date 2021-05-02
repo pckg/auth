@@ -473,7 +473,7 @@ class Auth
 
         $_SESSION['Pckg']['Auth']['Provider'] = [
             $providerKey => [
-                "user" => $user->toArray(),
+                "user" => $user ? $user->toArray() : [],
                 "hash" => $sessionHash,
                 "flags" => [],
             ]
@@ -482,7 +482,9 @@ class Auth
         $this->loggedIn = true;
         $this->user = $user;
 
-        trigger(Auth::class . '.userLoggedIn', [$user]);
+        if ($user) {
+            trigger(Auth::class . '.userLoggedIn', [$user]);
+        }
     }
 
     /**

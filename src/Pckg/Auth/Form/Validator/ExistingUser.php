@@ -29,6 +29,6 @@ class ExistingUser extends AbstractValidator
      */
     public function validate($value)
     {
-        return (new Users())->where('email', $value)->one() ? true : false;
+        return (new Users())->nonDeleted()->where('email', $value)->one() ? true : false;
     }
 }
