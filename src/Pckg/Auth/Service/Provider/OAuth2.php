@@ -75,6 +75,11 @@ class OAuth2 extends AbstractProvider
         }
         return $this->oauth2;
     }
+    
+    public function getConfig()
+    {
+        return $this->config;
+    }
 
     public function refreshToken()
     {

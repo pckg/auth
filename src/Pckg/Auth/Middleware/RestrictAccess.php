@@ -38,6 +38,7 @@ class RestrictAccess extends AbstractChainOfReponsibility
             return $next();
         }
 
+        $request = request();
         foreach ($route['tags'] ?? [] as $tag) {
             foreach ($gates as $gate) {
                 /**
@@ -54,7 +55,7 @@ class RestrictAccess extends AbstractChainOfReponsibility
                 }
 
                 if (!Reflect::call($tags[$tag], [$auth])) {
-                    if (request()->isJson() || request()->isAjax() || request()->isPost()) {
+                    if ($request->isJson() || $request->isAjax() || $request->isCORS()) {
                         response()->{auth()->isLoggedIn() ? 'forbidden' : 'unauthorized'}();
                     }
 
