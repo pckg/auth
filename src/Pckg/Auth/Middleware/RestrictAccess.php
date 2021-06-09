@@ -39,12 +39,12 @@ class RestrictAccess extends AbstractChainOfReponsibility
         }
 
         $request = request();
-        foreach ($route['tags'] ?? [] as $k => $tag) {
+        foreach ($route['tags'] ?? [] as $tag) {
+            if (is_bool($tag) && $tag) {
+                continue;
+            }
+
             foreach ($gates as $gate) {
-                if (!is_numeric($k)) {
-                    $tag = $k; // allow tag => bool
-                }
-                
                 /**
                  * Check if gate is responsible for a tag.
                  */
