@@ -10,7 +10,7 @@
     }
   ],
   "require": {
-    "pckg/framework": "dev-master",
+    "pckg/framework": "dev-master || dev-master-yoda",
     "facebook/graph-sdk": "5.*",
     "ext-json": "*"
   },
