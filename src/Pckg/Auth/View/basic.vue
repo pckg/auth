@@ -68,7 +68,7 @@
         <div class="alert alert-danger clear-both" v-if="error.length > 0">{{ error }}</div>
 
         <button class="btn btn-block btn-primary" @click.prevent="executeAction" :key="'btnAction'" :disabled="loading">
-            <template v-if="loading"><i class="fa fa-spinner fa-spin"></i></template>
+            <template v-if="loading"><i class="fa fa-spinner-third fa-spin"></i></template>
             <template v-else>{{ stepBtnText }}</template>
         </button>
 

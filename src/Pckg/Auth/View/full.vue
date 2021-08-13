@@ -70,7 +70,7 @@
         <div class="alert alert-danger clear-both" v-if="error.length > 0">{{ error }}</div>
 
         <button class="button btn-block" @click.prevent="executeAction" :key="'btnAction'" :disabled="loading">
-            <template v-if="loading"><i class="fal fa-spinner fa-spin"></i></template>
+            <template v-if="loading"><i class="fal fa-spinner-third fa-spin"></i></template>
             <template v-else>{{ __('auth.' + myStep + '.btn') }}</template>
         </button>
 
