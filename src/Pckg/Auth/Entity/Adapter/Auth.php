@@ -36,6 +36,6 @@ class Auth implements AuthInterface
      */
     public function userId()
     {
-        return $this->authService->getUser('id');
+        return $this->authService->user('id');
     }
 }
