@@ -31,7 +31,7 @@ class LoginWithSession extends AbstractChainOfReponsibility
         $auth->requestProvider();
         $providerKey = $auth->getProviderKey();
         $sessionProvider = $auth->getSessionProvider();
-        
+
         /**
          * Session for provider does not exist.
          */

@@ -406,6 +406,13 @@ class Auth
         $this->performLoginFromStorage($cookie);
     }
 
+    public function canUseProvider(string $provider)
+    {
+        $authConfig = config('pckg.auth.providers.' . $provider);
+
+        return $authConfig && !isset($authConfig['disabled']);
+    }
+
     /**
      * @param  array $storage
      * @return bool
@@ -425,6 +432,11 @@ class Auth
                 continue;
             }
 
+            // skip disabled providers
+            if (!$this->canUseProvider($provider)) {
+                continue;
+            }
+
             $this->useProvider($provider);
 
             $user = $this->getProvider()->getUserById($userId);
@@ -436,6 +448,7 @@ class Auth
             $entry = $this->getSecurityHash() . $user->id . $user->autologin;
 
             if (!password_verify($entry, $hash)) {
+                // throw error?
                 continue;
             }
 

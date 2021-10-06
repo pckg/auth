@@ -38,7 +38,19 @@ class RestrictAccess extends AbstractChainOfReponsibility
             return $next();
         }
 
-        $request = request();
+        $processUnauthenticated = function ($gate, $auth) {
+            $request = request();
+
+            if ($request->isJson() || $request->isAjax() || $request->isCORS()) {
+                response()->{auth()->isLoggedIn() ? 'forbidden' : 'unauthorized'}();
+            }
+
+            $redir = !$auth || !$auth->isLoggedIn() ? '?loginredirect=' . get('loginredirect', router()->getURL()) : '';
+            $url = ($gate['redirect'] ?? $gate['internal']) . $redir;
+            redirect($url);
+            die(); // for each case?
+        };
+
         foreach ($route['tags'] ?? [] as $tag) {
             if (is_bool($tag) && $tag) {
                 continue;
@@ -52,20 +64,19 @@ class RestrictAccess extends AbstractChainOfReponsibility
                     continue;
                 }
 
-                $auth = auth($gate['provider'] ?? null);
+                $auth = auth();
+                if (!$auth->canUseProvider($gate['provider'] ?? null)) {
+                    continue;
+                }
+
+                $auth->useProvider($gate['provider'] ?? null);
 
                 if (!array_key_exists($tag, $tags)) {
                     throw new Exception('Auth tag ' . $tag . ' not set.');
                 }
 
                 if (!Reflect::call($tags[$tag], [$auth])) {
-                    if ($request->isJson() || $request->isAjax() || $request->isCORS()) {
-                        response()->{auth()->isLoggedIn() ? 'forbidden' : 'unauthorized'}();
-                    }
-
-                    $redir = !$auth->isLoggedIn() ? '?loginredirect=' . get('loginredirect', router()->getURL()) : '';
-                    $url = ($gate['redirect'] ?? $gate['internal']) . $redir;
-                    redirect($url);
+                    $processUnauthenticated($gate, $auth);
                 }
             }
         }

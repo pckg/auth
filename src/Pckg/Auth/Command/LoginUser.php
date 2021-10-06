@@ -81,7 +81,10 @@ class LoginUser
              * @T00D00 - login user on all providers!
              */
             if ($auth->performLogin($user)) {
-                $auth->useProvider($provider);
+                $provided = $auth->useProvider($provider);
+                if (!$provided) {
+                    return $this->error();
+                }
                 if ($autologin) {
                     $auth->setAutologin();
                 }
