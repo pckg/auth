@@ -65,12 +65,13 @@ class RestrictAccess extends AbstractChainOfReponsibility
                 }
 
                 $auth = auth();
-                if (!$auth->canUseProvider($gate['provider'] ?? null)) {
+                $providerName = $gate['provider'] ?? null;
+                if ($providerName && !$auth->canUseProvider($providerName)) {
                     continue;
+                } else if ($providerName) {
+                    $auth->useProvider($providerName);
                 }
-
-                $auth->useProvider($gate['provider'] ?? null);
-
+                
                 if (!array_key_exists($tag, $tags)) {
                     throw new Exception('Auth tag ' . $tag . ' not set.');
                 }
