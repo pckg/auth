@@ -1,48 +1,48 @@
 <template>
     <div class="c-login --advanced flex-tower --gap-sm" :class="!noauth && oauth ? 'flex-grid@sm  --grid-num --x3@md' : ''">
 
-        <div class="--center block" v-if="!noauth">
-            <div class="text-center display-block">
-                <img class="__logo margin-bottom-sm"
+        <div class="--ai-center --jc-center block" v-if="!noauth">
+            <div class="text-center block">
+                <img class="__logo mb-sm"
                      src="https://startmaestro.cdn.startcomms.com/storage/uploads/backend/commslogo_3_6_4.png"/>
             </div>
             <pckg-auth-full :ref="'login'"></pckg-auth-full>
         </div>
 
-        <div class="color-grayish text-center --center font-size-xs block" v-if="!noauth && oauth">OR</div>
+        <div class="color-grayish text-center --ai-center --jc-center font-size-xs block" v-if="!noauth && oauth">OR</div>
 
-        <div class="flex-grid --gap-sm --center --grid-num" v-if="oauth">
-            <div class="color-grayish text-center --center font-size-xs">Login with OAuth provider</div>
+        <div class="flex-grid --gap-sm --ai-center --jc-center --grid-num" v-if="oauth">
+            <div class="color-grayish text-center --ai-center --jc-center font-size-xs">Login with OAuth provider</div>
 
-            <a href="/oauth/apple" class="flex-row --start padding-xs-g btn-apple" v-if="hasOauth('apple')">
-                <div class="--center margin-right-xs" style="flex-basis: 3rem;"><i class="fab fa-fw fa-apple"></i>
+            <a href="/oauth/apple" class="flex-row --start p-xs btn-apple" v-if="hasOauth('apple')">
+                <div class="--ai-center --jc-center mr-xs" style="flex-basis: 3rem;"><i class="fab fa-fw fa-apple"></i>
                 </div>
-                <div class="--center">Login with <b>Apple</b> account</div>
+                <div class="--ai-center --jc-center">Login with <b>Apple</b> account</div>
             </a>
 
-            <a href="/oauth/comms" class="flex-row --start padding-xs-g btn-c" v-if="hasOauth('comms')">
-                <div class="--center margin-right-xs" style="flex-basis: 3rem;">
+            <a href="/oauth/comms" class="flex-row --start p-xs btn-c" v-if="hasOauth('comms')">
+                <div class="--ai-center --jc-center mr-xs" style="flex-basis: 3rem;">
                     <img src="https://startmaestro.cdn.startcomms.com/storage/uploads/backend/commslogo_3_6_4.png"/>
                 </div>
-                <div class="--center">Login with <b>Comms ID</b></div>
+                <div class="--ai-center --jc-center">Login with <b>Comms ID</b></div>
             </a>
 
-            <a href="/oauth/facebook" class="flex-row --start padding-xs-g btn-fb" v-if="hasOauth('facebook')">
-                <div class="--center margin-right-xs" style="flex-basis: 3rem;"><i
+            <a href="/oauth/facebook" class="flex-row --start p-xs btn-fb" v-if="hasOauth('facebook')">
+                <div class="--ai-center --jc-center mr-xs" style="flex-basis: 3rem;"><i
                     class="fab fa-fw fa-facebook"></i></div>
-                <div class="--center">Login with <b>Facebook</b> account</div>
+                <div class="--ai-center --jc-center">Login with <b>Facebook</b> account</div>
             </a>
 
-            <a href="/oauth/linkedin" class="flex-row --start padding-xs-g btn-linkedin" v-if="hasOauth('linkedin')">
-                <div class="--center margin-right-xs" style="flex-basis: 3rem;"><i
+            <a href="/oauth/linkedin" class="flex-row --start p-xs btn-linkedin" v-if="hasOauth('linkedin')">
+                <div class="--ai-center --jc-center mr-xs" style="flex-basis: 3rem;"><i
                     class="fab fa-fw fa-linkedin"></i></div>
-                <div class="--center">Login with <b>LinkedIn</b> account</div>
+                <div class="--ai-center --jc-center">Login with <b>LinkedIn</b> account</div>
             </a>
 
-            <a href="/oauth/google" class="flex-row --start padding-xs-g btn-g" v-if="hasOauth('google')">
-                <div class="--center margin-right-xs" style="flex-basis: 3rem;"><i class="fab fa-fw fa-google"></i>
+            <a href="/oauth/google" class="flex-row --start p-xs btn-g" v-if="hasOauth('google')">
+                <div class="--ai-center --jc-center mr-xs" style="flex-basis: 3rem;"><i class="fab fa-fw fa-google"></i>
                 </div>
-                <div class="--center">Login with <b>Google</b> account</div>
+                <div class="--ai-center --jc-center">Login with <b>Google</b> account</div>
             </a>
         </div>
 
