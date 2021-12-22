@@ -192,7 +192,7 @@ class Auth
      * @param  null $key
      * @return array|mixed|null
      */
-    public function user($key = null)
+    public function user(?string $key = null)
     {
         if (!$key) {
             return $this->getUser();
