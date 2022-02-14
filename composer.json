@@ -10,7 +10,7 @@
     }
   ],
   "require": {
-    "pckg/framework": "dev-master || dev-master-yoda",
+    "pckg/framework": "dev-next-8.0",
     "ext-json": "*"
   },
   "require-dev": {
