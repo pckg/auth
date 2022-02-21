@@ -75,7 +75,7 @@ class OAuth2 extends AbstractProvider
         }
         return $this->oauth2;
     }
-    
+
     public function getConfig()
     {
         return $this->config;
@@ -166,6 +166,16 @@ class OAuth2 extends AbstractProvider
          */
         if (!$code) {
             /**
+             * Use referer for better redirect.
+             */
+            $referer = server('HTTP_REFERER');
+            if ($referer) {
+                session()->set('authReferer', $referer);
+            } else {
+                session()->delete('authReferer');
+            }
+
+            /**
              * What if we are already authenticated and have valid token?
              */
             $this->redirectToLogin();
@@ -220,24 +230,34 @@ class OAuth2 extends AbstractProvider
         $userRecord = $this->getUserByEmail($email);
 
         /**
-         * What is this condition for?
+         * Check if we're adding another connection.
          */
-        if (!$userRecord && auth()->isLoggedIn()) {
-            $userRecord = auth()->getUser();
-        }
-
-        /**
-         * Auto register user.
-         */
-        if (!$userRecord) {
+        if (auth()->isLoggedIn()) {
+            if ($userRecord) {
+                // different oauth and current users?
+                // redirect to merge screen?
+                if ($userRecord->id !== auth()->user('id')) {
+                    throw new Exception('Logout and login with different account');
+                } else {
+                    // yeah, this is the correct user
+                }
+            } else {
+                throw new Exception('Logout and create a separate account');
+            }
+        } else {
+            /**
+             * Auto register user.
+             */
             $userData = [
-                'email' => $user['user']['email'],
+                'email' => $email,
             ];
             $userRecord = User::create($userData);
         }
 
+
         /**
          * Connect it to the user.
+         * @deprecated
          */
         if ($this->identifier && !($user->{$this->identifier . '_user_id'} ?? null)) {
             $userRecord->setAndSave(
@@ -262,7 +282,7 @@ class OAuth2 extends AbstractProvider
          * We want to keep user logged in for concurrent sessions, so also set a cookie.
          */
         $this->auth->performLogin($userRecord);
-        $this->auth->setAutologin();
+        $this->auth->setAutologin(); // mark as social login?
 
         /**
          * Redirect user to the refering URL.
