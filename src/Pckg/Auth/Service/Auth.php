@@ -302,6 +302,17 @@ class Auth
         return $hash;
     }
 
+    public function getPrefixedCookieName(string $name)
+    {
+        /**
+         * We DO want to use store identifier in cookie name, because multi-tenancy.
+         * And we DO want to use that on our session provider.
+         */
+        $prefix = config('pckg.auth.cookiePrefix', null);
+
+        return [$prefix . $name, $prefix];
+    }
+
     /**
      * Decode cookie with value, signature and host values.
      *
@@ -310,6 +321,7 @@ class Auth
      */
     public function getSecureCookie(string $name)
     {
+        [$name, $prefix] = $this->getPrefixedCookieName($name);
         $value = cookie()->get($name);
         if (!$value) {
             return null;
@@ -327,7 +339,7 @@ class Auth
         /**
          * Check that signature matches and that we are actually on the same host.
          */
-        if (!$this->hashedPasswordMatches($decoded['signature'], $decoded['value'] . $decoded['host'] . $name)) {
+        if (!$this->hashedPasswordMatches($decoded['signature'], $decoded['value'] . $decoded['host'] . $name . $prefix)) {
             return null;
         }
 
@@ -342,6 +354,8 @@ class Auth
      */
     public function setSecureCookie(string $name, $value = null, $duration = null)
     {
+        [$name, $prefix] = $this->getPrefixedCookieName($name);
+
         /**
          * Delete cookie when empty value or negative duration.
          */
@@ -355,7 +369,7 @@ class Auth
          */
         $host = server('HTTP_HOST', null);
         $encoded = base64_encode(json_encode($value));
-        $signature = $this->hashPassword($encoded . $host . $name);
+        $signature = $this->hashPassword($encoded . $host . $name . $prefix);
         $value = base64_encode(
             json_encode(
                 [
