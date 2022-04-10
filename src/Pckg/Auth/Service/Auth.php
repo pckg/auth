@@ -46,6 +46,8 @@ class Auth
      */
     protected $user;
 
+    protected $secureCookiePrefix = null;
+
     /**
      *
      */
@@ -308,9 +310,24 @@ class Auth
          * We DO want to use store identifier in cookie name, because multi-tenancy.
          * And we DO want to use that on our session provider.
          */
-        $prefix = config('pckg.auth.cookiePrefix', null);
+        $prefix = $this->getSecureCookiePrefix();
+        if (!$prefix && !is_string($prefix)) {
+            $prefix = config('pckg.auth.cookiePrefix', null);
+        }
 
         return [$prefix . $name, $prefix];
+    }
+
+    public function setSecureCookiePrefix(?string $prefix)
+    {
+        $this->secureCookiePrefix = $prefix;
+
+        return $this;
+    }
+
+    public function getSecureCookiePrefix()
+    {
+        return $this->secureCookiePrefix;
     }
 
     /**
@@ -408,7 +425,7 @@ class Auth
         if (!$cookie) {
             return;
         }
-        $this->performLoginFromStorage($cookie);
+        return $this->performLoginFromStorage($cookie);
     }
 
     public function performParentLogin()
@@ -435,6 +452,11 @@ class Auth
     protected function performLoginFromStorage(array $storage)
     {
         foreach ($storage as $provider => $data) {
+            // new
+            if ($provider !== $this->getProviderKey()) {
+                continue;
+            }
+
             if (!is_array($data)) {
                 continue;
             }
@@ -451,7 +473,7 @@ class Auth
                 continue;
             }
 
-            $this->useProvider($provider);
+            // $this->useProvider($provider);
 
             $user = $this->getProvider()->getUserById($userId);
 
@@ -462,6 +484,8 @@ class Auth
             $entry = $this->getSecurityHash() . $user->id . $user->autologin;
 
             if (!password_verify($entry, $hash)) {
+                // changing the autologin invalidates sessions
+                //throw new \Exception('Not verified cookie!');
                 // throw error?
                 continue;
             }
@@ -553,13 +577,11 @@ class Auth
          */
         $sessionHash = password_hash($this->getUserSecuritySessionPass($user), PASSWORD_DEFAULT);
 
-        $_SESSION['Pckg']['Auth']['Provider'] = [
-            $providerKey => [
-                "user" => $user->toArray(),
-                "hash" => $sessionHash,
-                "date" => date('Y-m-d H:i:s'),
-                "flags" => [],
-            ]
+        $_SESSION['Pckg']['Auth']['Provider'][$providerKey] = [
+            "user" => $user->toArray(),
+            "hash" => $sessionHash,
+            "date" => date('Y-m-d H:i:s'),
+            "flags" => [],
         ];
 
         /**

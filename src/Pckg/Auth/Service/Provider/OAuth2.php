@@ -184,7 +184,7 @@ class OAuth2 extends AbstractProvider
          * We want to save the token?
          */
         try {
-        $token = $this->fetchTokenFromCode($code);
+            $token = $this->fetchTokenFromCode($code);
         } catch (\Throwable $e) {
             error_log(exception($e));
             throw new \Exception('Error fetching token from code');
@@ -233,7 +233,7 @@ class OAuth2 extends AbstractProvider
             $userData = [
                 'email' => $user['user']['email'],
             ];
-            $userRecord = User::create($userData);
+            $userRecord = User::create($userData, $this->config['entity']);
         }
 
         /**
