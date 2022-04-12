@@ -46,6 +46,8 @@ class Auth
      */
     protected $user;
 
+    protected $secureCookiePrefix = null;
+
     /**
      *
      */
@@ -302,6 +304,32 @@ class Auth
         return $hash;
     }
 
+    public function getPrefixedCookieName(string $name)
+    {
+        /**
+         * We DO want to use store identifier in cookie name, because multi-tenancy.
+         * And we DO want to use that on our session provider.
+         */
+        $prefix = $this->getSecureCookiePrefix();
+        if (!$prefix && !is_string($prefix)) {
+            $prefix = config('pckg.auth.cookiePrefix', null);
+        }
+
+        return [$prefix . $name, $prefix];
+    }
+
+    public function setSecureCookiePrefix(?string $prefix)
+    {
+        $this->secureCookiePrefix = $prefix;
+
+        return $this;
+    }
+
+    public function getSecureCookiePrefix()
+    {
+        return $this->secureCookiePrefix;
+    }
+
     /**
      * Decode cookie with value, signature and host values.
      *
@@ -310,6 +338,7 @@ class Auth
      */
     public function getSecureCookie(string $name)
     {
+        [$name, $prefix] = $this->getPrefixedCookieName($name);
         $value = cookie()->get($name);
         if (!$value) {
             return null;
@@ -327,7 +356,7 @@ class Auth
         /**
          * Check that signature matches and that we are actually on the same host.
          */
-        if (!$this->hashedPasswordMatches($decoded['signature'], $decoded['value'] . $decoded['host'] . $name)) {
+        if (!$this->hashedPasswordMatches($decoded['signature'], $decoded['value'] . $decoded['host'] . $name . $prefix)) {
             return null;
         }
 
@@ -342,6 +371,8 @@ class Auth
      */
     public function setSecureCookie(string $name, $value = null, $duration = null)
     {
+        [$name, $prefix] = $this->getPrefixedCookieName($name);
+
         /**
          * Delete cookie when empty value or negative duration.
          */
@@ -355,7 +386,7 @@ class Auth
          */
         $host = server('HTTP_HOST', null);
         $encoded = base64_encode(json_encode($value));
-        $signature = $this->hashPassword($encoded . $host . $name);
+        $signature = $this->hashPassword($encoded . $host . $name . $prefix);
         $value = base64_encode(
             json_encode(
                 [
@@ -394,7 +425,7 @@ class Auth
         if (!$cookie) {
             return;
         }
-        $this->performLoginFromStorage($cookie);
+        return $this->performLoginFromStorage($cookie);
     }
 
     public function performParentLogin()
@@ -421,6 +452,11 @@ class Auth
     protected function performLoginFromStorage(array $storage)
     {
         foreach ($storage as $provider => $data) {
+            // new
+            if ($provider !== $this->getProviderKey()) {
+                continue;
+            }
+
             if (!is_array($data)) {
                 continue;
             }
@@ -437,7 +473,7 @@ class Auth
                 continue;
             }
 
-            $this->useProvider($provider);
+            // $this->useProvider($provider);
 
             $user = $this->getProvider()->getUserById($userId);
 
@@ -448,6 +484,8 @@ class Auth
             $entry = $this->getSecurityHash() . $user->id . $user->autologin;
 
             if (!password_verify($entry, $hash)) {
+                // changing the autologin invalidates sessions
+                //throw new \Exception('Not verified cookie!');
                 // throw error?
                 continue;
             }
@@ -539,13 +577,11 @@ class Auth
          */
         $sessionHash = password_hash($this->getUserSecuritySessionPass($user), PASSWORD_DEFAULT);
 
-        $_SESSION['Pckg']['Auth']['Provider'] = [
-            $providerKey => [
-                "user" => $user->toArray(),
-                "hash" => $sessionHash,
-                "date" => date('Y-m-d H:i:s'),
-                "flags" => [],
-            ]
+        $_SESSION['Pckg']['Auth']['Provider'][$providerKey] = [
+            "user" => $user->toArray(),
+            "hash" => $sessionHash,
+            "date" => date('Y-m-d H:i:s'),
+            "flags" => [],
         ];
 
         /**

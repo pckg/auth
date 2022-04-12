@@ -29,6 +29,9 @@ class LoginWithSession extends AbstractChainOfReponsibility
          */
         $auth = auth();
         $auth->requestProvider();
+        
+        trigger(LoginWithSession::class . '.providerRequested', [$auth]);
+
         $providerKey = $auth->getProviderKey();
         $sessionProvider = $auth->getSessionProvider();
 

@@ -14,7 +14,7 @@ class User
      * @param  array $data
      * @return \Pckg\Auth\Record\User|\Pckg\Database\Record
      */
-    public static function create(array $data = [])
+    public static function create(array $data = [], ?string $entity = null)
     {
         $data = array_merge(
             $data,
@@ -27,7 +27,7 @@ class User
             ]
         );
 
-        $user = \Pckg\Auth\Record\User::create($data);
+        $user = \Pckg\Auth\Record\User::createNew($data, $entity ? resolve($entity) : null)->save();
 
         trigger(User::class . '.created', [$user]);
 
