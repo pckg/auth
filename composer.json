@@ -10,10 +10,10 @@
     }
   ],
   "require": {
-    "pckg/framework": "dev-next-8.0 as dev-master",
     "ext-json": "*"
   },
   "require-dev": {
+    "pckg/framework": "dev-next-8.0 as dev-master",
     "pckg-app/frontend-dev": "dev-master",
     "pckg-app/api": "dev-master",
     "pckg/mail": "dev-master",
