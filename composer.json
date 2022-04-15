@@ -10,7 +10,7 @@
     }
   ],
   "require": {
-    "pckg/framework": "dev-next-8.0",
+    "pckg/framework": "dev-next-8.0 as dev-master",
     "ext-json": "*"
   },
   "require-dev": {
@@ -21,8 +21,7 @@
     "pckg/manager": "dev-master",
     "pckg/concept": "dev-master",
     "pckg/migrator": "dev-master",
-    "league/oauth2-client": "^2.6",
-    "facebook/facebook-instant-articles-sdk-php": "dev-master"
+    "league/oauth2-client": "^2.6"
   },
   "autoload": {
     "psr-0": {
