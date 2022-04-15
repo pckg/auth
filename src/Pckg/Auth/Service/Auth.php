@@ -544,7 +544,7 @@ class Auth
      */
     public function getUserSecuritySessionPass($user)
     {
-        return $this->getSecurityHash() . '_' . $user->id . '_' . session_id();
+        return $this->getSecurityHash() . '_' . $user->id/* . '_' . session_id()*/;
     }
 
     public function regenerateSession()
