@@ -244,7 +244,7 @@ class OAuth2 extends AbstractProvider
             } else {
                 throw new Exception('Logout and create a separate account');
             }
-        } else {
+        } else if (!$userRecord) {
             /**
              * Auto register user.
              */
@@ -252,6 +252,8 @@ class OAuth2 extends AbstractProvider
                 'email' => $email,
             ];
             $userRecord = User::create($userData, $this->config['entity']);
+        } else {
+            // preset user record?
         }
 
 
