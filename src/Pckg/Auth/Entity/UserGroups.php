@@ -11,5 +11,4 @@ use Pckg\Database\Entity;
  */
 class UserGroups extends Entity
 {
-
 }

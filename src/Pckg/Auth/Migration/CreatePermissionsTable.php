@@ -11,7 +11,6 @@ use Pckg\Migration\Migration;
  */
 class CreatePermissionsTable extends Migration
 {
-
     /**
      * @return CreatePermissionsTable|void
      */

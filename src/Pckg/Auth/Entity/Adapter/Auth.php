@@ -12,7 +12,6 @@ use Pckg\Database\Entity\Extension\Adapter\AuthInterface;
  */
 class Auth implements AuthInterface
 {
-
     /**
      * @var AuthService
      */

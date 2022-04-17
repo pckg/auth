@@ -15,7 +15,6 @@ use Pckg\Framework\Request\Data\SessionDriver\FileDriver;
  */
 class Auth
 {
-
     /**
      * @var
      */
@@ -494,6 +493,8 @@ class Auth
 
             return true;
         }
+
+        return false;
     }
 
     /**

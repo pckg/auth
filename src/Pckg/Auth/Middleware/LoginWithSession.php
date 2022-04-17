@@ -13,7 +13,6 @@ use Pckg\Framework\Response;
  */
 class LoginWithSession extends AbstractChainOfReponsibility
 {
-
     /**
      * @param  callable $next
      * @return mixed
@@ -29,7 +28,7 @@ class LoginWithSession extends AbstractChainOfReponsibility
          */
         $auth = auth();
         $auth->requestProvider();
-        
+
         trigger(LoginWithSession::class . '.providerRequested', [$auth]);
 
         $providerKey = $auth->getProviderKey();

@@ -14,7 +14,6 @@ use Pckg\Framework\Response;
  */
 class HandleLogoutRequest extends AbstractChainOfReponsibility
 {
-
     /**
      * @var Response
      */

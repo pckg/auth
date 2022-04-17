@@ -2,8 +2,8 @@
 
 namespace Pckg\Auth\Service\Provider;
 
+use Exception;
 use GuzzleHttp\Client;
-use http\Exception\BadConversionException;
 use League\OAuth2\Client\Provider\GenericProvider;
 use Pckg\Auth\Factory\User;
 use Pckg\Auth\Service\Auth;
@@ -15,7 +15,6 @@ use Pckg\Auth\Service\Auth;
  */
 class OAuth2 extends AbstractProvider
 {
-
     /**
      * @var Auth
      */

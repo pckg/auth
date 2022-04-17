@@ -14,7 +14,6 @@ use Pckg\Mailo\Record\App;
  */
 class LoginWithApiKeyHeader
 {
-
     /**
      * @param  callable $next
      * @return mixed

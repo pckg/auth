@@ -25,7 +25,6 @@ use Pckg\Framework\Request\Session\SessionUser;
  */
 class Auth extends Provider
 {
-
     /**
      * @return string[]
      */
@@ -33,7 +32,6 @@ class Auth extends Provider
     {
         return [
             BasicAuth::class,
-            FacebookAuth::class,
         ];
     }
 

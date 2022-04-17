@@ -11,7 +11,6 @@ use Pckg\Auth\Service\Auth;
  */
 class Database extends AbstractProvider
 {
-
     /**
      * @var Auth
      */

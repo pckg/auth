@@ -16,7 +16,6 @@ use Pckg\Htmlbuilder\Validator\Method\Email\Email;
  */
 class SignupUser extends Bootstrap implements ResolvesOnRequest
 {
-
     /**
      * @return $this
      */

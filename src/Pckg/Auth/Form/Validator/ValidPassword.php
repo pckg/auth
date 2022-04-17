@@ -11,7 +11,6 @@ use Pckg\Htmlbuilder\Validator\AbstractValidator;
  */
 class ValidPassword extends AbstractValidator
 {
-
     /**
      * @var bool
      */

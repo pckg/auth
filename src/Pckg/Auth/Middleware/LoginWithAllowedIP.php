@@ -14,7 +14,6 @@ use Pckg\Mailo\Record\App;
  */
 class LoginWithAllowedIP
 {
-
     /**
      * @param  callable $next
      * @return mixed

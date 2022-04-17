@@ -13,7 +13,6 @@ use Pckg\Htmlbuilder\Element\Form\ResolvesOnRequest;
  */
 class ForgotPassword extends Bootstrap implements ResolvesOnRequest
 {
-
     /**
      * @return $this
      */

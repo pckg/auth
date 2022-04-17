@@ -17,7 +17,6 @@ use Pckg\Database\Record;
  */
 class User extends Record
 {
-
     /**
      * @var string
      */

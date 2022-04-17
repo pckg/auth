@@ -12,7 +12,6 @@ use Pckg\Auth\Record\User;
  */
 class LoginWithAutologinGetParameter
 {
-
     /**
      * @param  callable $next
      * @return mixed

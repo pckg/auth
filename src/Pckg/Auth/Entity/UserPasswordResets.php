@@ -12,7 +12,6 @@ use Pckg\Database\Entity;
  */
 class UserPasswordResets extends Entity
 {
-
     /**
      * @var string
      */

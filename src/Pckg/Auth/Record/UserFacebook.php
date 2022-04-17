@@ -11,5 +11,4 @@ use Pckg\Database\Record;
  */
 class UserFacebook extends Record
 {
-
 }

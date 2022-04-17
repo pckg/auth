@@ -12,7 +12,6 @@ use Pckg\Htmlbuilder\Validator\AbstractValidator;
  */
 class ExistingUser extends AbstractValidator
 {
-
     /**
      * @var bool
      */

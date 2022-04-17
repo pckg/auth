@@ -12,7 +12,6 @@ use Pckg\Database\Entity;
  */
 class Logins extends Entity
 {
-
     /**
      * @var string
      */

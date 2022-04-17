@@ -12,7 +12,6 @@ use Pckg\Framework\Provider;
  */
 class ApiAuth extends Provider
 {
-
     /**
      * @return string[]
      */

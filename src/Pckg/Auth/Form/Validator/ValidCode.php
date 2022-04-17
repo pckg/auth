@@ -12,7 +12,6 @@ use Pckg\Htmlbuilder\Validator\AbstractValidator;
  */
 class ValidCode extends AbstractValidator
 {
-
     /**
      * @var bool
      */

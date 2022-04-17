@@ -12,7 +12,6 @@ use Pckg\Framework\Response;
  */
 class HandleLoginRequest
 {
-
     /**
      * @param  callable $next
      * @return mixed

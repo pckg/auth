@@ -16,7 +16,6 @@ use Symfony\Component\Console\Input\InputArgument;
  */
 class CreateGodfather extends Command
 {
-
     protected function configure()
     {
         $this->setName('auth:create-godfather')->setDescription('Create godfather user')->addArguments(

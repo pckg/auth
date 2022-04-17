@@ -9,7 +9,6 @@ namespace Pckg\Auth\Form\Validator;
  */
 class NonExistingUser extends ExistingUser
 {
-
     /**
      * @var string
      */

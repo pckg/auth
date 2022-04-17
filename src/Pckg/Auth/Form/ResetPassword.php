@@ -16,7 +16,6 @@ use Pckg\Htmlbuilder\Validator\Method\Custom;
  */
 class ResetPassword extends Bootstrap implements ResolvesOnRequest
 {
-
     /**
      * @return $this
      */

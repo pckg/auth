@@ -13,7 +13,6 @@ use Pckg\Database\Record;
  */
 class UserPasswordReset extends Record
 {
-
     /**
      * @var string
      */

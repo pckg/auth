@@ -2,7 +2,7 @@
 
 namespace Pckg\Auth\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Pckg\Concept\Event\Event;
 
 /**
  * Class SendUserRegistrationEmail
@@ -11,7 +11,6 @@ use Symfony\Component\EventDispatcher\Event;
  */
 class UserRegistered
 {
-
     /**
      * @var Event
      */

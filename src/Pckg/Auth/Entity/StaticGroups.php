@@ -11,7 +11,6 @@ use Pckg\Database\Entity;
  */
 class StaticGroups extends Entity
 {
-
     /**
      * @return array[]
      */

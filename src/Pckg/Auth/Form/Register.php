@@ -11,7 +11,6 @@ use Pckg\Htmlbuilder\Element\Form\Bootstrap;
  */
 class Register extends Bootstrap
 {
-
     /**
      * @return $this
      */

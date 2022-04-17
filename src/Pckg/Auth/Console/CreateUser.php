@@ -16,7 +16,6 @@ use Symfony\Component\Console\Input\InputArgument;
  */
 class CreateUser extends Command
 {
-
     protected function configure()
     {
         $this->setName('auth:create-user')->setDescription('Create user');

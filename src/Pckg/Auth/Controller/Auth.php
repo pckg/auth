@@ -33,7 +33,6 @@ use Pckg\Manager\Meta;
  */
 class Auth extends Controller
 {
-
     /**
      * @param  Meta $meta
      * @return array

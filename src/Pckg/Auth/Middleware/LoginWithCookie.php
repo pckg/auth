@@ -13,7 +13,6 @@ use Pckg\Framework\Response;
  */
 class LoginWithCookie extends AbstractChainOfReponsibility
 {
-
     /**
      * @param  callable $next
      * @return mixed

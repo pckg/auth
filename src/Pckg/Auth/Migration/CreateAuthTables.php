@@ -11,7 +11,6 @@ use Pckg\Migration\Migration;
  */
 class CreateAuthTables extends Migration
 {
-
     /**
      * @return CreateAuthTables|void
      */

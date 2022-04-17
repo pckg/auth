@@ -3,13 +3,11 @@
 namespace Pckg\Auth\Command;
 
 use Defuse\Crypto\Key;
-use OpenCode\OAuth2\Entity\Users;
+use Pckg\Auth\Entity\Users;
 use Pckg\Auth\Service\Auth;
 use Pckg\Concept\Command\Stated;
-use Pckg\Concept\Reflect;
 use Pckg\Mail\Service\Mail\Adapter\User;
 use Pckg\Mail\Service\Mail\Handler\Command;
-use Pckg\Mail\Service\Mail\Handler\Queue;
 
 /**
  * Class LoginUser
@@ -140,5 +138,4 @@ class LoginUser
             'twoFA' => 'sc*********et',
         ]);
     }
-
 }

@@ -14,7 +14,6 @@ use Pckg\Htmlbuilder\Element\Form\ResolvesOnRequest;
  */
 class Login extends Bootstrap implements ResolvesOnRequest
 {
-
     /**
      * @return $this
      */

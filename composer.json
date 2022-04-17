@@ -14,14 +14,15 @@
   },
   "require-dev": {
     "pckg/framework": "dev-next-8.0 as dev-master",
-    "pckg-app/frontend-dev": "dev-master",
-    "pckg-app/api": "dev-master",
+    "pckg-app/frontend-dev": "dev-next-8.0 as dev-master",
+    "pckg-app/api": "dev-next-8.0 as dev-master",
     "pckg/mail": "dev-master",
-    "pckg/htmlbuilder": "dev-master",
-    "pckg/manager": "dev-master",
+    "pckg/htmlbuilder": "dev-next-8.0 as dev-master",
+    "pckg/manager": "dev-next-8.0 as dev-master",
     "pckg/concept": "dev-master",
-    "pckg/migrator": "dev-master",
-    "league/oauth2-client": "^2.6"
+    "pckg/migrator": "dev-next-8.0 as dev-master",
+    "league/oauth2-client": "^2.6",
+    "defuse/php-encryption": "^2.0"
   },
   "autoload": {
     "psr-0": {

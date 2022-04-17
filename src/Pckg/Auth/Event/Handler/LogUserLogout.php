@@ -12,7 +12,6 @@ use Pckg\Concept\AbstractObject;
  */
 class LogUserLogout extends AbstractChainOfReponsibility
 {
-
     /**
      * @param  callable       $next
      * @param  AbstractObject $handler

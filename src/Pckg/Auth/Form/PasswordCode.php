@@ -14,7 +14,6 @@ use Pckg\Htmlbuilder\Element\Form\ResolvesOnRequest;
  */
 class PasswordCode extends Bootstrap implements ResolvesOnRequest
 {
-
     /**
      * @return $this
      */

@@ -23,7 +23,6 @@ use Pckg\Framework\Provider;
  */
 class BasicAuth extends Provider
 {
-
     /**
      * @return string[]
      */
@@ -37,7 +36,7 @@ class BasicAuth extends Provider
             LoginWithAllowedIP::class,
             function (array $next) {
                 dispatcher()->trigger(\Pckg\Auth\Service\Auth::class . '.middlewares');
-                
+
                 return $next['next']();
             },
             HandleLogoutRequest::class,

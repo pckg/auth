@@ -15,7 +15,6 @@ use Pckg\Framework\Request;
  */
 class LoginUserViaForm extends LoginUser
 {
-
     /**
      * @var Login
      */

@@ -13,7 +13,6 @@ use Pckg\Concept\Event\AbstractEvent;
  */
 class UserLoggedIn extends AbstractEvent
 {
-
     /**
      * @var string
      */

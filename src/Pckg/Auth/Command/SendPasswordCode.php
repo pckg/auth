@@ -14,7 +14,6 @@ use Pckg\Concept\CommandInterface;
  */
 class SendPasswordCode
 {
-
     /**
      * @var \Pckg\Auth\Record\User
      */

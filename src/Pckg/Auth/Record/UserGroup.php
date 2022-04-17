@@ -13,7 +13,6 @@ use Pckg\Database\Record;
  */
 class UserGroup extends Record
 {
-
     /**
      * @var string
      */

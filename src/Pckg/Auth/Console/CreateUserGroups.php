@@ -16,7 +16,6 @@ use Symfony\Component\Console\Input\InputArgument;
  */
 class CreateUserGroups extends Command
 {
-
     protected function configure()
     {
         $this->setName('auth:create-user-groups')->setDescription('Create user groups');

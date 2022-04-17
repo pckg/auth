@@ -12,7 +12,6 @@ use Pckg\Htmlbuilder\Validator\AbstractValidator;
  */
 class UserEmail extends AbstractValidator
 {
-
     /**
      * @var string
      */

@@ -14,7 +14,6 @@ use Pckg\Concept\AbstractChainOfReponsibility;
  */
 class LogUserLogin extends AbstractChainOfReponsibility
 {
-
     /**
      * @param  User     $user
      * @param  callable $next

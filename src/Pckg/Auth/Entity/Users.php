@@ -15,7 +15,6 @@ use Pckg\Database\Entity;
  */
 class Users extends Entity
 {
-
     /**
      * @var string
      */

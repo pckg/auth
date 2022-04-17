@@ -11,7 +11,6 @@ use Pckg\Auth\Service\ProviderInterface;
  */
 abstract class AbstractProvider implements ProviderInterface
 {
-
     /**
      * @var
      */

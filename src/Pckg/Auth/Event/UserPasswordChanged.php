@@ -2,7 +2,7 @@
 
 namespace Pckg\Auth\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Pckg\Concept\Event\Event;
 
 /**
  * Class UserPasswordChanged
@@ -11,7 +11,6 @@ use Symfony\Component\EventDispatcher\Event;
  */
 class UserPasswordChanged
 {
-
     /**
      * @var Event
      */

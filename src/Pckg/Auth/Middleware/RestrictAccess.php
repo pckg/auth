@@ -13,7 +13,6 @@ use Pckg\Concept\Reflect;
  */
 class RestrictAccess extends AbstractChainOfReponsibility
 {
-
     /**
      * @param  callable $next
      * @return mixed
@@ -71,7 +70,7 @@ class RestrictAccess extends AbstractChainOfReponsibility
                 } else if ($providerName) {
                     $auth->useProvider($providerName);
                 }
-                
+
                 if (!array_key_exists($tag, $tags)) {
                     throw new Exception('Auth tag ' . $tag . ' not set.');
                 }
