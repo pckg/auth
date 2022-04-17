@@ -2,9 +2,9 @@ name: Pckg Auth CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, next-8.0 ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, next-8.0 ]
 
 jobs:
 
