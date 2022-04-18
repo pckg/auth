@@ -14,6 +14,8 @@
   },
   "require-dev": {
     "pckg/framework": "dev-next-8.0 as dev-master",
+    "pckg/database": "dev-next-8.0 as dev-master",
+    "pckg/collection": "dev-next-8.0 as dev-master",
     "pckg-app/frontend-dev": "dev-next-8.0 as dev-master",
     "pckg-app/api": "dev-next-8.0 as dev-master",
     "pckg/mail": "dev-master",
