@@ -2,10 +2,8 @@
 
 namespace Pckg\Auth\Controller;
 
-use Derive\Orders\Record\Order;
 use Pckg\Auth\Command\LoginUserViaForm;
 use Pckg\Auth\Command\LogoutUser;
-use Pckg\Auth\Command\RegisterUser;
 use Pckg\Auth\Command\SendPasswordCode;
 use Pckg\Auth\Entity\UserPasswordResets;
 use Pckg\Auth\Entity\Users;
@@ -13,16 +11,10 @@ use Pckg\Auth\Factory\User;
 use Pckg\Auth\Form\ForgotPassword;
 use Pckg\Auth\Form\Login;
 use Pckg\Auth\Form\PasswordCode;
-use Pckg\Auth\Form\Register;
 use Pckg\Auth\Form\ResetPassword;
 use Pckg\Auth\Form\SignupUser;
-use Pckg\Auth\Record\UserPasswordReset;
 use Pckg\Auth\Service\Auth as AuthService;
-use Pckg\Concept\Event\Dispatcher;
-use Pckg\Framework\Controller;
-use Pckg\Framework\Exception\NotFound;
 use Pckg\Framework\Response;
-use Pckg\Framework\Router;
 use Pckg\Manager\Meta;
 
 /**
@@ -31,7 +23,7 @@ use Pckg\Manager\Meta;
  * @package Pckg\Auth\Controller
  * @
  */
-class Auth extends Controller
+class Auth
 {
     /**
      * @param  Meta $meta
@@ -39,10 +31,10 @@ class Auth extends Controller
      */
     public function getUserAction(Meta $meta)
     {
-        $user = $this->auth()->getUser();
+        $user = auth()->getUser();
 
         return [
-            'loggedIn' => $this->auth()->isLoggedIn(),
+            'loggedIn' => auth()->isLoggedIn(),
             'user' => $user ? only($user->data(), ['id', 'email', 'name', 'surname', 'user_group_id']) : [],
             'csrf' => $meta->getCsrfValue(),
         ];
@@ -53,7 +45,7 @@ class Auth extends Controller
      */
     public function getUserAddressesAction()
     {
-        $user = $this->auth()->getUser();
+        $user = auth()->getUser();
 
         $addresses = $user ? $user->addresses : [];
 
@@ -68,11 +60,11 @@ class Auth extends Controller
     public function getLoginAction()
     {
         if (auth()->isLoggedIn()) {
-            $user = $this->auth()->getUser();
+            $user = auth()->getUser();
 
-            return $this->response()->redirect($user ? $user->getDashboardUrl() : '/');
+            return response()->redirect($user ? $user->getDashboardUrl() : '/');
         } else if (config('pckg.auth.providers.frontend.inactive')) {
-            return $this->response()->redirect('/');
+            return response()->redirect('/');
         }
 
         return view('Pckg/Auth:login');
@@ -89,19 +81,19 @@ class Auth extends Controller
          */
         $loginUserCommand->onSuccess(
             function () {
-                $user = $this->auth()->getUser();
+                $user = auth()->getUser();
 
-                $this->response()->respondWithSuccessRedirect($user->getDashboardUrl());
+                response()->respondWithSuccessRedirect($user->getDashboardUrl());
             }
         )->onError(
             function ($data) {
-                if ($this->request()->isAjax()) {
-                    $this->response()->respondWithError(array_merge(['text' => __('pckg.auth.error')], $data ?? []));
+                if (request()->isAjax()) {
+                    response()->respondWithError(array_merge(['text' => __('pckg.auth.error')], $data ?? []));
 
                     return;
                 }
 
-                $this->response()->respondWithErrorRedirect();
+                response()->respondWithErrorRedirect();
             }
         )->execute();
     }
@@ -122,7 +114,7 @@ class Auth extends Controller
     {
         $logoutUserCommand->onSuccess(
             function () use ($response) {
-                if ($this->request()->isJson()) {
+                if (request()->isJson()) {
                     $response->respond(
                         [
                             'success' => true,
@@ -134,7 +126,7 @@ class Auth extends Controller
             }
         )->onError(
             function () use ($response) {
-                if ($this->request()->isJson()) {
+                if (request()->isJson()) {
                     $response->respond(
                         [
                             'success' => false,
@@ -199,7 +191,7 @@ class Auth extends Controller
             ->whereRaw('SHA1(CONCAT(users.hash, users.autologin)) = ?', [$activation])
             ->one();
 
-        return $this->response()->redirect('/');
+        return response()->redirect('/');
     }
 
     /**
@@ -297,13 +289,13 @@ class Auth extends Controller
         /**
          * Set new password.
          */
-        $user->setAndSave(['password' => $this->auth('frontend')->hashPassword($data['password'])]);
+        $user->setAndSave(['password' => auth('frontend')->hashPassword($data['password'])]);
         $code->setAndSave(['used_at' => date('Y-m-d H:i:s')]);
 
         /**
          * Login user.
          */
-        $this->auth('frontend')->performLogin($user);
+        auth('frontend')->performLogin($user);
 
         return [
             'success' => true,
@@ -315,7 +307,7 @@ class Auth extends Controller
      */
     public function getMeAction()
     {
-        $user = $this->auth()->getUser();
+        $user = auth()->getUser();
         $data = only($user, ['id', 'email']);
 
         return [
