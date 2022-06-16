@@ -58,7 +58,9 @@ class LoginWithApiKeyHeader
         /**
          * Authenticate user
          */
-        auth()->authenticate($token->app->user);
+        $auth = auth();
+        $user = auth()->getProvider()->getUserById($token->app->user_id);
+        $auth->authenticate($user);
         context()->bind(Auth::class . ':api', $token);
 
         return $next();
