@@ -33,7 +33,7 @@ class LoginWithApiKeyHeader
         /**
          * Process request with header.
          */
-        $apiKey = request()->getHeader($headerName);
+        $apiKey = request()->header($headerName);
         if (!$apiKey) {
             return $next();
         }
