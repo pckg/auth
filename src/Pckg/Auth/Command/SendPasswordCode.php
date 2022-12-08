@@ -53,8 +53,8 @@ class SendPasswordCode
         $min = 0;
         $max = 999999;
         $num = rand($min, $max);
-        $code = str_pad($num, strlen($max), '0', STR_PAD_LEFT);
-        $niceCode = implode(' ', str_split($code, strlen($max) / 2));
+        $code = str_pad((string)$num, strlen((string)$max), '0', STR_PAD_LEFT);
+        $niceCode = implode(' ', str_split($code, strlen((string)$max) / 2));
 
         /**
          * Send email.

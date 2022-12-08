@@ -9,6 +9,7 @@ use Pckg\Database\Entity;
  * Class UserPasswordResets
  *
  * @package Pckg\Auth\Entity
+ * @method $this joinUser()
  */
 class UserPasswordResets extends Entity
 {

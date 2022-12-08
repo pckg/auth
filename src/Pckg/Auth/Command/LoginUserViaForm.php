@@ -20,10 +20,6 @@ class LoginUserViaForm extends LoginUser
      */
     protected $loginForm;
 
-    /**
-     * @param Request $request
-     * @param Auth    $auth
-     */
     public function __construct(Login $loginForm)
     {
         $this->loginForm = $loginForm;

@@ -26,9 +26,6 @@ class LoginUser
     }
 
     /**
-     * @param  $email
-     * @param  $password
-     * @param  false $autologin
      * @return mixed|null
      * @throws \Exception
      */
@@ -80,9 +77,9 @@ class LoginUser
              */
             if ($auth->performLogin($user)) {
                 $provided = $auth->useProvider($provider);
-                if (!$provided) {
+                /*if (!$provided) {
                     return $this->error();
-                }
+                }*/
                 if ($autologin) {
                     $auth->setAutologin();
                 }
@@ -103,7 +100,6 @@ class LoginUser
         /**
          * We need to create a 2FA code and send it.
          * The session must be the same, and refreshed.
-         * @var Command $mailHandler
          */
         auth()->regenerateSession();
         $key = Key::createNewRandomKey()->saveToAsciiSafeString();

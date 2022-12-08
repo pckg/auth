@@ -13,6 +13,8 @@ use Pckg\Database\Record;
  * @property JsonObject $oauth2
  * @property string $email
  * @property string $autologin
+ * @property string $hash
+ * @property string $password
  * @property int|null $user_group_id
  */
 class User extends Record

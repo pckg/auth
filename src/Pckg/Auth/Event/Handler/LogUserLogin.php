@@ -21,6 +21,7 @@ class LogUserLogin extends AbstractChainOfReponsibility
      */
     public function handle(User $user, callable $next)
     {
+        // @phpstan-ignore-next-line
         if (!(new Logins())->getRepository()->getCache()->hasTable('logins')) {
             return $next();
         }

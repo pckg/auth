@@ -29,14 +29,8 @@ class HandleLogoutRequest extends AbstractChainOfReponsibility
      */
     protected $auth;
 
-    /**
-     * @var
-     */
     protected $users;
 
-    /**
-     * @var
-     */
     protected $dispatcher;
 
     public function __construct(Request $request, Auth $auth, Response $response)

@@ -41,9 +41,11 @@ class RegisterUser
      */
     public function execute()
     {
-        $this->rUser->setArray($this->request->post());
+        $this->rUser->set($this->request->post());
 
-        $this->rUser->hashPassword();
+        if ($this->rUser->password) {
+            $this->rUser->password = auth()->hashPassword($this->rUser->password);
+        }
 
         if ($this->rUser->save()) {
             // trigger('user.registered', [$this->rUser]);

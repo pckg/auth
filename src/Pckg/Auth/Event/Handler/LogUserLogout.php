@@ -19,7 +19,7 @@ class LogUserLogout extends AbstractChainOfReponsibility
      */
     public function handle(callable $next, AbstractObject $handler)
     {
-        die("writing logout log");
+        error_log(static::class);
 
         return $next();
     }

@@ -21,7 +21,7 @@ class OAuth2 extends AbstractProvider
     protected $auth;
 
     /**
-     * @var GenericProvider
+     * @var ?GenericProvider
      */
     protected $oauth2;
 
@@ -72,6 +72,7 @@ class OAuth2 extends AbstractProvider
             }
             $this->oauth2 = new GenericProvider($config);
         }
+
         return $this->oauth2;
     }
 
@@ -119,6 +120,7 @@ class OAuth2 extends AbstractProvider
         $token = $accessToken->getToken();
         session()->set('oauth2accesstoken', $token)
             ->set('oauth2refreshtoken', $accessToken->getRefreshToken())
+            // @phpstan-ignore-next-line
             ->set('oauth2expires', strtotime($accessToken->getExpires()));
 
         return $token;

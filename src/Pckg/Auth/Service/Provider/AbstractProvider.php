@@ -11,9 +11,6 @@ use Pckg\Auth\Service\ProviderInterface;
  */
 abstract class AbstractProvider implements ProviderInterface
 {
-    /**
-     * @var
-     */
     protected $entity;
 
     /**
@@ -21,9 +18,6 @@ abstract class AbstractProvider implements ProviderInterface
      */
     protected $config = [];
 
-    /**
-     * @var
-     */
     protected $identifier;
 
     /**

@@ -15,19 +15,10 @@ use Pckg\Framework\Request\Data\SessionDriver\FileDriver;
  */
 class Auth
 {
-    /**
-     * @var
-     */
     public $users;
 
-    /**
-     * @var
-     */
     public $statuses;
 
-    /**
-     * @var
-     */
     protected $provider;
 
     /**
@@ -41,9 +32,9 @@ class Auth
     protected $loggedIn = false;
 
     /**
-     * @var User
+     * @var ?User
      */
-    protected $user;
+    protected $user = null;
 
     protected $secureCookiePrefix = null;
 
@@ -142,11 +133,8 @@ class Auth
      */
     public function getUser()
     {
-        //if ($this->user) {
         return $this->user;
-        //}
-
-        return $this->user = $this->getProvider()->getUserById($this->user('id'));
+        // return $this->user = $this->getProvider()->getUserById($this->user('id'));
     }
 
     /**
@@ -200,7 +188,7 @@ class Auth
         }
 
         return $this->getUser()->{$key} ?? null;
-        $sessionUser = $this->getSessionProvider()['user'] ?? [];
+        /*$sessionUser = $this->getSessionProvider()['user'] ?? [];
 
         if (!$sessionUser) {
             return null;
@@ -208,7 +196,7 @@ class Auth
             return $sessionUser;
         }
 
-        return array_key_exists($key, $sessionUser) ? $sessionUser[$key] : null;
+        return array_key_exists($key, $sessionUser) ? $sessionUser[$key] : null;*/
     }
 
     /**
@@ -263,11 +251,7 @@ class Auth
     {
         $rUser = $this->getProvider()->getUserByEmail($email);
 
-        if (!$rUser || !$this->hashedPasswordMatches($rUser->password, $password)) {
-            return false;
-        }
-
-        if ($rUser) {
+        if ($rUser && $this->hashedPasswordMatches($rUser->password, $password)) {
             return $this->performLogin($rUser);
         }
 
@@ -656,7 +640,6 @@ class Auth
     }
 
     /**
-     * @param  null $user
      * @return $this
      */
     public function setUser($user = null)
@@ -734,7 +717,6 @@ class Auth
     }
 
     /**
-     * @param  null $url
      * @return string
      */
     public function getNewInternalGetParameter($url = null)

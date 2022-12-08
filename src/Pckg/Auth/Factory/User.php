@@ -11,7 +11,7 @@ class User
 {
     /**
      * @param  array $data
-     * @return \Pckg\Auth\Record\User|\Pckg\Database\Record
+     * @return \Pckg\Auth\Record\User
      */
     public static function create(array $data = [], ?string $entity = null)
     {

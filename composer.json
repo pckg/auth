@@ -9,6 +9,9 @@
       "email": "schtr4jh@schtr4jh.net"
     }
   ],
+  "replace": {
+    "pckg-app/frontend": "dev-next-8.0 as dev-master"
+  },
   "require": {
     "ext-json": "*"
   },
@@ -35,7 +38,7 @@
     "test": [
       "true || vendor/bin/phpunit --help --stop-on-defect",
       "true || vendor/bin/phpcloc cloc src/",
-      "vendor/bin/phpstan analyse src/ --level=1",
+      "vendor/bin/phpstan analyse src/ --level=6 || vendor/bin/phpstan analyse src/ --level=5",
       "vendor/bin/phpcs --extensions=php --warning-severity=8 --error-severity=1 --standard=PSR12 --parallel=2 -p src/",
       "vendor/bin/codecept run"
     ],

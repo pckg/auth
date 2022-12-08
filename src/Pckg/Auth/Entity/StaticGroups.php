@@ -2,6 +2,8 @@
 
 namespace Pckg\Auth\Entity;
 
+use Pckg\Auth\Record\UserGroup;
+use Pckg\Collection;
 use Pckg\Database\Entity;
 
 /**
@@ -12,11 +14,11 @@ use Pckg\Database\Entity;
 class StaticGroups extends Entity
 {
     /**
-     * @return array[]
+     * @return Collection
      */
     public function all()
     {
-        return [
+        return collect([
             [
                 'id' => 1,
                 'title' => 'Admin',
@@ -25,19 +27,14 @@ class StaticGroups extends Entity
                 'id' => 2,
                 'title' => 'SysOp',
             ],
-        ];
+        ]);
     }
 
-    /**
-     * @return array[]
-     */
     public function one()
     {
-        return [
-            [
-                'id' => 1,
-                'title' => 'Admin',
-            ],
-        ];
+        return new UserGroup([
+            'id' => 1,
+            'title' => 'Admin',
+        ]);
     }
 }
